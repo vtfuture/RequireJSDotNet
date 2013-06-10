@@ -1,0 +1,24 @@
+﻿@using RequireJS
+@{   
+    var entryPointPath = Html.RequireJsEntryPoint();
+    if(entryPointPath != null)
+    {
+    <script type="text/javascript">
+
+        var requireConfig = {
+            pageOptions: @ViewBag.PageOptions,
+            websiteOptions: @ViewBag.WebsiteOptions
+        };
+
+        var require = {
+            locale: '@Html.CurrentCulture()',
+            baseUrl: '@Url.Content("~/Scripts")',
+            paths: @Html.GetRequireJsPaths(),
+            shim: @Html.GetRequireJsShim()
+        };
+
+    </script>
+
+    <script data-main="@entryPointPath" src="@Url.Content("~/Scripts/require.js")"></script>
+    }
+}
