@@ -1,7 +1,7 @@
 ﻿/*
  * Keep Alive Module RequireJS for .NET
  * Version 1.0.0.1
- * Release Date 06/09/0212
+ * Release Date 10/06/0213
  * Copyright Stefan Prodan
  *   http://stefanprodan.eu
  * Dual licensed under the MIT and GPL licenses:

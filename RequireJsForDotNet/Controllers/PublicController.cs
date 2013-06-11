@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RequireJS;
+using RequireJsForDotNet.Helpers;
 
 namespace RequireJsForDotNet.Controllers
 {
@@ -14,13 +15,15 @@ namespace RequireJsForDotNet.Controllers
             RequireJsOptions.Add(
                 "homeUrl",
                 Url.Action("Index", "Home", new { area = "" }),
-                RequireJsOptionsScope.Website
-                );
+                RequireJsOptionsScope.Website);
             RequireJsOptions.Add(
                 "adminUrl",
                 Url.Action("Index", "Dashboard", new { area = "Admin" }),
-                RequireJsOptionsScope.Website
-                );
+                RequireJsOptionsScope.Website);
+            RequireJsOptions.Add(
+                "statusEnum",
+                RequireJsHtmlHelpers.ToJsonDictionary<AjaxRequestStatus>(),
+                RequireJsOptionsScope.Website);
         }
     }
 }

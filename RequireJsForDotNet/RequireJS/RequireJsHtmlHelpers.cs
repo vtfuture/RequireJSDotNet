@@ -1,7 +1,7 @@
 ﻿/*
  * RequireJS for .NET
  * Version 1.0.0.1
- * Release Date 06/09/0212
+ * Release Date 10/06/0213
  * Copyright Stefan Prodan
  *   http://stefanprodan.eu
  * Dual licensed under the MIT and GPL licenses:
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System;
 
 namespace RequireJS
 {
@@ -79,6 +80,13 @@ namespace RequireJS
         {
             // split the ro-Ro string by '-' so it returns eg. ro / en
             return System.Threading.Thread.CurrentThread.CurrentCulture.Name.Split('-')[0];
+        }
+
+        public static Dictionary<string, int> ToJsonDictionary<TEnum>()
+        {
+            var enumType = typeof(TEnum);
+            var names = Enum.GetNames(enumType);
+            return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
     }
 }

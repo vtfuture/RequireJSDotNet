@@ -14,6 +14,7 @@ namespace RequireJsForDotNet.Controllers
         {
             RequireJsOptions.Add("ids", new List<int> { 1, 2, 3 });
             RequireJsOptions.Add("successMsg", "All the modules have been loaded");
+ 
             return View();
         }
 
