@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>1.0.2</version>
+    <authors>Stefan Prodan</authors>
+    <owners>Stefan Prodan</owners>
+    <id>RequireJsNet</id>
+    <title>RequireJS.NET</title>
+    <copyright>Copyright Stefan Prodan 2013</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>RequireJS for ASP.NET MVC</description>
+    <tags>Javacript, RequireJS, ASP.NET MVC</tags>
+    <language>en-US</language>
+    <projectUrl>https://github.com/stefanprodan/RequireJSDotNet</projectUrl>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="5.0.6" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net45\" />
+    <file src="RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net45\" />
+  </files>
+</package>

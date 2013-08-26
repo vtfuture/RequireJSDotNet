@@ -1,7 +1,7 @@
 ﻿/*
  * RequireJS for .NET
- * Version 1.0.0.1
- * Release Date 10/06/0213
+ * Version 1.0.2.0
+ * Release Date 26/08/2013
  * Copyright Stefan Prodan
  *   http://stefanprodan.eu
  * Dual licensed under the MIT and GPL licenses:
@@ -10,7 +10,6 @@
  */
 using System.IO;
 using System.Xml.Linq;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,8 +36,24 @@ namespace RequireJS
 
         public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html)
         {
+            var cfg = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
+
+            if (!File.Exists(cfg))
+            {
+                throw new FileNotFoundException("RequireJS config not found", cfg);
+            }
+
             var result = new StringBuilder();
-            var paths = XDocument.Load(html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config")).Descendants("paths").Descendants("path");
+            var paths = XDocument.Load(cfg).Descendants("paths").Descendants("path");
+
+#if !DEBUG
+            
+            var cfgRelease = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config");
+            if (File.Exists(cfgRelease))
+            {
+                paths = XDocument.Load(html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config")).Descendants("paths").Descendants("path");
+            }
+#endif
 
             result.Append("{");
             foreach (var item in paths)

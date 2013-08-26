@@ -1,19 +1,14 @@
 ﻿/*
  * RequireJS for .NET
- * Version 1.0.0.1
- * Release Date 10/06/0213
+ * Version 1.0.2.0
+ * Release Date 26/08/2013
  * Copyright Stefan Prodan
  *   http://stefanprodan.eu
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  */
-using System.IO;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using System.Web.Mvc;
 
 namespace RequireJS
@@ -29,7 +24,7 @@ namespace RequireJS
                 //these options are set in the PublicController code
                 //options used in ~/Scripts/app-global.js
                 ctrl.RegisterGlobalOptions();
-                ctrl.RequireJsOptions.Save(RequireJsOptionsScope.Website);
+                ctrl.RequireJsOptions.Save(RequireJsOptionsScope.Global);
             }
             base.OnActionExecuting(filterContext);
         }

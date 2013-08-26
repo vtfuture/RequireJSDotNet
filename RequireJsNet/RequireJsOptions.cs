@@ -1,16 +1,13 @@
 ﻿/*
  * RequireJS for .NET
- * Version 1.0.0.1
- * Release Date 10/06/0213
+ * Version 1.0.2.0
+ * Release Date 26/08/2013
  * Copyright Stefan Prodan
  *   http://stefanprodan.eu
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  */
-using System;
-using System.IO;
-using System.Xml.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +19,7 @@ namespace RequireJS
     public class RequireJsOptions
     {
         private readonly Controller controller;
-        private readonly Dictionary<string, object> websiteOptions;
+        private readonly Dictionary<string, object> globalOptions;
         private readonly Dictionary<string, object> pageOptions;
 
         public RequireJsOptions(Controller controller)
@@ -30,7 +27,7 @@ namespace RequireJS
             this.controller = controller;
 
             pageOptions = new Dictionary<string, object>();
-            websiteOptions = new Dictionary<string, object>();
+            globalOptions = new Dictionary<string, object>();
 
             //save in case the RequireJsOptions is never used
             this.SaveAll();
@@ -47,12 +44,12 @@ namespace RequireJS
                     }
                     pageOptions.Add(key, JsonConvert.SerializeObject(value));
                     break;
-                case RequireJsOptionsScope.Website:
-                    if (websiteOptions.Keys.Contains(key))
+                case RequireJsOptionsScope.Global:
+                    if (globalOptions.Keys.Contains(key))
                     {
-                        websiteOptions.Remove(key);
+                        globalOptions.Remove(key);
                     }
-                    websiteOptions.Add(key, JsonConvert.SerializeObject(value));
+                    globalOptions.Add(key, JsonConvert.SerializeObject(value));
                     break;
             }
         }
@@ -64,8 +61,8 @@ namespace RequireJS
                 case RequireJsOptionsScope.Page:
                     pageOptions.Clear();
                     break;
-                case RequireJsOptionsScope.Website:
-                    websiteOptions.Clear();
+                case RequireJsOptionsScope.Global:
+                    globalOptions.Clear();
                     break;
             }
         }
@@ -73,7 +70,7 @@ namespace RequireJS
         public void ClearAll()
         {
             pageOptions.Clear();
-            websiteOptions.Clear();
+            globalOptions.Clear();
         }
 
         public void Save(RequireJsOptionsScope scope)
@@ -84,8 +81,8 @@ namespace RequireJS
                 case RequireJsOptionsScope.Page:
                     controller.ViewBag.PageOptions = new MvcHtmlString(ConvertToJsObject(pageOptions));
                     break;
-                case RequireJsOptionsScope.Website:
-                    controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(websiteOptions));
+                case RequireJsOptionsScope.Global:
+                    controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(globalOptions));
                     break;
             }
         }
@@ -93,7 +90,7 @@ namespace RequireJS
         public void SaveAll()
         {
             controller.ViewBag.PageOptions = new MvcHtmlString(ConvertToJsObject(pageOptions));
-            controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(websiteOptions));
+            controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(globalOptions));
         }
 
         private static string ConvertToJsObject(Dictionary<string, object> options)
@@ -114,6 +111,6 @@ namespace RequireJS
     public enum RequireJsOptionsScope
     {
         Page,
-        Website
+        Global
     }
 }
