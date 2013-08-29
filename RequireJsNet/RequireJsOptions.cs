@@ -131,7 +131,7 @@ namespace RequireJS
             Save(RequireJsOptionsScope.Page);
         }
 
-        public static string ConvertToJsObject(Dictionary<string, object> options)
+        internal static string ConvertToJsObject(Dictionary<string, object> options)
         {
             var config = new StringBuilder();
 

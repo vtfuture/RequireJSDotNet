@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using RequireJS
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -45,6 +47,7 @@
                 </div>
             </div>
         </footer>
-        @Html.Partial("_RequireSetup")
+
+        @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"))
     </body>
 </html>

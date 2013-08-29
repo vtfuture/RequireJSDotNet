@@ -20,6 +20,41 @@ namespace RequireJS
 {
     public static class RequireJsHtmlHelpers
     {
+        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl)
+        {
+            var setupHtml = new StringBuilder();
+
+            var entryPointPath = html.RequireJsEntryPoint();
+
+            if(entryPointPath != null)
+            {
+                setupHtml.AppendLine("<script type=\"text/javascript\">");
+                
+                setupHtml.AppendLine("var requireConfig = {");
+                setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
+                setupHtml.AppendLine(",");
+                setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
+                setupHtml.AppendLine("};");
+
+                setupHtml.AppendLine("var require = {");
+                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
+                setupHtml.AppendLine(",");
+                setupHtml.Append("baseUrl:'" + baseUrl + "'");
+                setupHtml.AppendLine(",");
+                setupHtml.Append("paths:" + html.GetRequireJsPaths());
+                setupHtml.AppendLine(",");
+                setupHtml.AppendLine("shim:" + html.GetRequireJsShim());
+                setupHtml.AppendLine("};");
+
+                setupHtml.AppendLine("</script>");
+
+                setupHtml.AppendLine("<script data-main=\"" + entryPointPath + "\" src=\"" + requireUrl + "\">");
+                setupHtml.AppendLine("</script>");
+            }
+
+            return new MvcHtmlString(setupHtml.ToString());
+        }
+
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html)
         {
             var area = html.ViewContext.RouteData.DataTokens["area"] != null
@@ -51,7 +86,7 @@ namespace RequireJS
             var cfgRelease = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config");
             if (File.Exists(cfgRelease))
             {
-                paths = XDocument.Load(html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config")).Descendants("paths").Descendants("path");
+                paths = XDocument.Load(cfgRelease).Descendants("paths").Descendants("path");
             }
 #endif
 
@@ -67,9 +102,23 @@ namespace RequireJS
 
         public static MvcHtmlString GetRequireJsShim(this HtmlHelper html)
         {
-            var result = new StringBuilder();
-            var shims = XDocument.Load(html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config")).Descendants("shim").Descendants("dependencies");
+            var cfg = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
 
+            if (!File.Exists(cfg))
+            {
+                throw new FileNotFoundException("RequireJS config not found", cfg);
+            }
+
+            var result = new StringBuilder();
+            var shims = XDocument.Load(cfg).Descendants("shim").Descendants("dependencies");
+#if !DEBUG
+            
+            var cfgRelease = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config");
+            if (File.Exists(cfgRelease))
+            {
+                shims = XDocument.Load(cfg).Descendants("shim").Descendants("dependencies");
+            }
+#endif
             result.Append("{");
             foreach (var item in shims)
             {
