@@ -1,6 +1,8 @@
 ﻿@using RequireJS
 @{   
     var entryPointPath = Html.RequireJsEntryPoint();
+    var pageOptions = new MvcHtmlString(RequireJsOptions.ConvertToJsObject(ViewBag.PageOptions));
+    var websiteOptions = new MvcHtmlString(RequireJsOptions.ConvertToJsObject(ViewBag.GlobalOptions));
 }
 
 @if(entryPointPath != null)
@@ -8,8 +10,8 @@
 <script type="text/javascript">
 
     var requireConfig = {
-        pageOptions: @ViewBag.PageOptions,
-        globalOptions: @ViewBag.WebsiteOptions
+        pageOptions: @pageOptions,
+        websiteOptions: @websiteOptions
     };
 
     var require = {

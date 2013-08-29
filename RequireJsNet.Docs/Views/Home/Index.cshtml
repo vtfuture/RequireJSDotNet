@@ -1,5 +1,9 @@
-﻿@{
+﻿@using System.Activities.Expressions
+@{
     ViewBag.Title = "RequireJS for .NET";
+
+    //Add RequireJS Page options directly from view via ViewBag
+    ViewBag.PageOptions.Add("newViewOpt", "test");
 }
 
 @section featured {

@@ -42,16 +42,54 @@ namespace RequireJS
                     {
                         pageOptions.Remove(key);
                     }
-                    pageOptions.Add(key, JsonConvert.SerializeObject(value));
+                    pageOptions.Add(key, value);
                     break;
                 case RequireJsOptionsScope.Global:
                     if (globalOptions.Keys.Contains(key))
                     {
                         globalOptions.Remove(key);
                     }
-                    globalOptions.Add(key, JsonConvert.SerializeObject(value));
+                    globalOptions.Add(key, value);
                     break;
             }
+        }
+
+        public void Add(string key, Dictionary<string, object> value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page, bool clearExisting = false)
+        {
+            var dictToModify = new Dictionary<string, object>();
+            switch (scope)
+            {
+                case RequireJsOptionsScope.Page:
+                    dictToModify = pageOptions;
+                    break;
+                case RequireJsOptionsScope.Global:
+                    dictToModify = globalOptions;
+                    break;
+            }
+
+            var existing = dictToModify.FirstOrDefault(r => r.Key == key).Value;
+            if (existing != null)
+            {
+                if (!clearExisting && existing is Dictionary<string, object>)
+                {
+                    AppendItems(existing as Dictionary<string, object>, value);
+                }
+                else
+                {
+                    dictToModify.Remove(key);
+                    dictToModify.Add(key, value);
+                }
+            }
+            else
+            {
+                dictToModify.Add(key, value);
+            }
+        }
+
+        public object GetByKey(string key, RequireJsOptionsScope scope)
+        {
+            return scope == RequireJsOptionsScope.Page ? pageOptions.FirstOrDefault(r => r.Key == key)
+                                                       : globalOptions.FirstOrDefault(r => r.Key == key);
         }
 
         public void Clear(RequireJsOptionsScope scope)
@@ -79,31 +117,44 @@ namespace RequireJS
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    controller.ViewBag.PageOptions = new MvcHtmlString(ConvertToJsObject(pageOptions));
+                    controller.ViewBag.PageOptions = pageOptions;
                     break;
                 case RequireJsOptionsScope.Global:
-                    controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(globalOptions));
+                    controller.ViewBag.GlobalOptions = globalOptions;
                     break;
             }
         }
 
         public void SaveAll()
         {
-            controller.ViewBag.PageOptions = new MvcHtmlString(ConvertToJsObject(pageOptions));
-            controller.ViewBag.WebsiteOptions = new MvcHtmlString(ConvertToJsObject(globalOptions));
+            Save(RequireJsOptionsScope.Global);
+            Save(RequireJsOptionsScope.Page);
         }
 
-        private static string ConvertToJsObject(Dictionary<string, object> options)
+        public static string ConvertToJsObject(Dictionary<string, object> options)
         {
             var config = new StringBuilder();
 
             config.Append("{");
             foreach (var item in options)
             {
-                config.AppendFormat(" {0}: {1}{2} ", item.Key, item.Value, options.Last().Equals(item) ? "" : ",");
+                config.AppendFormat(" {0}: {1}{2} ", item.Key, JsonConvert.SerializeObject(item.Value), options.Last().Equals(item) ? "" : ",");
             }
             config.Append("}");
             return config.ToString();
+        }
+
+        private void AppendItems(Dictionary<string, object> to, Dictionary<string, object> from)
+        {
+            foreach (var item in from)
+            {
+                var existing = to.FirstOrDefault(r => item.Key == r.Key).Value;
+                if (existing != null)
+                {
+                    to.Remove(item.Key);
+                }
+                to.Add(item.Key, item.Value);
+            }
         }
 
     }
