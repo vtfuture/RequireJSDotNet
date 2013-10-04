@@ -60,11 +60,16 @@ namespace RequireJS
                        : "Root";
             var controller = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue as string;
             var action = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue as string;
-
-            var entryPoint = "Controllers/" + area + "/" + controller + "/" + controller + "-" + action;
+			var entryPointTmpl = "Controllers/{0}/" + controller + "/" + controller + "-" + action;
+            var entryPoint = string.Format(entryPointTmpl, area);
             var filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
-
-            return File.Exists(filePath) ? new MvcHtmlString(entryPoint) : null;
+			if (File.Exists(filePath))
+            {
+                return new MvcHtmlString(entryPoint);
+            }
+            entryPoint = string.Format(entryPointTmpl, "Common");
+            var fallbackFile = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
+            return File.Exists(fallbackFile) ? new MvcHtmlString(entryPoint) : null;
         }
 
         public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html)
