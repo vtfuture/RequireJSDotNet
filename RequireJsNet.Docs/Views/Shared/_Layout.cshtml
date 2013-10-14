@@ -48,6 +48,18 @@
             </div>
         </footer>
 
-        @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), Server.MapPath("~/RequireJS.release.config"))
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        @Html.RenderRequireJsSetup(Url.Content("~/Scripts"),
+        Url.Content("~/Scripts/require.js"),
+        Server.MapPath("~/RequireJS.config"))
+    }
+    else
+    {
+        @Html.RenderRequireJsSetup(Url.Content("~/Scripts"),
+        Url.Content("~/Scripts/require.js"),
+        Server.MapPath("~/RequireJS.release.config"))
+    }
+        
     </body>
 </html>
