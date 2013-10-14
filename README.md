@@ -5,6 +5,7 @@ The RequireJS for .NET project smoothly integrates the RequireJS framework with 
 
 ### Documentation
 
+* [Setup RequireJS for ASP.NET MVC using NuGet](http://www.stefanprodan.eu/2013/08/setup-requirejs-for-asp-net-mvc-using-nuget/)
 * [Setup and configuration](https://github.com/stefanprodan/RequireJSDotNet/wiki/RequireJS-for-.NET-setup)
 * [Programming guide](https://github.com/stefanprodan/RequireJSDotNet/wiki/Programming-with-RequireJS-for-.NET)
 
