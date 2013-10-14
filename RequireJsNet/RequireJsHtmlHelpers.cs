@@ -18,7 +18,16 @@ namespace RequireJS
 {
     public static class RequireJsHtmlHelpers
     {
-        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl)
+        /// <summary>
+        /// Setup RequireJS to be used in layouts
+        /// </summary>
+        /// <example>
+        /// @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), Server.MapPath("~/RequireJS.release.config"))
+        /// </example>
+        /// <param name="baseUrl">Scrips folder</param>
+        /// <param name="requireUrl">requirejs.js url</param>
+        /// <param name="configPath">RequireJS.config server local path</param>
+        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string configPath = "")
         {
             var setupHtml = new StringBuilder();
 
@@ -39,9 +48,9 @@ namespace RequireJS
                 setupHtml.AppendLine(",");
                 setupHtml.Append("baseUrl:'" + baseUrl + "'");
                 setupHtml.AppendLine(",");
-                setupHtml.Append("paths:" + html.GetRequireJsPaths());
+                setupHtml.Append("paths:" + html.GetRequireJsPaths(configPath));
                 setupHtml.AppendLine(",");
-                setupHtml.AppendLine("shim:" + html.GetRequireJsShim());
+                setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configPath));
                 setupHtml.AppendLine("};");
 
                 setupHtml.AppendLine("</script>");
@@ -67,26 +76,20 @@ namespace RequireJS
             return File.Exists(filePath) ? new MvcHtmlString(entryPoint) : null;
         }
 
-        public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html)
+        public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html, string configPath = "")
         {
-            var cfg = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
-
-            if (!File.Exists(cfg))
+            if (string.IsNullOrEmpty(configPath))
             {
-                throw new FileNotFoundException("RequireJS config not found", cfg);
+                configPath = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
+            }
+
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException("RequireJS config not found", configPath);
             }
 
             var result = new StringBuilder();
-            var paths = XDocument.Load(cfg).Descendants("paths").Descendants("path");
-
-#if !DEBUG
-            
-            var cfgRelease = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config");
-            if (File.Exists(cfgRelease))
-            {
-                paths = XDocument.Load(cfgRelease).Descendants("paths").Descendants("path");
-            }
-#endif
+            var paths = XDocument.Load(configPath).Descendants("paths").Descendants("path");
 
             result.Append("{");
             foreach (var item in paths)
@@ -98,25 +101,21 @@ namespace RequireJS
             return new MvcHtmlString(result.ToString());
         }
 
-        public static MvcHtmlString GetRequireJsShim(this HtmlHelper html)
+        public static MvcHtmlString GetRequireJsShim(this HtmlHelper html, string configPath = "")
         {
-            var cfg = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
-
-            if (!File.Exists(cfg))
+            if (string.IsNullOrEmpty(configPath))
             {
-                throw new FileNotFoundException("RequireJS config not found", cfg);
+                configPath = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
+            }
+
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException("RequireJS config not found", configPath);
             }
 
             var result = new StringBuilder();
-            var shims = XDocument.Load(cfg).Descendants("shim").Descendants("dependencies");
-#if !DEBUG
-            
-            var cfgRelease = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.Release.config");
-            if (File.Exists(cfgRelease))
-            {
-                shims = XDocument.Load(cfg).Descendants("shim").Descendants("dependencies");
-            }
-#endif
+            var shims = XDocument.Load(configPath).Descendants("shim").Descendants("dependencies");
+
             result.Append("{");
             foreach (var item in shims)
             {
