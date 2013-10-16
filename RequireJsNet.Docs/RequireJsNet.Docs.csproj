@@ -198,6 +198,7 @@
     <Content Include="Scripts\Controllers\Root\Home\home-index.js" />
     <Content Include="RequireJS.config" />
     <Content Include="RequireJS.Release.config" />
+    <Content Include="RequireJS.Shared.config" />
     <None Include="Scripts\Lib\Vendor\Amplify\amplify-vsdoc.js" />
     <Content Include="Scripts\keepalive-service.js" />
     <Content Include="Scripts\Lib\Vendor\Amplify\amplify.js" />
