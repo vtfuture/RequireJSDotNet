@@ -24,7 +24,7 @@ namespace RequireJS
         /// Setup RequireJS to be used in layouts
         /// </summary>
         /// <example>
-        /// @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), Server.MapPath("~/RequireJS.release.config"))
+        /// @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), "~/RequireJS.release.config")
         /// </example>
         /// <param name="baseUrl">Scrips folder</param>
         /// <param name="requireUrl">requirejs.js url</param>
@@ -33,8 +33,14 @@ namespace RequireJS
             string configPath = "")
         {
             var setupHtml = new StringBuilder();
-
+            
             var entryPointPath = html.RequireJsEntryPoint();
+
+            //resolve config path
+            if (!string.IsNullOrEmpty(configPath) && configPath.StartsWith("~"))
+            {
+                configPath = html.ViewContext.HttpContext.Server.MapPath(configPath);
+            }
 
             if (entryPointPath != null)
             {
@@ -70,13 +76,15 @@ namespace RequireJS
         /// </summary>
         /// <param name="baseUrl">Scrips folder</param>
         /// <param name="requireUrl">requirejs.js url</param>
-        /// <param name="configsList">RequireJS.config files server local paths</param>
+        /// <param name="configsList">RequireJS.config files path</param>
         public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
             IList<string> configsList)
         {
             var setupHtml = new StringBuilder();
 
             var entryPointPath = html.RequireJsEntryPoint();
+
+            var configs = MapPath(html, configsList);
 
             if (entryPointPath != null)
             {
@@ -93,9 +101,9 @@ namespace RequireJS
                 setupHtml.AppendLine(",");
                 setupHtml.Append("baseUrl:'" + baseUrl + "'");
                 setupHtml.AppendLine(",");
-                setupHtml.Append("paths:" + html.GetRequireJsPaths(configsList));
+                setupHtml.Append("paths:" + html.GetRequireJsPaths(configs));
                 setupHtml.AppendLine(",");
-                setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configsList));
+                setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configs));
                 setupHtml.AppendLine("};");
 
                 setupHtml.AppendLine("</script>");
@@ -280,6 +288,24 @@ namespace RequireJS
             var enumType = typeof (TEnum);
             var names = Enum.GetNames(enumType);
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
+        }
+
+        private static List<string> MapPath(HtmlHelper html, IList<string> configsList)
+        {
+            var list = new List<string>();
+            foreach (var item in configsList)
+            {
+                if(item.StartsWith("~"))
+                {
+                    list.Add(html.ViewContext.HttpContext.Server.MapPath(item));
+                }
+                else
+                {
+                    list.Add(item);
+                }
+            }
+
+            return list;
         }
     }
 }
