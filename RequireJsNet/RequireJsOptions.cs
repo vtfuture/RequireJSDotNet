@@ -134,10 +134,15 @@ namespace RequireJS
             var config = new StringBuilder();
 
             config.Append("{");
-            foreach (var item in options)
+
+            if (options != null)
             {
-                config.AppendFormat(" {0}: {1}{2} ", item.Key, JsonConvert.SerializeObject(item.Value), options.Last().Equals(item) ? "" : ",");
+                foreach (var item in options)
+                {
+                    config.AppendFormat(" {0}: {1}{2} ", item.Key, JsonConvert.SerializeObject(item.Value), options.Last().Equals(item) ? "" : ",");
+                }
             }
+
             config.Append("}");
             return config.ToString();
         }
