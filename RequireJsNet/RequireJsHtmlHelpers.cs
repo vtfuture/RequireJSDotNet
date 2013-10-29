@@ -47,6 +47,7 @@ namespace RequireJS
                 setupHtml.AppendLine("<script type=\"text/javascript\">");
 
                 setupHtml.AppendLine("var requireConfig = {");
+                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
                 setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
                 setupHtml.AppendLine(",");
                 setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
