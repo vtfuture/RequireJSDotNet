@@ -47,19 +47,20 @@ namespace RequireJS
                 setupHtml.AppendLine("<script type=\"text/javascript\">");
 
                 setupHtml.AppendLine("var requireConfig = {");
-                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
-                setupHtml.AppendLine(",");
+                setupHtml.AppendLine("locale:'" + html.CurrentCulture() + "'");
+                setupHtml.Append(",");
+                setupHtml.AppendLine("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
+                setupHtml.Append(",");
                 setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
                 setupHtml.AppendLine("};");
 
                 setupHtml.AppendLine("var require = {");
-                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("baseUrl:'" + baseUrl + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("paths:" + html.GetRequireJsPaths(configPath));
-                setupHtml.AppendLine(",");
+                setupHtml.AppendLine("locale:'" + html.CurrentCulture() + "'");
+                setupHtml.Append(",");
+                setupHtml.AppendLine("baseUrl:'" + baseUrl + "'");
+                setupHtml.Append(",");
+                setupHtml.AppendLine("paths:" + html.GetRequireJsPaths(configPath));
+                setupHtml.Append(",");
                 setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configPath));
                 setupHtml.AppendLine("};");
 
