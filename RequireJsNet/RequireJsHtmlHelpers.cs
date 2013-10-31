@@ -93,8 +93,10 @@ namespace RequireJS
                 setupHtml.AppendLine("<script type=\"text/javascript\">");
 
                 setupHtml.AppendLine("var requireConfig = {");
-                setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
-                setupHtml.AppendLine(",");
+                setupHtml.AppendLine("locale:'" + html.CurrentCulture() + "'");
+                setupHtml.Append(",");
+                setupHtml.AppendLine("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
+                setupHtml.Append(",");
                 setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
                 setupHtml.AppendLine("};");
 
