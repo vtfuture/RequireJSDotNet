@@ -124,18 +124,49 @@ namespace RequireJS
             var area = html.ViewContext.RouteData.DataTokens["area"] != null
                 ? html.ViewContext.RouteData.DataTokens["area"].ToString()
                 : "Root";
+
             var controller = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue as string;
             var action = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue as string;
-            var entryPointTmpl = "Controllers/{0}/" + controller + "/" + controller + "-" + action;
+
+            //search for controller/action.js in current area
+            var entryPointTmpl = "Controllers/{0}/" + controller + "/" + action;
             var entryPoint = string.Format(entryPointTmpl, area);
             var filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
+
             if (File.Exists(filePath))
             {
                 return new MvcHtmlString(entryPoint);
             }
+
+            //search for controller/action.js in common area
             entryPoint = string.Format(entryPointTmpl, "Common");
-            var fallbackFile = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
-            return File.Exists(fallbackFile) ? new MvcHtmlString(entryPoint) : null;
+            filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                return new MvcHtmlString(entryPoint);
+            }
+
+            //search for controller/controller-action.js in current area
+            entryPointTmpl = "Controllers/{0}/" + controller + "/" + controller + "-" + action;
+            entryPoint = string.Format(entryPointTmpl, area);
+            filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                return new MvcHtmlString(entryPoint);
+            }
+
+            //search for controller/controller-action.js in common area
+            entryPoint = string.Format(entryPointTmpl, "Common");
+            filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                return new MvcHtmlString(entryPoint);
+            }
+
+            return null;
         }
 
         public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html, string configPath = "")

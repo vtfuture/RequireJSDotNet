@@ -192,10 +192,9 @@
     <Content Include="Scripts\app-helpers.js" />
     <Content Include="Scripts\app-utils.js" />
     <Content Include="Scripts\Controllers\Admin\Dashboard\dashboard-index.js" />
-    <Content Include="Scripts\Controllers\Root\Home\backup.js" />
     <Content Include="Scripts\Controllers\Root\Home\home-contact.js" />
-    <Content Include="Scripts\Controllers\Root\Home\home-inbox.js" />
-    <Content Include="Scripts\Controllers\Root\Home\home-index.js" />
+    <Content Include="Scripts\Controllers\Root\Home\inbox.js" />
+    <Content Include="Scripts\Controllers\Root\Home\index.js" />
     <Content Include="RequireJS.config" />
     <Content Include="RequireJS.Release.config" />
     <Content Include="RequireJS.Shared.config" />
