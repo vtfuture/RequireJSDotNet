@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Docs", "RequireJsNet.Docs\RequireJsNet.Docs.csproj", "{7EE6D196-E631-4526-8615-45E2A24F4088}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet", "RequireJsNet\RequireJsNet.csproj", "{EA33DE7B-1269-4000-8C33-F6B0632D1872}"
@@ -18,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor", "RequireJsNet.Compressor\RequireJsNet.Compressor.csproj", "{27FBCFC2-9AD7-4042-BC47-0A61B8078264}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor.Demo", "RequireJsNet.Compressor.Demo\RequireJsNet.Compressor.Demo.csproj", "{9D7A9019-25DE-4128-BB84-600C53838A2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,10 @@ Global
 		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
