@@ -47,7 +47,6 @@
     <Compile Include="ActionType.cs" />
     <Compile Include="CompressorTask.cs" />
     <Compile Include="CompressorTaskEngine.cs" />
-    <Compile Include="CssCompressorTask.cs" />
     <Compile Include="FileSpec.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="JavaScriptCompressorTask.cs" />
