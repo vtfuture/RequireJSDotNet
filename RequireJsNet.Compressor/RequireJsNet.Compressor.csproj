@@ -39,11 +39,6 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="Yahoo.Yui.Compressor">
       <HintPath>..\packages\YUICompressor.NET.2.3.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
     </Reference>

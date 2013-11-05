@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EcmaScript.NET;
 
 using Yahoo.Yui.Compressor;
 
@@ -26,6 +27,8 @@ namespace RequireJsNet.Compressor
         public string LoggingType { get; set; }
 
         public FileSpec[] SourceFiles { get; set; }
+
+        private List<EcmaScriptException> EcmaExceptions { get; set; }
 
         public string OutputFile { get; set; }
 
@@ -56,6 +59,7 @@ namespace RequireJsNet.Compressor
             this.Encoding = Encoding.Default;
             DeleteSourceFiles = false;
             LineBreakPosition = -1;
+            EcmaExceptions = new List<EcmaScriptException>();
         }
 
         public bool Execute()
@@ -136,6 +140,11 @@ namespace RequireJsNet.Compressor
 
             var startTime = DateTime.Now;
             var compressedText = CompressFiles();
+
+            if (EcmaExceptions.Count > 0)
+            {
+                return false;
+            }
 
             // Save this css to the output file, if we have some result text.
             if (!this.SaveCompressedText(compressedText))
@@ -328,6 +337,12 @@ namespace RequireJsNet.Compressor
                     }
                     catch (Exception exception)
                     {
+                        if (exception is EcmaScriptException)
+                        {
+                            var ecmaException = exception as EcmaScriptException;
+                            Log.LogEcmaError(ecmaException);
+                            EcmaExceptions.Add(ecmaException);
+                        }
                         if (exception is FileNotFoundException)
                         {
                             Log.LogError(string.Format(CultureInfo.InvariantCulture, "ERROR reading file or path [{0}].", file.FileName));

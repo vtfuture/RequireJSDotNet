@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using EcmaScript.NET;
 
 namespace RequireJsNet.Compressor
 {
@@ -17,5 +18,7 @@ namespace RequireJsNet.Compressor
         void LogErrorFromException(Exception exception);
 
         void LogErrorFromException(Exception exception, bool showStackTrace);
+
+        void LogEcmaError(EcmaScriptException ecmaScriptException);
     }
 }

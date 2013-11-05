@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,23 +49,7 @@ namespace RequireJsNet.Compressor
             }
             catch (EcmaScriptException ecmaScriptException)
             {
-                Log.LogError("An error occurred in parsing the Javascript file.");
-                if (ecmaScriptException.LineNumber == -1)
-                {
-                    Log.LogError("[ERROR] {0} ********", ecmaScriptException.Message);
-                }
-                else
-                {
-                    Log.LogError(
-                        "[ERROR] {0} ******** Line: {2}. LineOffset: {3}. LineSource: \"{4}\"",
-                        ecmaScriptException.Message,
-                        string.IsNullOrEmpty(ecmaScriptException.SourceName)
-                            ? string.Empty
-                            : "Source: {1}. " + ecmaScriptException.SourceName,
-                        ecmaScriptException.LineNumber,
-                        ecmaScriptException.ColumnNumber,
-                        ecmaScriptException.LineSource);
-                }
+                TaskEngine.Log.LogEcmaError(ecmaScriptException);
                 return false;
             }
         }
