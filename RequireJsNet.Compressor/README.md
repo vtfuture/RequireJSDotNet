@@ -1,4 +1,4 @@
-﻿RequireJS.NET Compressor msbuild task
+﻿RequireJS.NET Compressor MSBuild task
 =====================================
 
 This is a fork of the MSBuild task provided here: http://yuicompressor.codeplex.com/
