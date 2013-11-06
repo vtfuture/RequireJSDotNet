@@ -136,6 +136,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="RequireJS.config" />
     <Content Include="MinifyBundlesTask.proj" />
+    <Content Include="BuildTools\MinifyBundlesTaskSubfolder.proj" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -160,6 +161,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\RequireJS.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RequireJsNet.Compressor\RequireJsNet.Compressor.csproj">

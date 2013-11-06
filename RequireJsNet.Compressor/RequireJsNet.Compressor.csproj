@@ -39,12 +39,17 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Yahoo.Yui.Compressor">
       <HintPath>..\packages\YUICompressor.NET.2.3.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionType.cs" />
+    <Compile Include="Bundle.cs" />
+    <Compile Include="BundleDefinition.cs" />
+    <Compile Include="BundleItem.cs" />
     <Compile Include="CompressorTask.cs" />
     <Compile Include="CompressorTaskEngine.cs" />
     <Compile Include="FileSpec.cs" />
@@ -52,6 +57,9 @@
     <Compile Include="JavaScriptCompressorTask.cs" />
     <Compile Include="MsBuildLogAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequireCompressorTask.cs" />
+    <Compile Include="RequireConfigReader.cs" />
+    <Compile Include="RequireConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="YuiCompressor.NET.license.txt" />

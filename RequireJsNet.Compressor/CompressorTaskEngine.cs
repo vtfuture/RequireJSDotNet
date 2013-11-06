@@ -115,19 +115,7 @@ namespace RequireJsNet.Compressor
 
             Log.LogMessage("Starting Compression...");
 
-            // Determine and log the Assembly version.
-            var assembly = Assembly.GetExecutingAssembly();
-            var fileVersionAttributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
-            var assemblyFileVersion = fileVersionAttributes.Length > 0
-                                             ? ((AssemblyFileVersionAttribute)fileVersionAttributes[0]).Version
-                                             : "Unknown File Version";
-
-            var assemblyTitleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-            var assemblyTitle = assemblyTitleAttributes.Length > 0
-                                       ? ((AssemblyTitleAttribute)assemblyTitleAttributes[0]).Title
-                                       : "Unknown Title";
-
-            Log.LogMessage(string.Format("Using version {0} of {1}.", assemblyFileVersion, assemblyTitle));
+            OutputAssemblyInfo();
 
             // What is the current thread culture?
             Log.LogMessage(
@@ -161,6 +149,23 @@ namespace RequireJsNet.Compressor
             Log.LogMessage(string.Empty); // This, in effect, is a new line.
 
             return true;
+        }
+
+        private void OutputAssemblyInfo()
+        {
+            // Determine and log the Assembly version.
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionAttributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+            var assemblyFileVersion = fileVersionAttributes.Length > 0
+                                             ? ((AssemblyFileVersionAttribute)fileVersionAttributes[0]).Version
+                                             : "Unknown File Version";
+
+            var assemblyTitleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            var assemblyTitle = assemblyTitleAttributes.Length > 0
+                                       ? ((AssemblyTitleAttribute)assemblyTitleAttributes[0]).Title
+                                       : "Unknown Title";
+
+            Log.LogMessage(string.Format("Using version {0} of {1}.", assemblyFileVersion, assemblyTitle));
         }
 
         public void ParseTaskParameters()
