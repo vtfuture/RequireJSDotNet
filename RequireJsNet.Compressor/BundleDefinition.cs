@@ -10,5 +10,6 @@ namespace RequireJsNet.Compressor
     {
         public string Name { get; set; }
         public List<BundleItem> Items { get; set; }
+        public bool IsVirtual { get; set; }
     }
 }

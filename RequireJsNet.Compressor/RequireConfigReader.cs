@@ -44,7 +44,7 @@ namespace RequireJsNet.Compressor
             ResolvePhysicalPaths();
 
             var bundles = new List<Bundle>();
-            foreach (var bundleDefinition in Configuration.Bundles)
+            foreach (var bundleDefinition in Configuration.Bundles.Where(r => !r.IsVirtual))
             {
                 var bundle = new Bundle();
                 bundle.Output = GetOutputPath(bundleDefinition.Name);
@@ -148,6 +148,7 @@ namespace RequireJsNet.Compressor
                 var bundles = bundlesElement.Descendants("bundle").Select(r => new BundleDefinition
                 {
                     Name = r.Attribute("name").Value,
+                    IsVirtual = r.Attribute("virtual") != null ? Convert.ToBoolean(r.Attribute("virtual").Value) : false,
                     Items = r.Descendants("bundleItem").Select(x => new BundleItem
                     {
                         ModuleName = x.Attribute("path").Value,
