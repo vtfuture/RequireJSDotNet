@@ -41,7 +41,10 @@ namespace RequireJsNet.Compressor
                 LoadConfigData(filePath);
             }
 
+            ResolveDefaultBundles();
+
             ResolvePhysicalPaths();
+
             ResolveBundleIncludes();
 
             var bundles = new List<Bundle>();
@@ -56,6 +59,41 @@ namespace RequireJsNet.Compressor
             }
 
             return bundles;
+        }
+
+        private void ResolveDefaultBundles()
+        {
+            var groupedPaths =
+                Configuration.Paths.Where(r => !string.IsNullOrWhiteSpace(r.DefaultBundle))
+                    .GroupBy(r => r.DefaultBundle)
+                    .Select(r => new
+                    {
+                        Bundle = r.Key,
+                        Items = r.ToList()
+                    }).ToList();
+            foreach (var bundleGroup in groupedPaths)
+            {
+                var itemList = bundleGroup.Items.Select(r => new BundleItem
+                {
+                    CompressionType = "standard",
+                    ModuleName = r.Key
+                }).ToList();
+                var existingBundle = Configuration.Bundles.Where(r => r.Name == bundleGroup.Bundle).FirstOrDefault();
+                if (existingBundle == null)
+                {
+                    Configuration.Bundles.Add(new BundleDefinition
+                    {
+                        Includes = new List<string>(),
+                        IsVirtual = true,
+                        Items = itemList,
+                        Name = bundleGroup.Bundle
+                    });
+                }
+                else
+                {
+                    existingBundle.Items = itemList.Concat(existingBundle.Items).ToList();
+                }
+            }
         }
 
 
@@ -146,9 +184,14 @@ namespace RequireJsNet.Compressor
                 var finalName = item.ModuleName;
 
                 // this will only go 1 level deep, other cases should be taken into account
-                if (Configuration.Paths.ContainsKey(finalName))
+                if (Configuration.Paths.Where(r => r.Key == finalName).Any())
                 {
-                    finalName = Configuration.Paths[finalName];
+                    var finalEl = Configuration.Paths.Where(r => r.Key == finalName).FirstOrDefault();
+                    if (finalEl == null)
+                    {
+                        throw new Exception("Could not find path item with name = " + finalName);
+                    }
+                    finalName = finalEl.Value;
                 }
                 item.PhysicalPath = Path.Combine(ProjectPath, Configuration.EntryPoint, finalName + ".js");
                 if (!File.Exists(item.PhysicalPath))
@@ -217,16 +260,17 @@ namespace RequireJsNet.Compressor
             var pathsElement = docRoot.Document.Root.Descendants("paths").FirstOrDefault();
             if (pathsElement != null)
             {
-                var paths = pathsElement.Descendants("path").Select(r => new
+                var paths = pathsElement.Descendants("path").Select(r => new PathItem
                 {
                     Key = r.Attribute("key").Value,
-                    Value = r.Attribute("value").Value
+                    Value = r.Attribute("value").Value,
+                    DefaultBundle = ReadStringAttribute(r.Attribute("bundle"))
                 });
                 foreach (var scriptPath in paths)
                 {
-                    if (!Configuration.Paths.ContainsKey(scriptPath.Key))
+                    if (!Configuration.Paths.Where(r => r.Key == scriptPath.Key).Any())
                     {
-                        Configuration.Paths.Add(scriptPath.Key, scriptPath.Value);
+                        Configuration.Paths.Add(scriptPath);
                     }
                 }
             }

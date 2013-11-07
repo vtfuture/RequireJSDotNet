@@ -9,12 +9,12 @@ namespace RequireJsNet.Compressor
     internal class RequireConfiguration
     {
         public string EntryPoint { get; set; }
-        public Dictionary<string, string> Paths { get; set; }
+        public List<PathItem> Paths { get; set; }
         public List<BundleDefinition> Bundles { get; set; }
 
         public RequireConfiguration()
         {
-            Paths = new Dictionary<string, string>();
+            Paths = new List<PathItem>();
             Bundles = new List<BundleDefinition>();
         }
     }
