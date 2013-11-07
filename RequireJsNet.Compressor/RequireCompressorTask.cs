@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -44,6 +45,7 @@ namespace RequireJsNet.Compressor
 
             if (bundles.Any())
             {
+                EnsureOutputDirectoriesExist(bundles);
                 var compressor = new JavaScriptCompressor();
                 foreach (var bundle in bundles)
                 {
@@ -68,7 +70,21 @@ namespace RequireJsNet.Compressor
             return true;
         }
 
-        
+        private void EnsureOutputDirectoriesExist(List<Bundle> bundles)
+        {
+            foreach (var bundle in bundles)
+            {
+                var directoryName = Path.GetDirectoryName(bundle.Output);
+                if (directoryName == null)
+                {
+                    continue;
+                }
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+            }
+        }
 
     }
 }

@@ -47,7 +47,7 @@ namespace RequireJsNet.Compressor
             foreach (var bundleDefinition in Configuration.Bundles.Where(r => !r.IsVirtual))
             {
                 var bundle = new Bundle();
-                bundle.Output = GetOutputPath(bundleDefinition.Name);
+                bundle.Output = GetOutputPath(bundleDefinition);
                 bundle.Files = bundleDefinition.Items
                                                 .Select(r => new FileSpec(r.PhysicalPath, r.CompressionType))
                                                 .ToList();
@@ -76,9 +76,19 @@ namespace RequireJsNet.Compressor
             }
         }
 
-        private string GetOutputPath(string bundleName)
+        private string GetOutputPath(BundleDefinition bundle)
         {
-            return Path.Combine(ProjectPath, Configuration.EntryPoint, bundleName + ".js");
+            if (string.IsNullOrEmpty(bundle.OutputPath))
+            {
+                return Path.Combine(ProjectPath, Configuration.EntryPoint, bundle.Name + ".js");
+            }
+            var directory = Path.GetDirectoryName(bundle.OutputPath) ?? "";
+            var fileName = Path.GetFileName(bundle.OutputPath);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = bundle.Name + ".js";
+            }
+            return Path.Combine(ProjectPath, Configuration.EntryPoint, directory, fileName); 
         }
 
         private void FindConfigs()
@@ -148,11 +158,12 @@ namespace RequireJsNet.Compressor
                 var bundles = bundlesElement.Descendants("bundle").Select(r => new BundleDefinition
                 {
                     Name = r.Attribute("name").Value,
-                    IsVirtual = r.Attribute("virtual") != null ? Convert.ToBoolean(r.Attribute("virtual").Value) : false,
+                    IsVirtual = ReadBooleanAttribute(r.Attribute("virtual")),
+                    OutputPath = ReadStringAttribute(r.Attribute("outputPath")),
                     Items = r.Descendants("bundleItem").Select(x => new BundleItem
                     {
                         ModuleName = x.Attribute("path").Value,
-                        CompressionType = x.Attribute("compression") != null ? x.Attribute("compression").Value : ""
+                        CompressionType = ReadStringAttribute(x.Attribute("compression"))
                     }).ToList()
                 });
 
@@ -164,6 +175,24 @@ namespace RequireJsNet.Compressor
                     }
                 }
             }
+        }
+
+        private string ReadStringAttribute(XAttribute attribute)
+        {
+            if (attribute == null)
+            {
+                return string.Empty;
+            }
+            return attribute.Value;
+        }
+
+        private bool ReadBooleanAttribute(XAttribute attribute)
+        {
+            if (attribute == null)
+            {
+                return false;
+            }
+            return Convert.ToBoolean(attribute.Value);
         }
 
     }
