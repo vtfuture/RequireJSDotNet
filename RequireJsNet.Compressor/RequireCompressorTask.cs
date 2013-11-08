@@ -24,6 +24,8 @@ namespace RequireJsNet.Compressor
 
         public string PackagePath { get; set; }
         public ITaskItem[] RequireConfigs { get; set; }
+        public ITaskItem EntryPointOverride { get; set; }
+
 
         public override bool Execute()
         {
@@ -32,8 +34,14 @@ namespace RequireJsNet.Compressor
             {
                 files = RequireConfigs.Select(r => r.GetMetadata("FullPath")).ToList();    
             }
-            
-            ConfigReader = new RequireConfigReader(ProjectPath, PackagePath, files);
+
+            var entryPointOveride = string.Empty;
+
+            if (EntryPointOverride != null)
+            {
+                entryPointOveride = EntryPointOverride.GetMetadata("FullPath");
+            }
+            ConfigReader = new RequireConfigReader(ProjectPath, PackagePath, entryPointOveride,  files);
             var bundles = new List<Bundle>();
             try
             {

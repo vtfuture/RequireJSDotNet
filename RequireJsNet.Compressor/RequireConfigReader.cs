@@ -14,13 +14,15 @@ namespace RequireJsNet.Compressor
         private RequireConfiguration Configuration { get; set; }
         private string ProjectPath { get; set; }
         private string OutputPath { get; set; }
+        private string EntryOverride { get; set; }
         private List<string> FilePaths { get; set; }
 
-        public RequireConfigReader(string projectPath, string packagePath, List<string> filePaths)
+        public RequireConfigReader(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths)
         {
             ProjectPath = projectPath;
             FilePaths = filePaths;
             OutputPath = projectPath;
+            EntryOverride = entryPointOverride;
             if (!string.IsNullOrWhiteSpace(packagePath))
             {
                 OutputPath = packagePath;
@@ -256,6 +258,10 @@ namespace RequireJsNet.Compressor
                 {
                     Configuration.EntryPoint = entryPoint;
                 }
+            }
+            if(!string.IsNullOrWhiteSpace(EntryOverride))
+            {
+                Configuration.EntryPoint = EntryOverride;
             }
 
             LoadPaths(doc.Document.Root);
