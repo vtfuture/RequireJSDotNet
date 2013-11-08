@@ -64,7 +64,9 @@
     <Compile Include="RequireConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="YuiCompressor.NET.license.txt" />
+    <Content Include="YuiCompressor.NET.license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
