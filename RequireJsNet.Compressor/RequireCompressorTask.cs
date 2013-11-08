@@ -21,6 +21,8 @@ namespace RequireJsNet.Compressor
         public int LineBreakPosition { get; set; }
         [Required]
         public string ProjectPath { get; set; }
+
+        public string PackagePath { get; set; }
         public ITaskItem[] RequireConfigs { get; set; }
 
         public override bool Execute()
@@ -31,7 +33,7 @@ namespace RequireJsNet.Compressor
                 files = RequireConfigs.Select(r => r.GetMetadata("FullPath")).ToList();    
             }
             
-            ConfigReader = new RequireConfigReader(ProjectPath, files);
+            ConfigReader = new RequireConfigReader(ProjectPath, PackagePath, files);
             var bundles = new List<Bundle>();
             try
             {

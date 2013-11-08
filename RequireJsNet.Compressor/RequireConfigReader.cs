@@ -13,12 +13,18 @@ namespace RequireJsNet.Compressor
         private const string DefaultScriptDirectory = "Scripts";
         private RequireConfiguration Configuration { get; set; }
         private string ProjectPath { get; set; }
+        private string OutputPath { get; set; }
         private List<string> FilePaths { get; set; }
 
-        public RequireConfigReader(string projectPath, List<string> filePaths)
+        public RequireConfigReader(string projectPath, string packagePath, List<string> filePaths)
         {
             ProjectPath = projectPath;
             FilePaths = filePaths;
+            OutputPath = projectPath;
+            if (!string.IsNullOrWhiteSpace(packagePath))
+            {
+                OutputPath = packagePath;
+            }
             Configuration = new RequireConfiguration
             {
                 EntryPoint = Path.Combine(projectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory)
@@ -32,6 +38,7 @@ namespace RequireJsNet.Compressor
             {
                 throw new DirectoryNotFoundException("Could not find project directory.");
             }
+
 
             FindConfigs();
 
@@ -205,7 +212,7 @@ namespace RequireJsNet.Compressor
         {
             if (string.IsNullOrEmpty(bundle.OutputPath))
             {
-                return Path.Combine(ProjectPath, Configuration.EntryPoint, bundle.Name + ".js");
+                return Path.Combine(OutputPath, bundle.Name + ".js");
             }
             var directory = Path.GetDirectoryName(bundle.OutputPath) ?? "";
             var fileName = Path.GetFileName(bundle.OutputPath);
@@ -213,7 +220,7 @@ namespace RequireJsNet.Compressor
             {
                 fileName = bundle.Name + ".js";
             }
-            return Path.Combine(ProjectPath, Configuration.EntryPoint, directory, fileName); 
+            return Path.Combine(OutputPath, directory, fileName); 
         }
 
         private void FindConfigs()
