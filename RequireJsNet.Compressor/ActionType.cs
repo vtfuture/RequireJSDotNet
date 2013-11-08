@@ -3,6 +3,7 @@
     public enum ActionType
     {
         Unknown,
+        Css, 
         JavaScript
     }
 }
