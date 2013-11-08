@@ -27,7 +27,7 @@ namespace RequireJsNet.Compressor
             }
             Configuration = new RequireConfiguration
             {
-                EntryPoint = Path.Combine(projectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory)
+                EntryPoint = Path.GetFullPath(Path.Combine(projectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory))
             };
         }
 
@@ -200,7 +200,7 @@ namespace RequireJsNet.Compressor
                     }
                     finalName = finalEl.Value;
                 }
-                item.PhysicalPath = Path.Combine(ProjectPath, Configuration.EntryPoint, finalName + ".js");
+                item.PhysicalPath = Path.GetFullPath(Path.Combine(ProjectPath, Configuration.EntryPoint, finalName + ".js"));
                 if (!File.Exists(item.PhysicalPath))
                 {
                     throw new FileNotFoundException("Could not load script" + item.PhysicalPath, item.PhysicalPath);
@@ -212,7 +212,7 @@ namespace RequireJsNet.Compressor
         {
             if (string.IsNullOrEmpty(bundle.OutputPath))
             {
-                return Path.Combine(OutputPath, bundle.Name + ".js");
+                return Path.GetFullPath(Path.Combine(OutputPath, bundle.Name + ".js"));
             }
             var directory = Path.GetDirectoryName(bundle.OutputPath) ?? "";
             var fileName = Path.GetFileName(bundle.OutputPath);
@@ -220,7 +220,7 @@ namespace RequireJsNet.Compressor
             {
                 fileName = bundle.Name + ".js";
             }
-            return Path.Combine(OutputPath, directory, fileName); 
+            return Path.GetFullPath(Path.Combine(OutputPath, directory, fileName)); 
         }
 
         private void FindConfigs()
