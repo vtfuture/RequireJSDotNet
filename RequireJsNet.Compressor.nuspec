@@ -5,7 +5,7 @@
     <authors>Cezar Cretu</authors>
     <owners>Stefan Prodan</owners>
     <id>RequireJsNet.Compressor</id>
-    <title>RequireJS.NET</title>
+    <title>RequireJS.NET Compressor MSBuild task</title>
     <copyright>Copyright Stefan Prodan 2013</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>RequireJS.NET integrates the RequireJS framework with ASP.NET MVC on the server side using xml configuration files, action filter attributes, a base controller for inheritance and helper classes.</description>
