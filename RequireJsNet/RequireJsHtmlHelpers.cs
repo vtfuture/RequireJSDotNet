@@ -33,7 +33,7 @@ namespace RequireJS
             string configPath = "")
         {
             var setupHtml = new StringBuilder();
-            
+
             var entryPointPath = html.RequireJsEntryPoint();
 
             //resolve config path
@@ -320,7 +320,7 @@ namespace RequireJS
 
         public static Dictionary<string, int> ToJsonDictionary<TEnum>()
         {
-            var enumType = typeof (TEnum);
+            var enumType = typeof(TEnum);
             var names = Enum.GetNames(enumType);
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
@@ -330,7 +330,7 @@ namespace RequireJS
             var list = new List<string>();
             foreach (var item in configsList)
             {
-                if(item.StartsWith("~"))
+                if (item.StartsWith("~"))
                 {
                     list.Add(html.ViewContext.HttpContext.Server.MapPath(item));
                 }
