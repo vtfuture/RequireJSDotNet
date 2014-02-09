@@ -7,9 +7,8 @@ using System.Xml.Serialization;
 
 namespace RequireJsNet.Models
 {
-    public class RequireDependency
+    internal class RequireDependency
     {
-        [XmlAttribute("dependency")]
         public string Dependency { get; set; }
     }
 }

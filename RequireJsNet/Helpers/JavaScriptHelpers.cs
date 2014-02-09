@@ -9,11 +9,11 @@ using Newtonsoft.Json.Converters;
 
 namespace RequireJsNet.Helpers
 {
-    public static class JavaScriptHelpers
+    internal static class JavaScriptHelpers
     {
         public static string SerializeAsVariable<T>(T obj, string varName)
         {
-            var json = JsonConvert.SerializeObject(obj, new KeyValuePairConverter());
+            var json = JsonConvert.SerializeObject(obj);
             return string.Format("var {0} = {1};", varName, json);
         }
 

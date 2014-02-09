@@ -7,9 +7,8 @@ using System.Xml.Serialization;
 
 namespace RequireJsNet.Models
 {
-    public class RequireShim
+    internal class RequireShim
     {
-        [XmlElement("dependencies")]
         public List<ShimEntry> ShimEntries { get; set; }
     }
 }

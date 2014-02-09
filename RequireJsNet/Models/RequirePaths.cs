@@ -9,7 +9,6 @@ namespace RequireJsNet.Models
 {
     public class RequirePaths
     {
-        [XmlElement("path")]
         public List<RequirePath> PathList { get; set; }
     }
 }

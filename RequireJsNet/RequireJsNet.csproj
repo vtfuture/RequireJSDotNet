@@ -81,9 +81,9 @@
     <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="IRequireJsLogger.cs" />
     <Compile Include="JavaScriptBuilder.cs" />
-    <Compile Include="Models\RequireOptions.cs" />
+    <Compile Include="Models\JsonConfig.cs" />
+    <Compile Include="Models\JsonRequireOptions.cs" />
     <Compile Include="Models\RoutingInfo.cs" />
-    <Compile Include="RequireJsHtmlHelpers.cs" />
     <Compile Include="Validation\ConfigValidator.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\ReaderFactory.cs" />
@@ -96,11 +96,10 @@
     <Compile Include="Models\RequirePath.cs" />
     <Compile Include="Models\RequirePaths.cs" />
     <Compile Include="Models\RequireShim.cs" />
-    <Compile Include="Models\RequireXmlConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireJsConfigAttribute.cs" />
     <Compile Include="RequireJsController.cs" />
-    <Compile Include="RequireJsHtmlHelpersRef.cs" />
+    <Compile Include="RequireJsHtmlHelpers.cs" />
     <Compile Include="RequireJsOptions.cs" />
     <Compile Include="Validation\ConfigValidationError.cs" />
   </ItemGroup>

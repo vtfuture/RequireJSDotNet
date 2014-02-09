@@ -15,7 +15,7 @@
     <AssemblyName>RequireJsNet.Docs</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -195,7 +195,9 @@
     <Content Include="Scripts\Controllers\Root\Home\home-contact.js" />
     <Content Include="Scripts\Controllers\Root\Home\inbox.js" />
     <Content Include="Scripts\Controllers\Root\Home\index.js" />
-    <Content Include="RequireJS.config" />
+    <Content Include="RequireJS.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="RequireJS.Release.config" />
     <Content Include="RequireJS.Shared.config" />
     <None Include="Scripts\Lib\Vendor\Amplify\amplify-vsdoc.js" />
@@ -316,7 +318,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>41319</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:40982/</IISUrl>
+          <IISUrl>http://localhost/RequireJsNet.Docs</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

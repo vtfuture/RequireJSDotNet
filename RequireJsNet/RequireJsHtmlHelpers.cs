@@ -16,10 +16,16 @@ using System.Text;
 using System.Web.Mvc;
 using System;
 
+using RequireJsNet;
+using RequireJsNet.Configuration;
+using RequireJsNet.Helpers;
+using RequireJsNet.Models;
+
 namespace RequireJS
 {
     public static class RequireJsHtmlHelpers
     {
+        const string DefaultConfigPath = "~/RequireJS.config";
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
@@ -30,47 +36,9 @@ namespace RequireJS
         /// <param name="requireUrl">requirejs.js url</param>
         /// <param name="configPath">RequireJS.config server local path</param>
         public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
-            string configPath = "")
+            string configPath = "", IRequireJsLogger logger = null)
         {
-            var setupHtml = new StringBuilder();
-
-            var entryPointPath = html.RequireJsEntryPoint();
-
-            //resolve config path
-            if (!string.IsNullOrEmpty(configPath) && configPath.StartsWith("~"))
-            {
-                configPath = html.ViewContext.HttpContext.Server.MapPath(configPath);
-            }
-
-            if (entryPointPath != null)
-            {
-                setupHtml.AppendLine("<script type=\"text/javascript\">");
-
-                setupHtml.AppendLine("var requireConfig = {");
-                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
-                setupHtml.AppendLine(",");
-                setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
-                setupHtml.AppendLine("};");
-
-                setupHtml.AppendLine("var require = {");
-                setupHtml.AppendLine("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.Append(",");
-                setupHtml.AppendLine("baseUrl:'" + baseUrl + "'");
-                setupHtml.Append(",");
-                setupHtml.AppendLine("paths:" + html.GetRequireJsPaths(configPath));
-                setupHtml.Append(",");
-                setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configPath));
-                setupHtml.AppendLine("};");
-
-                setupHtml.AppendLine("</script>");
-
-                setupHtml.AppendLine("<script data-main=\"" + entryPointPath + "\" src=\"" + requireUrl + "\">");
-                setupHtml.AppendLine("</script>");
-            }
-
-            return new MvcHtmlString(setupHtml.ToString());
+            return html.RenderRequireJsSetup(baseUrl, requireUrl, new List<string> { configPath }, logger);
         }
 
         /// <summary>
@@ -80,57 +48,59 @@ namespace RequireJS
         /// <param name="requireUrl">requirejs.js url</param>
         /// <param name="configsList">RequireJS.config files path</param>
         public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
-            IList<string> configsList)
+            IList<string> configsList, IRequireJsLogger logger = null)
         {
-            var setupHtml = new StringBuilder();
-
             var entryPointPath = html.RequireJsEntryPoint();
-
-            var configs = MapPath(html, configsList);
-
-            if (entryPointPath != null)
+            if (!configsList.Any())
             {
-                setupHtml.AppendLine("<script type=\"text/javascript\">");
-
-                setupHtml.AppendLine("var requireConfig = {");
-                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("pageOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.PageOptions));
-                setupHtml.AppendLine(",");
-                setupHtml.AppendLine("websiteOptions:" + RequireJsOptions.ConvertToJsObject(html.ViewBag.GlobalOptions));
-                setupHtml.AppendLine("};");
-
-                setupHtml.AppendLine("var require = {");
-                setupHtml.Append("locale:'" + html.CurrentCulture() + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("baseUrl:'" + baseUrl + "'");
-                setupHtml.AppendLine(",");
-                setupHtml.Append("paths:" + html.GetRequireJsPaths(configs));
-                setupHtml.AppendLine(",");
-                setupHtml.AppendLine("shim:" + html.GetRequireJsShim(configs));
-                setupHtml.AppendLine("};");
-
-                setupHtml.AppendLine("</script>");
-
-                setupHtml.AppendLine("<script data-main=\"" + entryPointPath + "\" src=\"" + requireUrl + "\">");
-                setupHtml.AppendLine("</script>");
+                throw new Exception("No config files to load.");
             }
+            var processedConfigs = configsList.Select(r =>
+            {
+                var resultingPath = html.ViewContext.HttpContext.MapPath(r);
+                PathHelpers.VerifyFileExists(resultingPath);
+                return resultingPath;
+            }).ToList();
 
-            return new MvcHtmlString(setupHtml.ToString());
+            var loader = new ConfigLoader(processedConfigs, logger);
+            var resultingConfig = loader.Get();
+            var outputConfig = new JsonConfig
+            {
+                BaseUrl = baseUrl,
+                Locale = html.CurrentCulture(),
+                Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
+                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(r => r.For, r => new JsonRequireDeps
+                                                                                      {
+                                                                                          Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
+                                                                                          Exports = r.Exports
+                                                                                      })
+            };
+
+            var options = new JsonRequireOptions
+            {
+                Locale = html.CurrentCulture(),
+                PageOptions = html.ViewBag.PageOptions,
+                WebsiteOptions = html.ViewBag.GlobalOptions
+            };
+
+            var configBuilder = new JavaScriptBuilder();
+            configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(options, "requireConfig"));
+            configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(outputConfig, "require"));
+
+            var requireRootBuilder = new JavaScriptBuilder();
+            requireRootBuilder.AddAttributesToStatement("data-main", entryPointPath.ToString());
+            requireRootBuilder.AddAttributesToStatement("src", requireUrl);
+
+            return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render());
         }
 
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html)
         {
-            var area = html.ViewContext.RouteData.DataTokens["area"] != null
-                ? html.ViewContext.RouteData.DataTokens["area"].ToString()
-                : "Root";
-
-            var controller = html.ViewContext.Controller.ValueProvider.GetValue("controller").RawValue as string;
-            var action = html.ViewContext.Controller.ValueProvider.GetValue("action").RawValue as string;
+            var routingInfo = html.GetRoutingInfo();
 
             //search for controller/action.js in current area
-            var entryPointTmpl = "Controllers/{0}/" + controller + "/" + action;
-            var entryPoint = string.Format(entryPointTmpl, area);
+            var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
+            var entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
             var filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
 
             if (File.Exists(filePath))
@@ -148,8 +118,8 @@ namespace RequireJS
             }
 
             //search for controller/controller-action.js in current area
-            entryPointTmpl = "Controllers/{0}/" + controller + "/" + controller + "-" + action;
-            entryPoint = string.Format(entryPointTmpl, area);
+            entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action;
+            entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
             filePath = html.ViewContext.HttpContext.Server.MapPath("~/Scripts/" + entryPoint + ".js");
 
             if (File.Exists(filePath))
@@ -169,148 +139,7 @@ namespace RequireJS
             return null;
         }
 
-        public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html, string configPath = "")
-        {
-            if (string.IsNullOrEmpty(configPath))
-            {
-                configPath = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
-            }
 
-            if (!File.Exists(configPath))
-            {
-                throw new FileNotFoundException("RequireJS config not found", configPath);
-            }
-
-            var result = new StringBuilder();
-            var paths = XDocument.Load(configPath).Descendants("paths").Descendants("path");
-
-            result.Append("{");
-            foreach (var item in paths)
-            {
-                result.AppendFormat("\"{0}\":\"{1}\"{2}", item.Attribute("key").Value.Trim(),
-                    item.Attribute("value").Value.Trim(), paths.Last() == item ? "" : ",");
-            }
-            result.Append("}");
-
-            return new MvcHtmlString(result.ToString());
-        }
-
-        public static MvcHtmlString GetRequireJsPaths(this HtmlHelper html, IList<string> configsList)
-        {
-            var pathList = new List<string>();
-
-            var result = new StringBuilder();
-            result.Append("{");
-            foreach (var configPath in configsList)
-            {
-                if (!File.Exists(configPath))
-                {
-                    throw new FileNotFoundException("RequireJS config not found", configPath);
-                }
-
-                var paths = XDocument.Load(configPath).Descendants("paths").Descendants("path");
-                foreach (var item in paths)
-                {
-                    //check unique name
-                    var name = item.Attribute("key").Value.Trim();
-                    if (pathList.Contains(name))
-                    {
-                        throw new DuplicateNameException(name + " duplicate path found in " + configPath);
-                    }
-                    pathList.Add(name);
-
-                    result.AppendFormat("\"{0}\":\"{1}\"{2}", item.Attribute("key").Value.Trim(),
-                        item.Attribute("value").Value.Trim(),
-                        (paths.Last() == item && configsList.Last() == configPath) ? "" : ",");
-                }
-
-            }
-            result.Append("}");
-            return new MvcHtmlString(result.ToString());
-        }
-
-        public static MvcHtmlString GetRequireJsShim(this HtmlHelper html, string configPath = "")
-        {
-            if (string.IsNullOrEmpty(configPath))
-            {
-                configPath = html.ViewContext.HttpContext.Server.MapPath("~/RequireJS.config");
-            }
-
-            if (!File.Exists(configPath))
-            {
-                throw new FileNotFoundException("RequireJS config not found", configPath);
-            }
-
-            var result = new StringBuilder();
-            var shims = XDocument.Load(configPath).Descendants("shim").Descendants("dependencies");
-
-            result.Append("{");
-            foreach (var item in shims)
-            {
-                result.AppendFormat(" \"{0}\": {1} deps: [", item.Attribute("for").Value.Trim(), "{");
-                var deps = item.Descendants("add");
-                foreach (var dep in deps)
-                {
-                    result.AppendFormat("\"{0}\"{1}", dep.Attribute("dependency").Value.Trim(),
-                        deps.Last() == dep ? "" : ",");
-                }
-
-                var exports = item.Attribute("exports") != null &&
-                              !string.IsNullOrEmpty(item.Attribute("exports").Value)
-                    ? ", exports: '" + item.Attribute("exports").Value.Trim() + "'"
-                    : string.Empty;
-
-                result.AppendFormat("]{0} {1}{2} ", exports, "}", shims.Last() == item ? "" : ",");
-            }
-            result.Append("}");
-
-            return new MvcHtmlString(result.ToString());
-        }
-
-        public static MvcHtmlString GetRequireJsShim(this HtmlHelper html, IList<string> configsList)
-        {
-            var shimList = new List<string>();
-            var result = new StringBuilder();
-            result.Append("{");
-            foreach (var configPath in configsList)
-            {
-                if (!File.Exists(configPath))
-                {
-                    throw new FileNotFoundException("RequireJS config not found", configPath);
-                }
-
-                var shims = XDocument.Load(configPath).Descendants("shim").Descendants("dependencies");
-                foreach (var item in shims)
-                {
-                    //check unique name
-                    var name = item.Attribute("for").Value.Trim();
-                    if (shimList.Contains(name))
-                    {
-                        throw new DuplicateNameException(name + " duplicate shim found in " + configPath);
-                    }
-                    shimList.Add(name);
-
-                    result.AppendFormat(" \"{0}\": {1} deps: [", item.Attribute("for").Value.Trim(), "{");
-                    var deps = item.Descendants("add");
-                    foreach (var dep in deps)
-                    {
-                        result.AppendFormat("\"{0}\"{1}", dep.Attribute("dependency").Value.Trim(),
-                            deps.Last() == dep ? "" : ",");
-                    }
-
-                    var exports = item.Attribute("exports") != null &&
-                                  !string.IsNullOrEmpty(item.Attribute("exports").Value)
-                        ? ", exports: '" + item.Attribute("exports").Value.Trim() + "'"
-                        : string.Empty;
-
-                    result.AppendFormat("]{0} {1}{2} ", exports, "}",
-                        (shims.Last() == item && configsList.Last() == configPath) ? "" : ",");
-                }
-            }
-            result.Append("}");
-
-            return new MvcHtmlString(result.ToString());
-        }
 
         public static string CurrentCulture(this HtmlHelper html)
         {
@@ -321,26 +150,8 @@ namespace RequireJS
         public static Dictionary<string, int> ToJsonDictionary<TEnum>()
         {
             var enumType = typeof(TEnum);
-            var names = Enum.GetNames(enumType);
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
 
-        private static List<string> MapPath(HtmlHelper html, IList<string> configsList)
-        {
-            var list = new List<string>();
-            foreach (var item in configsList)
-            {
-                if (item.StartsWith("~"))
-                {
-                    list.Add(html.ViewContext.HttpContext.Server.MapPath(item));
-                }
-                else
-                {
-                    list.Add(item);
-                }
-            }
-
-            return list;
-        }
     }
 }

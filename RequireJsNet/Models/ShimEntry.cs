@@ -7,11 +7,10 @@ using System.Xml.Serialization;
 
 namespace RequireJsNet.Models
 {
-    public class ShimEntry
+    internal class ShimEntry
     {
         public string For { get; set; }
         public string Exports { get; set; }
-        [XmlElement("add")]
         public List<RequireDependency> Dependencies { get; set; } 
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Configuration
 {
-    enum ReaderType
+    internal enum ReaderType
     {
         Xml,
         Json

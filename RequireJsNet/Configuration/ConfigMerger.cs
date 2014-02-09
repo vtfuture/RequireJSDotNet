@@ -66,6 +66,10 @@ namespace RequireJsNet.Configuration
                                                             .Select(r => r.FirstOrDefault())
                                                             .ToList();
                 }
+                else
+                {
+                    finalShims.Add(shim);
+                }
             }
         }
 
