@@ -13,6 +13,7 @@ namespace RequireJsNet
     {
         private const string PathElement = "path";
         private const string ShimElement = "shim";
+        private const string MapElement = "map";
 
         private readonly ConfigurationCollection collection;
 
@@ -24,7 +25,8 @@ namespace RequireJsNet
         private static readonly string[] ComponentsToValidate = new string[]
         {
             PathElement,
-            ShimElement
+            ShimElement,
+            MapElement
         };  
         private readonly List<string> ValidatedComponents = new List<string>();  
         private readonly List<ConfigValidationError> Errors = new List<ConfigValidationError>();
@@ -68,6 +70,8 @@ namespace RequireJsNet
             ValidatedComponents.Add(PathElement);
             ValidateShims();
             ValidatedComponents.Add(ShimElement);
+            ValidateMaps();
+            ValidatedComponents.Add(MapElement);
         }
 
         private void ValidatePaths()
@@ -120,6 +124,11 @@ namespace RequireJsNet
         }
 
         private void ValidateShims()
+        {
+            //TODO: validate
+        }
+
+        private void ValidateMaps()
         {
             //TODO: validate
         }

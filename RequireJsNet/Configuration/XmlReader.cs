@@ -30,6 +30,7 @@ namespace RequireJsNet.Configuration
                 collection.FilePath = Path;
                 collection.Paths = GetPaths(doc.Root);
                 collection.Shim = GetShim(doc.Root);
+                collection.Map = GetMap(doc.Root);
                 return collection;    
             }
         }
@@ -70,6 +71,28 @@ namespace RequireJsNet.Configuration
                                                     }).ToList();
             }
             return shim;
+        }
+
+        private RequireMap GetMap(XElement root)
+        {
+            var map = new RequireMap();
+            map.MapElements = new List<RequireMapElement>();
+            var mapEl = root.Descendants("map").FirstOrDefault();
+            if (mapEl != null)
+            {
+                map.MapElements = mapEl.Descendants("replace")
+                                            .Select(r => new RequireMapElement
+                                                        {
+                                                            For = r.Attribute("for").Value,
+                                                            Replacements = r.Descendants("add")
+                                                                                .Select(x => new RequireReplacement
+                                                                                            {
+                                                                                                NewKey = x.Attribute("new").Value,
+                                                                                                OldKey = x.Attribute("old").Value
+                                                                                            }).ToList()
+                                                        }).ToList();
+            }
+            return map;
         }
 
     }

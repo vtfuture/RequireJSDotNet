@@ -19,6 +19,9 @@ namespace RequireJsNet.Models
         public Dictionary<string, string> Paths { get; set; }
         [JsonProperty(PropertyName = "shim")]
         public Dictionary<string, JsonRequireDeps> Shim { get; set; }
+        [JsonProperty(PropertyName = "map")]
+        public Dictionary<string, Dictionary<string, string>> Map { get; set; }
+
     }
 
     internal class JsonRequireDeps
@@ -29,4 +32,5 @@ namespace RequireJsNet.Models
         [JsonProperty(PropertyName = "exports", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Exports { get; set; }
     }
+
 }

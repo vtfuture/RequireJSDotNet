@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace RequireJsNet.Configuration
             finalCollection.Paths.PathList = new List<RequirePath>();
             finalCollection.Shim = new RequireShim();
             finalCollection.Shim.ShimEntries = new List<ShimEntry>();
+            finalCollection.Map = new RequireMap();
+            finalCollection.Map.MapElements = new List<RequireMapElement>();
         }
 
         public ConfigurationCollection GetMerged()
@@ -27,7 +30,8 @@ namespace RequireJsNet.Configuration
             foreach (var coll in collections)
             {
                 MergePaths(coll);
-                MergeShims(coll);    
+                MergeShims(coll);
+                MergeMaps(coll);
             }
             
             return finalCollection;
@@ -63,7 +67,7 @@ namespace RequireJsNet.Configuration
                     // distinct by Dependency
                     existingKey.Dependencies = existingKey.Dependencies
                                                             .GroupBy(r => r.Dependency)
-                                                            .Select(r => r.FirstOrDefault())
+                                                            .Select(r => r.LastOrDefault())
                                                             .ToList();
                 }
                 else
@@ -73,7 +77,26 @@ namespace RequireJsNet.Configuration
             }
         }
 
-        
+        private void MergeMaps(ConfigurationCollection collection)
+        {
+            var finalMaps = finalCollection.Map.MapElements;
+            foreach (var map in collection.Map.MapElements)
+            {
+                var existingKey = finalMaps.Where(r => r.For == map.For).FirstOrDefault();
+                if (existingKey != null)
+                {
+                    existingKey.Replacements.AddRange(map.Replacements);
+                    existingKey.Replacements = existingKey.Replacements
+                                                        .GroupBy(r => r.OldKey)
+                                                        .Select(r => r.LastOrDefault())
+                                                        .ToList();
+                }
+                else
+                {
+                    finalMaps.Add(map);
+                }
+            }
+        }
 
 
     }

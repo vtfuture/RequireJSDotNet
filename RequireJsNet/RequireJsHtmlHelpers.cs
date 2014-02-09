@@ -73,7 +73,8 @@ namespace RequireJS
                                                                                       {
                                                                                           Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
                                                                                           Exports = r.Exports
-                                                                                      })
+                                                                                      }),
+                Map = resultingConfig.Map.MapElements.ToDictionary(r => r.For, r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
             };
 
             var options = new JsonRequireOptions

@@ -83,6 +83,9 @@
     <Compile Include="JavaScriptBuilder.cs" />
     <Compile Include="Models\JsonConfig.cs" />
     <Compile Include="Models\JsonRequireOptions.cs" />
+    <Compile Include="Models\RequireMap.cs" />
+    <Compile Include="Models\RequireMapElement.cs" />
+    <Compile Include="Models\RequireReplacement.cs" />
     <Compile Include="Models\RoutingInfo.cs" />
     <Compile Include="Validation\ConfigValidator.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
