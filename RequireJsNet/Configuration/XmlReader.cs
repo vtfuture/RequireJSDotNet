@@ -23,7 +23,7 @@ namespace RequireJsNet.Configuration
 
         public ConfigurationCollection ReadConfig()
         {
-            using (var stream = new FileStream(Path, FileMode.Open))
+            using (var stream = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var doc = XDocument.Load(stream);
                 var collection = new ConfigurationCollection();
