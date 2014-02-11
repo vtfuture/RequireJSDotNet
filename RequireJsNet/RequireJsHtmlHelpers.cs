@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System;
-
+using Microsoft.SqlServer.Server;
 using RequireJsNet;
 using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
@@ -51,48 +51,60 @@ namespace RequireJS
             IList<string> configsList, IRequireJsLogger logger = null)
         {
             var entryPointPath = html.RequireJsEntryPoint();
-            if (!configsList.Any())
+
+            if (entryPointPath != null)
             {
-                throw new Exception("No config files to load.");
+                if (!configsList.Any())
+                {
+                    throw new Exception("No config files to load.");
+                }
+                var processedConfigs = configsList.Select(r =>
+                {
+                    var resultingPath = html.ViewContext.HttpContext.MapPath(r);
+                    PathHelpers.VerifyFileExists(resultingPath);
+                    return resultingPath;
+                }).ToList();
+
+                var loader = new ConfigLoader(processedConfigs, logger);
+                var resultingConfig = loader.Get();
+                var outputConfig = new JsonConfig
+                {
+                    BaseUrl = baseUrl,
+                    Locale = html.CurrentCulture(),
+                    Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
+                    Shim = resultingConfig.Shim.ShimEntries.ToDictionary(r => r.For, r => new JsonRequireDeps
+                    {
+                        Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
+                        Exports = r.Exports
+                    }),
+                    Map =
+                        resultingConfig.Map.MapElements.ToDictionary(r => r.For,
+                            r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
+                };
+
+                var options = new JsonRequireOptions
+                {
+                    Locale = html.CurrentCulture(),
+                    PageOptions = html.ViewBag.PageOptions,
+                    WebsiteOptions = html.ViewBag.GlobalOptions
+                };
+
+                var configBuilder = new JavaScriptBuilder();
+                configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(options, "requireConfig"));
+                configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(outputConfig, "require"));
+
+                var requireRootBuilder = new JavaScriptBuilder();
+                requireRootBuilder.AddAttributesToStatement("data-main", entryPointPath.ToString());
+                requireRootBuilder.AddAttributesToStatement("src", requireUrl);
+
+                return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render());
+
             }
-            var processedConfigs = configsList.Select(r =>
+            else
             {
-                var resultingPath = html.ViewContext.HttpContext.MapPath(r);
-                PathHelpers.VerifyFileExists(resultingPath);
-                return resultingPath;
-            }).ToList();
+                return new MvcHtmlString(string.Empty);
+            }
 
-            var loader = new ConfigLoader(processedConfigs, logger);
-            var resultingConfig = loader.Get();
-            var outputConfig = new JsonConfig
-            {
-                BaseUrl = baseUrl,
-                Locale = html.CurrentCulture(),
-                Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
-                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(r => r.For, r => new JsonRequireDeps
-                                                                                      {
-                                                                                          Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
-                                                                                          Exports = r.Exports
-                                                                                      }),
-                Map = resultingConfig.Map.MapElements.ToDictionary(r => r.For, r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
-            };
-
-            var options = new JsonRequireOptions
-            {
-                Locale = html.CurrentCulture(),
-                PageOptions = html.ViewBag.PageOptions,
-                WebsiteOptions = html.ViewBag.GlobalOptions
-            };
-
-            var configBuilder = new JavaScriptBuilder();
-            configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(options, "requireConfig"));
-            configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(outputConfig, "require"));
-
-            var requireRootBuilder = new JavaScriptBuilder();
-            requireRootBuilder.AddAttributesToStatement("data-main", entryPointPath.ToString());
-            requireRootBuilder.AddAttributesToStatement("src", requireUrl);
-
-            return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render());
         }
 
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html)
