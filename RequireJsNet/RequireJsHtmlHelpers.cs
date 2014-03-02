@@ -35,10 +35,10 @@ namespace RequireJS
         /// <param name="baseUrl">Scrips folder</param>
         /// <param name="requireUrl">requirejs.js url</param>
         /// <param name="configPath">RequireJS.config server local path</param>
-        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
+        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string urlArgs = "",
             string configPath = "", IRequireJsLogger logger = null)
         {
-            return html.RenderRequireJsSetup(baseUrl, requireUrl, new List<string> { configPath }, logger);
+            return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, logger);
         }
 
         /// <summary>
@@ -50,6 +50,19 @@ namespace RequireJS
         public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
             IList<string> configsList, IRequireJsLogger logger = null)
         {
+            return html.RenderRequireJsSetup(baseUrl, requireUrl, null, configsList, logger);
+        }
+
+        /// <summary>
+        /// Setup RequireJS to be used in layouts
+        /// </summary>
+        /// <param name="baseUrl">Scrips folder</param>
+        /// <param name="requireUrl">requirejs.js url</param>
+        /// <param name="urlArgs"></param>
+        /// <param name="configsList">RequireJS.config files path</param>
+        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string urlArgs,
+            IList<string> configsList, IRequireJsLogger logger = null)
+        {
             var entryPointPath = html.RequireJsEntryPoint();
 
             if (entryPointPath == null)
@@ -57,7 +70,7 @@ namespace RequireJS
                 return new MvcHtmlString(string.Empty);
             }
 
-            if (!configsList.Any())
+            if (configsList == null || !configsList.Any())
             {
                 throw new Exception("No config files to load.");
             }
@@ -74,6 +87,7 @@ namespace RequireJS
             {
                 BaseUrl = baseUrl,
                 Locale = html.CurrentCulture(),
+                UrlArgs = urlArgs,
                 Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
                 Shim = resultingConfig.Shim.ShimEntries.ToDictionary(r => r.For, r => new JsonRequireDeps
                 {

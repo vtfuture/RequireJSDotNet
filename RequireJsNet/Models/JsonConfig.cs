@@ -15,6 +15,8 @@ namespace RequireJsNet.Models
         public string BaseUrl { get; set; }
         [JsonProperty(PropertyName = "locale")]
         public string Locale { get; set; }
+        [JsonProperty(PropertyName = "urlArgs")]
+        public string UrlArgs { get; set; }
         [JsonProperty(PropertyName = "paths")]
         public Dictionary<string, string> Paths { get; set; }
         [JsonProperty(PropertyName = "shim")]

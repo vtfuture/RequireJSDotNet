@@ -43,5 +43,10 @@ namespace RequireJsNet.Docs.Helpers
                 return sw.GetStringBuilder().ToString().Trim();
             }
         }
+
+        public static string RenderAppVersion()
+        {
+            return "v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
     }
 }
