@@ -42,11 +42,12 @@ namespace RequireJsNet.Configuration
             var pathEl = root.Descendants("paths").FirstOrDefault();
             if (pathEl != null)
             {
-                paths.PathList = pathEl.Descendants("path").Select(r => new RequirePath
-                                                                        {
-                                                                            Key = r.Attribute("key").Value,
-                                                                            Value = r.Attribute("value").Value
-                                                                        }).ToList();
+                paths.PathList = pathEl.Descendants("path")
+                                        .Select(r => new RequirePath
+                                                    {
+                                                        Key = r.Attribute("key").Value,
+                                                        Value = r.Attribute("value").Value
+                                                    }).ToList();
             }
             return paths;
         }
@@ -59,7 +60,8 @@ namespace RequireJsNet.Configuration
             if (shimEl != null)
             {
                 shim.ShimEntries = shimEl.Descendants("dependencies")
-                                        .Select(ShimEntryReader).ToList();
+                                        .Select(ShimEntryReader)
+                                        .ToList();
             }
             return shim;
         }
@@ -91,7 +93,8 @@ namespace RequireJsNet.Configuration
             if (mapEl != null)
             {
                 map.MapElements = mapEl.Descendants("replace")
-                                            .Select(MapElementReader).ToList();
+                                        .Select(MapElementReader)
+                                        .ToList();
             }
             return map;
         }
