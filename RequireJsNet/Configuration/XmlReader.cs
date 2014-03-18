@@ -61,7 +61,7 @@ namespace RequireJsNet.Configuration
                 shim.ShimEntries = shimEl.Descendants("dependencies")
                                         .Select(r => new ShimEntry
                                                     {
-                                                        Exports = r.Attribute("exports").Value,
+                                                        Exports = r.Attribute("exports") != null ? r.Attribute("exports").Value : "",
                                                         For = r.Attribute("for").Value,
                                                         Dependencies = r.Descendants("add")
                                                                             .Select(x => new RequireDependency
