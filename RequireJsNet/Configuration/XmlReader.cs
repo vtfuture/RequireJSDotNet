@@ -59,18 +59,28 @@ namespace RequireJsNet.Configuration
             if (shimEl != null)
             {
                 shim.ShimEntries = shimEl.Descendants("dependencies")
-                                        .Select(r => new ShimEntry
-                                                    {
-                                                        Exports = r.Attribute("exports") != null ? r.Attribute("exports").Value : "",
-                                                        For = r.Attribute("for").Value,
-                                                        Dependencies = r.Descendants("add")
-                                                                            .Select(x => new RequireDependency
-                                                                                        {
-                                                                                            Dependency = x.Attribute("dependency").Value
-                                                                                        }).ToList()
-                                                    }).ToList();
+                                        .Select(ShimEntryReader).ToList();
             }
             return shim;
+        }
+
+        private ShimEntry ShimEntryReader(XElement element)
+        {
+            return new ShimEntry
+            {
+                Exports = element.Attribute("exports") != null ? element.Attribute("exports").Value : "",
+                For = element.Attribute("for").Value,
+                Dependencies = DependenciesReader(element)
+            };
+        }
+
+        private List<RequireDependency> DependenciesReader(XElement element)
+        {
+            return element.Descendants("add")
+                        .Select(x => new RequireDependency
+                        {
+                            Dependency = x.Attribute("dependency").Value
+                        }).ToList();
         }
 
         private RequireMap GetMap(XElement root)
@@ -81,19 +91,30 @@ namespace RequireJsNet.Configuration
             if (mapEl != null)
             {
                 map.MapElements = mapEl.Descendants("replace")
-                                            .Select(r => new RequireMapElement
-                                                        {
-                                                            For = r.Attribute("for").Value,
-                                                            Replacements = r.Descendants("add")
-                                                                                .Select(x => new RequireReplacement
-                                                                                            {
-                                                                                                NewKey = x.Attribute("new").Value,
-                                                                                                OldKey = x.Attribute("old").Value
-                                                                                            }).ToList()
-                                                        }).ToList();
+                                            .Select(MapElementReader).ToList();
             }
             return map;
         }
 
+        
+
+        private RequireMapElement MapElementReader(XElement element)
+        {
+            return new RequireMapElement
+                   {
+                       For = element.Attribute("for").Value,
+                       Replacements = ReplacementsReader(element)
+                   };
+        }
+
+        private List<RequireReplacement> ReplacementsReader(XElement element)
+        {
+            return element.Descendants("add")
+                            .Select(x => new RequireReplacement
+                                         {
+                                             NewKey = x.Attribute("new").Value,
+                                             OldKey = x.Attribute("old").Value
+                                         }).ToList();
+        }
     }
 }
