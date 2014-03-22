@@ -25,7 +25,9 @@ namespace RequireJS
 {
     public static class RequireJsHtmlHelpers
     {
-        const string DefaultConfigPath = "~/RequireJS.config";
+        const string defaultConfigPath = "~/RequireJS.config";
+        const string defaultEntryPointRoot = "~/Scripts/";
+        const string defaultArea = "Common";
 
         /// <summary>
         /// Setup RequireJS to be used in layouts
@@ -40,6 +42,11 @@ namespace RequireJS
         public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string urlArgs = "",
             string configPath = "", string entryPointRoot = "~/Scripts/", IRequireJsLogger logger = null)
         {
+            if(string.IsNullOrEmpty(configPath))
+            {
+                configPath = defaultConfigPath;
+            }
+
             return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, entryPointRoot, logger);
         }
 
@@ -127,6 +134,14 @@ namespace RequireJS
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root)
         {
             var routingInfo = html.GetRoutingInfo();
+            var rootUrl = string.Empty;
+            var withBaseUrl = true;
+
+            if(root != defaultEntryPointRoot)
+            {
+                withBaseUrl = false;
+                rootUrl = UrlHelper.GenerateContentUrl(root, html.ViewContext.HttpContext);
+            }
 
             //search for controller/action.js in current area
             var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
@@ -135,16 +150,16 @@ namespace RequireJS
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(entryPoint);
+                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
             //search for controller/action.js in common area
-            entryPoint = string.Format(entryPointTmpl, "Common");
+            entryPoint = string.Format(entryPointTmpl, defaultArea);
             filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(entryPoint);
+                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
             //search for controller/controller-action.js in current area
@@ -154,16 +169,16 @@ namespace RequireJS
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(entryPoint);
+                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
             //search for controller/controller-action.js in common area
-            entryPoint = string.Format(entryPointTmpl, "Common");
+            entryPoint = string.Format(entryPointTmpl, defaultArea);
             filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(entryPoint);
+                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
             return null;

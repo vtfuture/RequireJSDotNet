@@ -256,6 +256,7 @@
     <Content Include="Scripts\Mods\myModule.js" />
     <Content Include="Scripts\Mods\myPublicModule.js" />
     <Content Include="Scripts\Mods\myStaticModule.js" />
+    <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
