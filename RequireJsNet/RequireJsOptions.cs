@@ -14,6 +14,12 @@ using System.Web.Mvc;
 
 namespace RequireJS
 {
+    public enum RequireJsOptionsScope
+    {
+        Page,
+        Global
+    }
+
     public class RequireJsOptions
     {
         private readonly Controller controller;
@@ -27,7 +33,7 @@ namespace RequireJS
             pageOptions = new Dictionary<string, object>();
             globalOptions = new Dictionary<string, object>();
 
-            //save in case the RequireJsOptions is never used
+            // save in case the RequireJsOptions is never used
             this.SaveAll();
         }
 
@@ -40,6 +46,7 @@ namespace RequireJS
                     {
                         pageOptions.Remove(key);
                     }
+
                     pageOptions.Add(key, value);
                     break;
                 case RequireJsOptionsScope.Global:
@@ -47,12 +54,17 @@ namespace RequireJS
                     {
                         globalOptions.Remove(key);
                     }
+
                     globalOptions.Add(key, value);
                     break;
             }
         }
 
-        public void Add(string key, Dictionary<string, object> value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page, bool clearExisting = false)
+        public void Add(
+            string key,
+            Dictionary<string, object> value,
+            RequireJsOptionsScope scope = RequireJsOptionsScope.Page,
+            bool clearExisting = false)
         {
             var dictToModify = new Dictionary<string, object>();
             switch (scope)
@@ -111,7 +123,7 @@ namespace RequireJS
 
         public void Save(RequireJsOptionsScope scope)
         {
-            //sends options to view using the ViewBag
+            // sends options to view using the ViewBag
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
@@ -139,7 +151,11 @@ namespace RequireJS
             {
                 foreach (var item in options)
                 {
-                    config.AppendFormat(" {0}: {1}{2} ", item.Key, JsonConvert.SerializeObject(item.Value), options.Last().Equals(item) ? "" : ",");
+                    config.AppendFormat(
+                        " {0}: {1}{2} ",
+                        item.Key,
+                        JsonConvert.SerializeObject(item.Value),
+                        options.Last().Equals(item) ? string.Empty : ",");
                 }
             }
 
@@ -156,15 +172,9 @@ namespace RequireJS
                 {
                     to.Remove(item.Key);
                 }
+
                 to.Add(item.Key, item.Value);
             }
         }
-
-    }
-
-    public enum RequireJsOptionsScope
-    {
-        Page,
-        Global
     }
 }

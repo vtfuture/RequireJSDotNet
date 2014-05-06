@@ -8,14 +8,9 @@ namespace RequireJsNet.Compressor
 {
     internal class RequireConfigReader
     {
-        
         private const string ConfigFileName = "RequireJS.config";
+
         private const string DefaultScriptDirectory = "Scripts";
-        private RequireConfiguration Configuration { get; set; }
-        private string ProjectPath { get; set; }
-        private string OutputPath { get; set; }
-        private string EntryOverride { get; set; }
-        private List<string> FilePaths { get; set; }
 
         public RequireConfigReader(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths)
         {
@@ -27,11 +22,22 @@ namespace RequireJsNet.Compressor
             {
                 OutputPath = packagePath;
             }
+
             Configuration = new RequireConfiguration
             {
                 EntryPoint = Path.GetFullPath(Path.Combine(projectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory))
             };
         }
+
+        private RequireConfiguration Configuration { get; set; }
+
+        private string ProjectPath { get; set; }
+
+        private string OutputPath { get; set; }
+
+        private string EntryOverride { get; set; }
+
+        private List<string> FilePaths { get; set; }
 
         public List<Bundle> ParseConfigs()
         {
@@ -113,6 +119,7 @@ namespace RequireJsNet.Compressor
             {
                 throw new Exception("Could not find any bundle with no dependency. Check your config for cyclic dependencies.");
             }
+
             rootBundles.ForEach(r => r.ParsedIncludes = true);
             var maxIterations = 500;
             var currentIt = 0;
@@ -126,6 +133,7 @@ namespace RequireJsNet.Compressor
 
                 // get all the bundles that have parents with resolved dependencies and haven't been resolved themselves
                 var parsableBundles = GetBundlesWithResolvedParents();
+
                 // we've checked earlier if there are any bundles that haven't been parsed
                 // if there are bundles that haven't been parsed but there aren't any we can parse, something went wrong
                 if (!parsableBundles.Any())
@@ -137,6 +145,7 @@ namespace RequireJsNet.Compressor
                 {
                     // store a reference to the old list
                     var oldItemList = bundle.Items;
+
                     // instantiate a new one so that when we're done we can append the old scripts
                     bundle.Items = new List<BundleItem>();
                     var parents = bundle.Includes.Select(r => GetBundleByName(r)).ToList();
@@ -144,22 +153,24 @@ namespace RequireJsNet.Compressor
                     {
                         bundle.Items.AddRange(parent.Items);
                     }
+
                     bundle.Items.AddRange(oldItemList);
                     bundle.Items = bundle.Items.GroupBy(r => r.PhysicalPath).Select(r => r.FirstOrDefault()).ToList();
                     bundle.ParsedIncludes = true;
                 }
+
                 currentIt++;
             }
-
         }
 
         private BundleDefinition GetBundleByName(string name)
         {
-            var result =  Configuration.Bundles.Where(r => r.Name == name).FirstOrDefault();
+            var result = Configuration.Bundles.Where(r => r.Name == name).FirstOrDefault();
             if (result == null)
             {
                 throw new Exception("Could not find bundle with name " + name);
             }
+
             return result;
         }
 
@@ -172,17 +183,16 @@ namespace RequireJsNet.Compressor
                 // for each include, get its bundle.ParsedIncludes property
                 // select those that don't have their parents resolved
                 // if any such items exist, it means that the item's parents haven't been resolved
-                var parentsResolved = !(bundle.Includes
-
+                var parentsResolved = !bundle.Includes
                                         .Select(r => GetBundleByName(r).ParsedIncludes)
-                        
-                        .Where(r => !r)
-                        .Any());
+                                        .Where(r => !r)
+                                        .Any();
                 if (parentsResolved)
                 {
                     result.Add(bundle);
                 }
             }
+
             return result;
         }
 
@@ -200,8 +210,10 @@ namespace RequireJsNet.Compressor
                     {
                         throw new Exception("Could not find path item with name = " + finalName);
                     }
+
                     finalName = finalEl.Value;
                 }
+
                 item.PhysicalPath = Path.GetFullPath(Path.Combine(ProjectPath, Configuration.EntryPoint, finalName + ".js"));
                 if (!File.Exists(item.PhysicalPath))
                 {
@@ -216,12 +228,14 @@ namespace RequireJsNet.Compressor
             {
                 return Path.GetFullPath(Path.Combine(OutputPath, bundle.Name + ".js"));
             }
-            var directory = Path.GetDirectoryName(bundle.OutputPath) ?? "";
+
+            var directory = Path.GetDirectoryName(bundle.OutputPath) ?? string.Empty;
             var fileName = Path.GetFileName(bundle.OutputPath);
             if (string.IsNullOrEmpty(fileName))
             {
                 fileName = bundle.Name + ".js";
             }
+
             return Path.GetFullPath(Path.Combine(OutputPath, directory, fileName)); 
         }
 
@@ -231,16 +245,17 @@ namespace RequireJsNet.Compressor
             {
                 return;
             }
+
             var files = Directory.GetFiles(ProjectPath, ConfigFileName);
             foreach (var file in files)
             {
                 FilePaths.Add(file);
             }
+
             if (!FilePaths.Any())
             {
                 throw new ArgumentException("No Require config files were provided and none were found in the project directory.");    
             }
-            
         }
 
         private void LoadConfigData(string path)
@@ -250,6 +265,7 @@ namespace RequireJsNet.Compressor
             {
                 throw new FileLoadException("Could not read config file.", path);
             }
+
             var entryPointAttr = doc.Document.Root.Attribute("entryPoint");
             if (entryPointAttr != null)
             {
@@ -259,7 +275,8 @@ namespace RequireJsNet.Compressor
                     Configuration.EntryPoint = entryPoint;
                 }
             }
-            if(!string.IsNullOrWhiteSpace(EntryOverride))
+
+            if (!string.IsNullOrWhiteSpace(EntryOverride))
             {
                 Configuration.EntryPoint = EntryOverride;
             }
@@ -323,6 +340,7 @@ namespace RequireJsNet.Compressor
             {
                 return new List<string>();
             }
+
             var result = attribute.Value.Split(',').Select(r => r.Trim()).Distinct().ToList();
             return result;
         }
@@ -333,6 +351,7 @@ namespace RequireJsNet.Compressor
             {
                 return string.Empty;
             }
+
             return attribute.Value;
         }
 
@@ -342,8 +361,8 @@ namespace RequireJsNet.Compressor
             {
                 return false;
             }
+
             return Convert.ToBoolean(attribute.Value);
         }
-
     }
 }

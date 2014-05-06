@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Web;
 
 namespace RequireJsNet.Helpers
@@ -16,6 +11,7 @@ namespace RequireJsNet.Helpers
             {
                 path = context.Server.MapPath(path);
             }
+
             return path;
         }
 

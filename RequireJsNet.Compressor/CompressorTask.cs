@@ -11,6 +11,13 @@ namespace RequireJsNet.Compressor
     {
         protected readonly CompressorTaskEngine TaskEngine;
 
+        protected CompressorTask(ICompressor compressor)
+        {
+            TaskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor) { SetTaskEngineParameters = this.SetTaskEngineParameters };
+            DeleteSourceFiles = false;
+            LineBreakPosition = -1;
+        }
+
         public string LoggingType { get; set; }
 
         [Required]
@@ -26,13 +33,6 @@ namespace RequireJsNet.Compressor
         public bool DeleteSourceFiles { get; set; }
 
         public int LineBreakPosition { get; set; }
-
-        protected CompressorTask(ICompressor compressor)
-        {
-            TaskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor) { SetTaskEngineParameters = this.SetTaskEngineParameters };
-            DeleteSourceFiles = false;
-            LineBreakPosition = -1;
-        }
 
         public override bool Execute()
         {
@@ -52,10 +52,12 @@ namespace RequireJsNet.Compressor
             {
                 return;
             }
+
             foreach (var sourceFile in SourceFiles)
             {
                 fileSpecs.Add(new FileSpec(sourceFile.ItemSpec, sourceFile.GetMetadata("CompressionType")));
             }
+
             this.TaskEngine.SourceFiles = fileSpecs.ToArray();
         }
     }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
 
 using EcmaScript.NET;
 
@@ -15,16 +12,6 @@ namespace RequireJsNet.Compressor
         private readonly IJavaScriptCompressor compressor;
 
         private CultureInfo threadCulture;
-
-        public bool ObfuscateJavaScript { get; set; }
-
-        public bool PreserveAllSemicolons { get; set; }
-
-        public bool DisableOptimizations { get; set; }
-
-        public string ThreadCulture { get; set; }
-
-        public bool IsEvalIgnored { get; set; }
 
         public JavaScriptCompressorTask()
             : this(new JavaScriptCompressor())
@@ -40,6 +27,16 @@ namespace RequireJsNet.Compressor
             TaskEngine.LogAdditionalTaskParameters = this.LogAdditionalTaskParameters;
             TaskEngine.SetCompressorParameters = this.SetCompressorParameters;
         }
+
+        public bool ObfuscateJavaScript { get; set; }
+
+        public bool PreserveAllSemicolons { get; set; }
+
+        public bool DisableOptimizations { get; set; }
+
+        public string ThreadCulture { get; set; }
+
+        public bool IsEvalIgnored { get; set; }
 
         public override bool Execute()
         {
@@ -104,6 +101,7 @@ namespace RequireJsNet.Compressor
                             threadCulture = CultureInfo.InvariantCulture;
                             break;
                         }
+
                     default:
                         {
                             threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);

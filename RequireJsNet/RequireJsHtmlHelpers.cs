@@ -7,15 +7,12 @@
  *   http://www.gnu.org/licenses/gpl.html
  */
 
-using System.Data;
-using System.IO;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
 using System;
-using Microsoft.SqlServer.Server;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
+
 using RequireJsNet;
 using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
@@ -25,9 +22,9 @@ namespace RequireJS
 {
     public static class RequireJsHtmlHelpers
     {
-        const string defaultConfigPath = "~/RequireJS.config";
-        const string defaultEntryPointRoot = "~/Scripts/";
-        const string defaultArea = "Common";
+        private const string DefaultConfigPath = "~/RequireJS.config";
+        private const string DefaultEntryPointRoot = "~/Scripts/";
+        private const string DefaultArea = "Common";
 
         /// <summary>
         /// Setup RequireJS to be used in layouts
@@ -35,16 +32,42 @@ namespace RequireJS
         /// <example>
         /// @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), "~/RequireJS.release.config")
         /// </example>
-        /// <param name="baseUrl">scripts base url</param>
-        /// <param name="requireUrl">requirejs.js url</param>
-        /// <param name="configPath">RequireJS.config server local path</param>
-        /// <param name="entryPointRoot">Scrips folder relative path ex. ~/Scripts/</param>
-        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string urlArgs = "",
-            string configPath = "", string entryPointRoot = "~/Scripts/", IRequireJsLogger logger = null)
+        /// <param name="html">
+        /// HtmlHelper instance
+        /// </param>
+        /// <param name="baseUrl">
+        /// scripts base url
+        /// </param>
+        /// <param name="requireUrl">
+        /// requirejs.js url
+        /// </param>
+        /// <param name="urlArgs">
+        /// url arguments
+        /// </param>
+        /// <param name="configPath">
+        /// RequireJS.config server local path
+        /// </param>
+        /// <param name="entryPointRoot">
+        /// Scripts folder relative path ex. ~/Scripts/
+        /// </param>
+        /// <param name="logger">
+        /// Logger to output errors
+        /// </param>
+        /// <returns>
+        /// The resulting <see cref="MvcHtmlString"/>.
+        /// </returns>
+        public static MvcHtmlString RenderRequireJsSetup(
+            this HtmlHelper html, 
+            string baseUrl, 
+            string requireUrl, 
+            string urlArgs = "",
+            string configPath = "", 
+            string entryPointRoot = "~/Scripts/", 
+            IRequireJsLogger logger = null)
         {
-            if(string.IsNullOrEmpty(configPath))
+            if (string.IsNullOrEmpty(configPath))
             {
-                configPath = defaultConfigPath;
+                configPath = DefaultConfigPath;
             }
 
             return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, entryPointRoot, logger);
@@ -53,12 +76,34 @@ namespace RequireJS
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
-        /// <param name="baseUrl">scripts base url</param>
-        /// <param name="requireUrl">requirejs.js url</param>
-        /// <param name="configsList">RequireJS.config files path</param>
-        /// <param name="entryPointRoot">Scrips folder relative path ex. ~/Scripts/</param>
-        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl,
-            IList<string> configsList, string entryPointRoot = "~/Scripts/", IRequireJsLogger logger = null)
+        /// <param name="html">
+        /// The html.
+        /// </param>
+        /// <param name="baseUrl">
+        /// scripts base url
+        /// </param>
+        /// <param name="requireUrl">
+        /// requirejs.js url
+        /// </param>
+        /// <param name="configsList">
+        /// RequireJS.config files path
+        /// </param>
+        /// <param name="entryPointRoot">
+        /// Scripts folder relative path ex. ~/Scripts/
+        /// </param>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        public static MvcHtmlString RenderRequireJsSetup(
+            this HtmlHelper html,
+            string baseUrl,
+            string requireUrl,
+            IList<string> configsList,
+            string entryPointRoot = "~/Scripts/",
+            IRequireJsLogger logger = null)
         {
             return html.RenderRequireJsSetup(baseUrl, requireUrl, null, configsList, entryPointRoot, logger);
         }
@@ -66,13 +111,37 @@ namespace RequireJS
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
-        /// <param name="baseUrl">scripts base url</param>
-        /// <param name="requireUrl">requirejs.js url</param>
-        /// <param name="urlArgs"></param>
-        /// <param name="configsList">RequireJS.config files path</param>
-        /// <param name="entryPointRoot">Scrips folder relative path ex. ~/Scripts/</param>
-        public static MvcHtmlString RenderRequireJsSetup(this HtmlHelper html, string baseUrl, string requireUrl, string urlArgs,
-            IList<string> configsList, string entryPointRoot = "~/Scripts/",  IRequireJsLogger logger = null)
+        /// <param name="html">
+        /// The html.
+        /// </param>
+        /// <param name="baseUrl">
+        /// scripts base url
+        /// </param>
+        /// <param name="requireUrl">
+        /// requirejs.js url
+        /// </param>
+        /// <param name="urlArgs">
+        /// </param>
+        /// <param name="configsList">
+        /// RequireJS.config files path
+        /// </param>
+        /// <param name="entryPointRoot">
+        /// Scripts folder relative path ex. ~/Scripts/
+        /// </param>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        public static MvcHtmlString RenderRequireJsSetup(
+            this HtmlHelper html,
+            string baseUrl,
+            string requireUrl,
+            string urlArgs,
+            IList<string> configsList,
+            string entryPointRoot = "~/Scripts/",
+            IRequireJsLogger logger = null)
         {
             var entryPointPath = html.RequireJsEntryPoint(entryPointRoot);
 
@@ -85,6 +154,7 @@ namespace RequireJS
             {
                 throw new Exception("No config files to load.");
             }
+
             var processedConfigs = configsList.Select(r =>
             {
                 var resultingPath = html.ViewContext.HttpContext.MapPath(r);
@@ -100,13 +170,16 @@ namespace RequireJS
                 Locale = html.CurrentCulture(),
                 UrlArgs = urlArgs,
                 Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
-                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(r => r.For, r => new JsonRequireDeps
-                {
-                    Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
-                    Exports = r.Exports
-                }),
-                Map = resultingConfig.Map.MapElements.ToDictionary(r => r.For,
-                                                                r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
+                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
+                        r => r.For,
+                        r => new JsonRequireDeps
+                                 {
+                                     Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
+                                     Exports = r.Exports
+                                 }),
+                Map = resultingConfig.Map.MapElements.ToDictionary(
+                         r => r.For,
+                         r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
             };
 
             var options = new JsonRequireOptions
@@ -130,20 +203,28 @@ namespace RequireJS
         /// <summary>
         /// Returns entry point script relative path
         /// </summary>
-        /// <param name="root">Relative root path ex. ~/Scripts/</param>
+        /// <param name="html">
+        /// The HtmlHelper instance.
+        /// </param>
+        /// <param name="root">
+        /// Relative root path ex. ~/Scripts/
+        /// </param>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root)
         {
             var routingInfo = html.GetRoutingInfo();
             var rootUrl = string.Empty;
             var withBaseUrl = true;
 
-            if(root != defaultEntryPointRoot)
+            if (root != DefaultEntryPointRoot)
             {
                 withBaseUrl = false;
                 rootUrl = UrlHelper.GenerateContentUrl(root, html.ViewContext.HttpContext);
             }
 
-            //search for controller/action.js in current area
+            // search for controller/action.js in current area
             var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
             var entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
             var filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
@@ -153,8 +234,8 @@ namespace RequireJS
                 return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
-            //search for controller/action.js in common area
-            entryPoint = string.Format(entryPointTmpl, defaultArea);
+            // search for controller/action.js in common area
+            entryPoint = string.Format(entryPointTmpl, DefaultArea);
             filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
@@ -162,7 +243,7 @@ namespace RequireJS
                 return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
-            //search for controller/controller-action.js in current area
+            // search for controller/controller-action.js in current area
             entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action;
             entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
             filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
@@ -172,8 +253,8 @@ namespace RequireJS
                 return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
             }
 
-            //search for controller/controller-action.js in common area
-            entryPoint = string.Format(entryPointTmpl, defaultArea);
+            // search for controller/controller-action.js in common area
+            entryPoint = string.Format(entryPointTmpl, DefaultArea);
             filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))

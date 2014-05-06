@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using RequireJsNet.Models;
 
@@ -12,6 +8,7 @@ namespace RequireJsNet.Configuration
     {
         private readonly IList<string> paths = new List<string>();
         private readonly IRequireJsLogger logger;
+
         public ConfigLoader(IList<string> paths, IRequireJsLogger logger)
         {
             this.paths = paths;
@@ -28,6 +25,7 @@ namespace RequireJsNet.Configuration
                 ValidateCollection(config, path);
                 collectionList.Add(config);
             }
+
             var configMerger = new ConfigMerger(collectionList);
             var merged = configMerger.GetMerged();
             ValidateCollection(merged, null);

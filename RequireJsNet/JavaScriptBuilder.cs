@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Text;
 using System.Web.Mvc;
 
 namespace RequireJsNet
 {
     internal class JavaScriptBuilder
     {
-        const string type = "application/javascript";
+        private const string Type = "application/javascript";
+
+        private readonly TagBuilder scriptTag = new TagBuilder("script");
+
+        private readonly StringBuilder content = new StringBuilder();
 
         public bool TagHasType { get; set; }
-
-        private TagBuilder scriptTag = new TagBuilder("script");
-
-        private StringBuilder content = new StringBuilder();
 
         public string Render()
         {
@@ -33,10 +28,10 @@ namespace RequireJsNet
         {
             if (TagHasType)
             {
-                scriptTag.MergeAttribute("type", type);
+                scriptTag.MergeAttribute("type", Type);
             }
 
-            scriptTag.InnerHtml = "";
+            scriptTag.InnerHtml = string.Empty;
 
             return scriptTag.ToString(TagRenderMode.Normal);
         }
@@ -50,6 +45,5 @@ namespace RequireJsNet
         {
             content.AppendLine(statement);
         }
-
     }
 }

@@ -17,13 +17,14 @@ namespace RequireJS
         {
             if (!filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                var ctrl = (RequireJsController) filterContext.Controller;
+                var ctrl = (RequireJsController)filterContext.Controller;
                 
-                //these options are set in the PublicController code
-                //options used in ~/Scripts/app-global.js
+                // these options are set in the PublicController code
+                // options used in ~/Scripts/app-global.js
                 ctrl.RegisterGlobalOptions();
                 ctrl.RequireJsOptions.Save(RequireJsOptionsScope.Global);
             }
+
             base.OnActionExecuting(filterContext);
         }
 
@@ -33,10 +34,11 @@ namespace RequireJS
             {
                 var ctrl = (RequireJsController)filterContext.Controller;
                 
-                //these options are set in the Action code
-                //options used in  ~/Scripts/Controllers/Area/Controller/Controller-Action.js
+                // these options are set in the Action code
+                // options used in  ~/Scripts/Controllers/Area/Controller/Controller-Action.js
                 ctrl.RequireJsOptions.Save(RequireJsOptionsScope.Page);
             }
+
             base.OnActionExecuted(filterContext);
         }
     }

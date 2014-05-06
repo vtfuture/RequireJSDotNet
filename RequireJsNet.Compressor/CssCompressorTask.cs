@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-using Yahoo.Yui.Compressor;
+﻿using Yahoo.Yui.Compressor;
 
 namespace RequireJsNet.Compressor
 {
     public class CssCompressorTask : CompressorTask
     {
-        private readonly ICssCompressor _compressor;
-
-        public bool PreserveComments { get; set; }
+        private readonly ICssCompressor compressor;
 
         public CssCompressorTask()
             : this(new CssCompressor())
@@ -21,12 +14,14 @@ namespace RequireJsNet.Compressor
         public CssCompressorTask(ICssCompressor compressor)
             : base(compressor)
         {
-            _compressor = compressor;
+            this.compressor = compressor;
         }
+
+        public bool PreserveComments { get; set; }
 
         public override bool Execute()
         {
-            _compressor.RemoveComments = !PreserveComments;
+            this.compressor.RemoveComments = !PreserveComments;
             return base.Execute();
         }
     }

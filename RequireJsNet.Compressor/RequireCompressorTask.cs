@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -13,17 +12,23 @@ namespace RequireJsNet.Compressor
 {
     public class RequireCompressorTask : Task
     {
-        private RequireConfigReader ConfigReader;
+        private RequireConfigReader configReader;
 
         public string LoggingType { get; set; }
+
         public string CompressionType { get; set; }
+
         public string EncodingType { get; set; }
+
         public int LineBreakPosition { get; set; }
+
         [Required]
         public string ProjectPath { get; set; }
 
         public string PackagePath { get; set; }
+
         public ITaskItem[] RequireConfigs { get; set; }
+
         public ITaskItem EntryPointOverride { get; set; }
 
 
@@ -41,11 +46,12 @@ namespace RequireJsNet.Compressor
             {
                 entryPointOveride = EntryPointOverride.GetMetadata("FullPath");
             }
-            ConfigReader = new RequireConfigReader(ProjectPath, PackagePath, entryPointOveride,  files);
+
+            this.configReader = new RequireConfigReader(ProjectPath, PackagePath, entryPointOveride,  files);
             var bundles = new List<Bundle>();
             try
             {
-                bundles = ConfigReader.ParseConfigs();
+                bundles = this.configReader.ParseConfigs();
             }
             catch (Exception ex)
             {
@@ -63,6 +69,7 @@ namespace RequireJsNet.Compressor
                     {
                         continue;
                     }
+
                     var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
                     {
                         CompressionType = CompressionType,
@@ -89,12 +96,12 @@ namespace RequireJsNet.Compressor
                 {
                     continue;
                 }
+
                 if (!Directory.Exists(directoryName))
                 {
                     Directory.CreateDirectory(directoryName);
                 }
             }
         }
-
     }
 }

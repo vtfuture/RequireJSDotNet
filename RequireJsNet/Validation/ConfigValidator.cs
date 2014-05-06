@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using RequireJsNet.Models;
 using RequireJsNet.Validation;
@@ -15,21 +12,23 @@ namespace RequireJsNet
         private const string ShimElement = "shim";
         private const string MapElement = "map";
 
-        private readonly ConfigurationCollection collection;
-
-        public ConfigValidator(ConfigurationCollection collection)
-        {
-            this.collection = collection;
-        }
-
         private static readonly string[] ComponentsToValidate = new string[]
         {
             PathElement,
             ShimElement,
             MapElement
         };  
-        private readonly List<string> ValidatedComponents = new List<string>();  
-        private readonly List<ConfigValidationError> Errors = new List<ConfigValidationError>();
+
+        private readonly ConfigurationCollection collection;
+
+        private readonly List<string> validatedComponents = new List<string>();
+
+        private readonly List<ConfigValidationError> errors = new List<ConfigValidationError>();
+
+        public ConfigValidator(ConfigurationCollection collection)
+        {
+            this.collection = collection;
+        }
 
         public bool IsValid
         {
@@ -37,10 +36,11 @@ namespace RequireJsNet
             {
                 if (ValidationComplete())
                 {
-                    return Errors.Any();
+                    return this.errors.Any();
                 }
+
                 Validate();
-                return Errors.Any();
+                return this.errors.Any();
             }
         }
 
@@ -48,30 +48,32 @@ namespace RequireJsNet
         {
             if (ValidationComplete())
             {
-                return Errors;
+                return this.errors;
             }
+
             Validate();
-            return Errors;
+            return this.errors;
         }
 
 
         private bool ValidationComplete()
         {
-            if (ComponentsToValidate.ToList().Except(ValidatedComponents).Any())
+            if (ComponentsToValidate.ToList().Except(this.validatedComponents).Any())
             {
                 return false;
             }
+
             return true;
         }
 
         private void Validate()
         {
             ValidatePaths();
-            ValidatedComponents.Add(PathElement);
+            this.validatedComponents.Add(PathElement);
             ValidateShims();
-            ValidatedComponents.Add(ShimElement);
+            this.validatedComponents.Add(ShimElement);
             ValidateMaps();
-            ValidatedComponents.Add(MapElement);
+            this.validatedComponents.Add(MapElement);
         }
 
         private void ValidatePaths()
@@ -86,7 +88,7 @@ namespace RequireJsNet
             var entriesWithoutKeys = indexedPaths.Where(r => string.IsNullOrEmpty(r.Element.Key));
             foreach (var entry in entriesWithoutKeys)
             {
-                Errors.Add(new ConfigValidationError
+                this.errors.Add(new ConfigValidationError
                 {
                     ElementKey = entry.Element.Key,
                     ElementProperty = "key",
@@ -109,15 +111,16 @@ namespace RequireJsNet
                 };
             foreach (var entry in doubledEntries)
             {
-                Errors.Add(new ConfigValidationError
+                this.errors.Add(new ConfigValidationError
                 {
                     ElementKey = entry.Key,
                     ElementProperty = "key",
                     ElementType = PathElement,
                     Index = entry.Indexes.Last(),
-                    Message = string.Format("Duplicate key {0} was found at positions {1}", 
-                                                entry.Key,
-                                                String.Join(", ", entry.Indexes))
+                    Message = string.Format(
+                                            "Duplicate key {0} was found at positions {1}", 
+                                            entry.Key,
+                                            string.Join(", ", entry.Indexes))
                 });
             }
 
@@ -125,13 +128,12 @@ namespace RequireJsNet
 
         private void ValidateShims()
         {
-            //TODO: validate
+            // TODO: validate
         }
 
         private void ValidateMaps()
         {
-            //TODO: validate
+            // TODO: validate
         }
-
     }
 }

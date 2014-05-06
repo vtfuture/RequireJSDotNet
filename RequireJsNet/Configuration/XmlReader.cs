@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 using RequireJsNet.Models;
 
@@ -13,12 +9,19 @@ namespace RequireJsNet.Configuration
 {
     internal class XmlReader : IConfigReader
     {
-        private readonly string _path;
-        public string Path { get { return _path; } }
+        private readonly string path;
 
         public XmlReader(string path)
         {
-            _path = path;
+            this.path = path;
+        }
+
+        public string Path
+        {
+            get
+            {
+                return this.path;
+            }
         }
 
         public ConfigurationCollection ReadConfig()
@@ -49,6 +52,7 @@ namespace RequireJsNet.Configuration
                                                         Value = r.Attribute("value").Value
                                                     }).ToList();
             }
+
             return paths;
         }
 
@@ -63,6 +67,7 @@ namespace RequireJsNet.Configuration
                                         .Select(ShimEntryReader)
                                         .ToList();
             }
+
             return shim;
         }
 
@@ -70,7 +75,7 @@ namespace RequireJsNet.Configuration
         {
             return new ShimEntry
             {
-                Exports = element.Attribute("exports") != null ? element.Attribute("exports").Value : "",
+                Exports = element.Attribute("exports") != null ? element.Attribute("exports").Value : string.Empty,
                 For = element.Attribute("for").Value,
                 Dependencies = DependenciesReader(element)
             };
@@ -96,10 +101,9 @@ namespace RequireJsNet.Configuration
                                         .Select(MapElementReader)
                                         .ToList();
             }
+
             return map;
         }
-
-        
 
         private RequireMapElement MapElementReader(XElement element)
         {

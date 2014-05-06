@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 using EcmaScript.NET;
 
@@ -16,19 +15,33 @@ namespace RequireJsNet.Compressor
 {
     public class CompressorTaskEngine
     {
+        private readonly ICompressor compressor;
+
         private CompressionType compressionType;
 
-        protected internal LoggingType LogType;
+        public CompressorTaskEngine(ILog log, ICompressor compressor)
+        {
+            Log = log;
+            this.compressor = compressor;
+            this.Encoding = Encoding.Default;
+            DeleteSourceFiles = false;
+            LineBreakPosition = -1;
+            EcmaExceptions = new List<EcmaScriptException>();
+        }
 
-        protected internal Encoding Encoding;
-
-        private readonly ICompressor compressor;
+        public delegate void Action();
 
         public string LoggingType { get; set; }
 
         public FileSpec[] SourceFiles { get; set; }
 
-        private List<EcmaScriptException> EcmaExceptions { get; set; }
+        public Action SetTaskEngineParameters { get; set; }
+
+        public Action ParseAdditionalTaskParameters { get; set; }
+
+        public Action LogAdditionalTaskParameters { get; set; }
+
+        public Action SetCompressorParameters { get; set; }
 
         public string OutputFile { get; set; }
 
@@ -42,25 +55,11 @@ namespace RequireJsNet.Compressor
 
         public ILog Log { get; private set; }
 
-        public Action SetTaskEngineParameters;
+        protected internal LoggingType LogType { get; set; }
 
-        public Action ParseAdditionalTaskParameters;
+        protected internal Encoding Encoding { get; set; }
 
-        public Action LogAdditionalTaskParameters;
-
-        public Action SetCompressorParameters;
-
-        public delegate void Action();
-
-        public CompressorTaskEngine(ILog log, ICompressor compressor)
-        {
-            Log = log;
-            this.compressor = compressor;
-            this.Encoding = Encoding.Default;
-            DeleteSourceFiles = false;
-            LineBreakPosition = -1;
-            EcmaExceptions = new List<EcmaScriptException>();
-        }
+        private List<EcmaScriptException> EcmaExceptions { get; set; }
 
         public bool Execute()
         {
@@ -70,6 +69,7 @@ namespace RequireJsNet.Compressor
                 {
                     this.SetTaskEngineParameters();
                 }
+
                 ParseTaskParameters();
                 if (this.SetCompressorParameters != null)
                 {
@@ -151,6 +151,49 @@ namespace RequireJsNet.Compressor
             return true;
         }
 
+        public void ParseTaskParameters()
+        {
+            ParseLoggingType();
+            if (string.IsNullOrEmpty(CompressionType))
+            {
+                LogMessage("No Compression type defined. Defaulting to 'Standard'.");
+                compressionType = ParseCompressionType("Standard");
+            }
+            else
+            {
+                compressionType = ParseCompressionType(CompressionType);
+            }
+
+            ParseEncoding();
+            if (this.ParseAdditionalTaskParameters != null)
+            {
+                ParseAdditionalTaskParameters();
+            }
+        }
+
+        protected internal virtual string Compress(FileSpec file, string originalContent)
+        {
+            compressor.CompressionType = GetCompressionTypeFor(file);
+            compressor.LineBreakPosition = LineBreakPosition;
+            return compressor.Compress(originalContent);
+        }
+
+        protected void LogMessage(string message, bool isIndented = false)
+        {
+            if (this.LogType != Yahoo.Yui.Compressor.LoggingType.None)
+            {
+                Log.LogMessage(string.Format(CultureInfo.InvariantCulture, "{0}{1}", isIndented ? "    " : string.Empty, message));
+            }
+        }
+
+        protected virtual void LogTaskParameters()
+        {
+            LogMessage("CompressionType: " + this.CompressionType);
+            LogMessage("DeleteSourceFiles: " + DeleteSourceFiles);
+            LogMessage("EncodingType: " + this.EncodingType);
+            LogMessage("LoggingType: " + this.LoggingType);
+        }
+
         private void OutputAssemblyInfo()
         {
             // Determine and log the Assembly version.
@@ -166,33 +209,6 @@ namespace RequireJsNet.Compressor
                                        : "Unknown Title";
 
             Log.LogMessage(string.Format("Using version {0} of {1}.", assemblyFileVersion, assemblyTitle));
-        }
-
-        public void ParseTaskParameters()
-        {
-            ParseLoggingType();
-            if (string.IsNullOrEmpty(CompressionType))
-            {
-                LogMessage("No Compression type defined. Defaulting to 'Standard'.");
-                compressionType = ParseCompressionType("Standard");
-            }
-            else
-            {
-                compressionType = ParseCompressionType(CompressionType);
-            }
-            ParseEncoding();
-            if (this.ParseAdditionalTaskParameters != null)
-            {
-                ParseAdditionalTaskParameters();
-            }
-        }
-
-        protected void LogMessage(string message, bool isIndented = false)
-        {
-            if (this.LogType != Yahoo.Yui.Compressor.LoggingType.None)
-            {
-                Log.LogMessage(string.Format(CultureInfo.InvariantCulture, "{0}{1}", isIndented ? "    " : string.Empty, message));
-            }
         }
 
         private void ParseLoggingType()
@@ -259,14 +275,6 @@ namespace RequireJsNet.Compressor
             }
         }
 
-        protected virtual void LogTaskParameters()
-        {
-            LogMessage("CompressionType: " + this.CompressionType);
-            LogMessage("DeleteSourceFiles: " + DeleteSourceFiles);
-            LogMessage("EncodingType: " + this.EncodingType);
-            LogMessage("LoggingType: " + this.LoggingType);
-        }
-
         private CompressionType ParseCompressionType(string type)
         {
             switch (type.ToLowerInvariant())
@@ -280,7 +288,6 @@ namespace RequireJsNet.Compressor
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private StringBuilder CompressFiles()
         {
             int totalOriginalContentLength = 0;
@@ -315,6 +322,7 @@ namespace RequireJsNet.Compressor
                             {
                                 finalContent = new StringBuilder();
                             }
+
                             finalContent.Append(compressedContent);
                         }
 
@@ -327,6 +335,7 @@ namespace RequireJsNet.Compressor
                                 {
                                     Log.LogMessage("Deleting source file: " + file.FileName);
                                 }
+
                                 File.Delete(file.FileName);
                             }
                         }
@@ -348,6 +357,7 @@ namespace RequireJsNet.Compressor
                             Log.LogEcmaError(ecmaException);
                             EcmaExceptions.Add(ecmaException);
                         }
+
                         if (exception is FileNotFoundException)
                         {
                             Log.LogError(string.Format(CultureInfo.InvariantCulture, "ERROR reading file or path [{0}].", file.FileName));
@@ -357,6 +367,7 @@ namespace RequireJsNet.Compressor
                             // FFS :( Something bad happened.
                             Log.LogError(string.Format(CultureInfo.InvariantCulture, "Failed to read/parse data in file [{0}].", file.FileName));
                         }
+
                         Log.LogErrorFromException(exception, false);
                     }
                 }
@@ -377,19 +388,12 @@ namespace RequireJsNet.Compressor
                         "Total original file size: {0}. After compression: {1}. Compressed down to {2}% of original size.",
                         totalOriginalContentLength,
                         finalContentLength,
-                        100 - (totalOriginalContentLength - (float)finalContentLength) / totalOriginalContentLength * 100));
+                        (100 - (totalOriginalContentLength - (float)finalContentLength)) / totalOriginalContentLength * 100));
 
                 LogMessage(string.Format(CultureInfo.InvariantCulture, "Compression Type: {0}.", compressionType));
             }
 
             return finalContent;
-        }
-
-        protected internal virtual string Compress(FileSpec file, string originalContent)
-        {
-            compressor.CompressionType = GetCompressionTypeFor(file);
-            compressor.LineBreakPosition = LineBreakPosition;
-            return compressor.Compress(originalContent);
         }
 
         private CompressionType GetCompressionTypeFor(FileSpec file)
@@ -409,28 +413,33 @@ namespace RequireJsNet.Compressor
             return actualCompressionType;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private bool SaveCompressedText(StringBuilder compressedText)
         {
             // Note: compressedText CAN be null or empty, so no check.
-
             try
             {
                 File.WriteAllText(OutputFile, compressedText == null ? string.Empty : compressedText.ToString(), this.Encoding);
-                Log.LogMessage(string.Format(CultureInfo.InvariantCulture, "Compressed content saved to file [{0}].{1}",
-                                             OutputFile, Environment.NewLine));
+                Log.LogMessage(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Compressed content saved to file [{0}].{1}",
+                        OutputFile,
+                        Environment.NewLine));
             }
             catch (Exception exception)
             {
                 // Most likely cause of this exception would be that the user failed to provide the correct path/file
                 // or the file is read only, unable to be written, etc.. 
-                Log.LogError(string.Format(CultureInfo.InvariantCulture,
-                                           "Failed to save the compressed text into the output file [{0}]. Please check the path/file name and make sure the file isn't magically locked, read-only, etc..",
-                                           OutputFile));
+                Log.LogError(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Failed to save the compressed text into the output file [{0}]. Please check the path/file name and make sure the file isn't magically locked, read-only, etc..",
+                        OutputFile));
                 Log.LogErrorFromException(exception, false);
 
                 return false;
             }
+
             return true;
         }
     }

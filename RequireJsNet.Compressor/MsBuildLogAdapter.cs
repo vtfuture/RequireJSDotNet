@@ -10,6 +10,11 @@ namespace RequireJsNet.Compressor
     {
         private readonly TaskLoggingHelper logger;
 
+        public MsBuildLogAdapter(TaskLoggingHelper logger)
+        {
+            this.logger = logger;
+        }
+
         public void LogMessage(string message)
         {
             logger.LogMessage(message);
@@ -35,11 +40,6 @@ namespace RequireJsNet.Compressor
             this.logger.LogErrorFromException(exception, showStackTrace);
         }
 
-        public MsBuildLogAdapter(TaskLoggingHelper logger)
-        {
-            this.logger = logger;
-        }
-
         public void LogEcmaError(EcmaScriptException ecmaScriptException)
         {
             this.LogError("An error occurred in parsing the Javascript file.");
@@ -49,12 +49,13 @@ namespace RequireJsNet.Compressor
             }
             else
             {
+                var sourceName = string.IsNullOrEmpty(ecmaScriptException.SourceName)
+                                     ? string.Empty
+                                     : "Source: {1}. " + ecmaScriptException.SourceName;
                 this.LogError(
                     "[ERROR] {0} ******** Line: {2}. LineOffset: {3}. LineSource: \"{4}\"",
                     ecmaScriptException.Message,
-                    string.IsNullOrEmpty(ecmaScriptException.SourceName)
-                        ? string.Empty
-                        : "Source: {1}. " + ecmaScriptException.SourceName,
+                    sourceName,
                     ecmaScriptException.LineNumber,
                     ecmaScriptException.ColumnNumber,
                     ecmaScriptException.LineSource);

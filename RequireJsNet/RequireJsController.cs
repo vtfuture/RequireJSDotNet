@@ -14,12 +14,12 @@ namespace RequireJS
     [RequireJsConfig]
     public abstract class RequireJsController : Controller
     {
-        public RequireJsOptions RequireJsOptions;
-
         protected RequireJsController()
         {
             RequireJsOptions = new RequireJsOptions(this);
         }
+
+        public RequireJsOptions RequireJsOptions { get; set; }
 
         public abstract void RegisterGlobalOptions();
     }

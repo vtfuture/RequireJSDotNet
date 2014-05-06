@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RequireJsNet.Compressor
+﻿namespace RequireJsNet.Compressor
 {
     public class FileSpec
     {
         private string fileName;
+
+        public FileSpec(string fileName, string compressionType)
+        {
+            FileName = fileName;
+            CompressionType = compressionType;
+        }
 
         public string FileName
         {
@@ -15,6 +16,7 @@ namespace RequireJsNet.Compressor
             {
                 return fileName;
             }
+
             set
             {
                 fileName = value.Trim();
@@ -22,11 +24,5 @@ namespace RequireJsNet.Compressor
         }
 
         public string CompressionType { get; set; }
-
-        public FileSpec(string fileName, string compressionType)
-        {
-            FileName = fileName;
-            CompressionType = compressionType;
-        }
     }
 }

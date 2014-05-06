@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using RequireJsNet.Models;
 
@@ -64,6 +60,7 @@ namespace RequireJsNet.Configuration
                 {
                     existingKey.Exports = shim.Exports;
                     existingKey.Dependencies.AddRange(shim.Dependencies);
+
                     // distinct by Dependency
                     existingKey.Dependencies = existingKey.Dependencies
                                                             .GroupBy(r => r.Dependency)
@@ -97,7 +94,5 @@ namespace RequireJsNet.Configuration
                 }
             }
         }
-
-
     }
 }
