@@ -202,7 +202,12 @@ namespace RequireJS
                 "require", 
                 (object)new[] { entryPointPath.ToString() }));
 
-            return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render() + requireEntryPointBuilder.Render());
+            return new MvcHtmlString(
+                configBuilder.Render() 
+                + Environment.NewLine
+                + requireRootBuilder.Render() 
+                + Environment.NewLine
+                + requireEntryPointBuilder.Render());
         }
 
         /// <summary>

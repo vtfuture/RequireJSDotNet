@@ -3,6 +3,8 @@ using System.Web.Mvc;
 
 namespace RequireJsNet
 {
+    using System;
+
     internal class JavaScriptBuilder
     {
         private const string Type = "application/javascript";
@@ -10,6 +12,8 @@ namespace RequireJsNet
         private readonly TagBuilder scriptTag = new TagBuilder("script");
 
         private readonly StringBuilder content = new StringBuilder();
+
+        private bool hasNewLine = false;
 
         public bool TagHasType { get; set; }
 
@@ -43,6 +47,12 @@ namespace RequireJsNet
 
         public void AddStatement(string statement)
         {
+            if (!hasNewLine)
+            {
+                content.AppendLine();
+                hasNewLine = true;
+            }
+
             content.AppendLine(statement);
         }
     }
