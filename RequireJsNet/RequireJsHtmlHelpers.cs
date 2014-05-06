@@ -194,10 +194,15 @@ namespace RequireJS
             configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(outputConfig, "require"));
 
             var requireRootBuilder = new JavaScriptBuilder();
-            requireRootBuilder.AddAttributesToStatement("data-main", entryPointPath.ToString());
             requireRootBuilder.AddAttributesToStatement("src", requireUrl);
 
-            return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render());
+            var requireEntryPointBuilder = new JavaScriptBuilder();
+            requireEntryPointBuilder.AddStatement(
+                JavaScriptHelpers.MethodCall(
+                "require", 
+                (object)new[] { entryPointPath.ToString() }));
+
+            return new MvcHtmlString(configBuilder.Render() + requireRootBuilder.Render() + requireEntryPointBuilder.Render());
         }
 
         /// <summary>
