@@ -1,0 +1,68 @@
+/*turquoise*/
+/* Custom colors for components */
+.bs-pager {
+  margin: 0;
+  font-size: 13px;
+  font-family: Arial, Verdana, sans-serif; }
+  .bs-pager > div {
+    padding: 0;
+    overflow: hidden;
+    margin: 18px 0; }
+  .bs-pager .pagination {
+    margin: 0;
+    float: left; }
+    .bs-pager .pagination .active a {
+      background: #45ada8;
+      border: 1px solid #45ada8; }
+      .bs-pager .pagination .active a:hover {
+        background: #45ada8;
+        border: 1px solid #45ada8;
+        color: #fff; }
+  .bs-pager .results_number {
+    float: left;
+    line-height: 29px;
+    margin-left: 10px; }
+  .bs-pager .results_per_page {
+    overflow: visible; }
+    .bs-pager .results_per_page .btn {
+      padding: 6px 9px 6px 10px;
+      font-size: 13px; }
+    .bs-pager .results_per_page .results_per_page_container {
+      margin-right: 5px; }
+    .bs-pager .results_per_page .dropdown {
+      float: left; }
+      .bs-pager .results_per_page .dropdown .caret {
+        margin-left: 5px; }
+      .bs-pager .results_per_page .dropdown .dropdown-menu {
+        left: auto;
+        right: 0;
+        min-width: 100px; }
+    .bs-pager .results_per_page .btn-go_up {
+      float: left;
+      margin-left: 10px; }
+
+/* Other colors */
+/*BLUE*/
+.bs-pager.blue .pagination .active a, .bs-pager.blue .pagination .active a:hover {
+  background: #559ed6;
+  border: 1px solid #559ed6; }
+
+/*GREEN*/
+.bs-pager.green .pagination .active a, .bs-pager.green .pagination .active a:hover {
+  background: #59b390;
+  border: 1px solid #59b390; }
+
+/*PURPLE*/
+.bs-pager.purple .pagination .active a, .bs-pager.purple .pagination .active a:hover {
+  background: #703d6f;
+  border: 1px solid #703d6f; }
+
+/*ORANGE*/
+.bs-pager.orange .pagination .active a, .bs-pager.orange .pagination .active a:hover {
+  background: #f27435;
+  border: 1px solid #f27435; }
+
+/*BLACK*/
+.bs-pager.black .pagination .active a, .bs-pager.black .pagination .active a:hover {
+  background: #424141;
+  border: 1px solid #424141; }

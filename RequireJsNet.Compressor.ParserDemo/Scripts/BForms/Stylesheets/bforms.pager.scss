@@ -1,0 +1,110 @@
+﻿$Gray: #dadada;
+$darkGray: #585858;
+$textGray: #989898;
+$textColor: #212121;
+$borderColor: #e8e8e8;
+$mainColor: #45ADA8; /*turquoise*/
+
+/* Custom colors for components */
+$Blue: #559ed6;
+$Green: #59B390;
+$Purple: #703D6F;
+$Orange: #F27435;
+$Black: #424141;
+
+
+.bs-pager {
+	margin: 0;
+	font-size: 13px;
+	font-family: Arial, Verdana, sans-serif;
+	> div {
+		padding: 0;
+		overflow: hidden;
+		margin: 18px 0;
+	}
+	.pagination {
+		margin: 0;
+		float: left;
+		.active a {
+			background: $mainColor;
+			border: 1px solid  $mainColor;
+			&:hover {
+				background: $mainColor;
+				border: 1px solid  $mainColor;
+				color: #fff;
+			}
+		}
+	}
+	.results_number {
+		float: left;
+		line-height: 29px;
+		margin-left: 10px;
+	}
+	.results_per_page {
+		overflow: visible;
+		.btn {
+			padding: 6px 9px 6px 10px;
+			font-size: 13px;
+		}
+		.results_per_page_container {
+			margin-right: 5px;
+		}
+		.dropdown {
+			float: left;
+			.caret {
+				margin-left: 5px;
+			}
+			.dropdown-menu {
+				left: auto;
+				right: 0;
+				min-width: 100px;
+			}
+		}
+		.btn-go_up {
+			float: left;
+			margin-left: 10px;
+		}
+	}
+}
+
+/* Other colors */
+
+/*BLUE*/
+.bs-pager.blue .pagination .active {
+	a, a:hover {
+		background: $Blue;
+		border: 1px solid $Blue;
+	}
+}
+
+/*GREEN*/
+.bs-pager.green .pagination .active {
+	a, a:hover {
+		background: $Green;
+		border: 1px solid $Green;
+	}
+}
+
+/*PURPLE*/
+.bs-pager.purple .pagination .active {
+	a, a:hover {
+		background: $Purple;
+		border: 1px solid $Purple;
+	}
+}
+
+/*ORANGE*/
+.bs-pager.orange .pagination .active {
+	a, a:hover {
+		background: $Orange;
+		border: 1px solid $Orange;
+	}
+}
+
+/*BLACK*/
+.bs-pager.black .pagination .active {
+	a, a:hover {
+		background: $Black;
+		border: 1px solid $Black;
+	}
+}

@@ -59,7 +59,9 @@
     <Compile Include="Models\FileSpec.cs" />
     <Compile Include="Models\PathItem.cs" />
     <Compile Include="Models\RequireConfiguration.cs" />
+    <Compile Include="Parsing\RequireCall.cs" />
     <Compile Include="Parsing\RequireVisitor.cs" />
+    <Compile Include="Parsing\VisitorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireProcessing\RequireConfigReader.cs" />
     <Compile Include="Tasks\CompressorTask.cs" />
@@ -73,6 +75,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="json1.json" />
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>

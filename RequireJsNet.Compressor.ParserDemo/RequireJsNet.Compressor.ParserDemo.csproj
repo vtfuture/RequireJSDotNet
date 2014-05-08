@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3FBD9FF5-7556-4EAC-8B15-364564E78594}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RequireJsNet.Compressor.ParserDemo</RootNamespace>
+    <AssemblyName>RequireJsNet.Compressor.ParserDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BForms">
+      <HintPath>..\packages\BForms.MVC.1.0.0.34\lib\net45\BForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Jint">
+      <HintPath>..\packages\Jint.2.1.0.0\lib\portable-net40+sl50+wp80+win\Jint.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RequireJsNet">
+      <HintPath>..\packages\RequireJsNet.1.0.7.0\lib\net45\RequireJsNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Scripts\BForms\Plugins\Datepicker\css\bforms.datepicker.scss" />
+    <None Include="Scripts\BForms\Plugins\Rangepicker\css\bforms.rangepicker.scss" />
+    <None Include="Scripts\BForms\RequireJS.config" />
+    <None Include="Scripts\BForms\RequireJS.Release.config" />
+    <None Include="Scripts\BForms\Stylesheets\bforms.core.scss" />
+    <None Include="Scripts\BForms\Stylesheets\bforms.grid.scss" />
+    <None Include="Scripts\BForms\Stylesheets\bforms.groupeditor.scss" />
+    <None Include="Scripts\BForms\Stylesheets\bforms.pager.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\BForms\Bundles\css\stylesheets.css" />
+    <Content Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\BForms\Bundles\images\bg-user.png" />
+    <Content Include="Scripts\BForms\Bundles\images\edit-pencil.gif" />
+    <Content Include="Scripts\BForms\Bundles\images\grippy.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-arr-down.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-arr-left.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-arr-right.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-arr-up.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-calendar.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-down_arrow-small.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-grippy.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-order_down.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-order_up.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-remove.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-right_arrow-small.png" />
+    <Content Include="Scripts\BForms\Bundles\images\icn-time.png" />
+    <Content Include="Scripts\BForms\Bundles\images\preloader-small.gif" />
+    <Content Include="Scripts\BForms\Bundles\images\preloader.gif" />
+    <Content Include="Scripts\BForms\Bundles\images\preloader_16x16.gif" />
+    <Content Include="Scripts\BForms\Bundles\images\select2-spinner.gif" />
+    <Content Include="Scripts\BForms\Bundles\images\select2.png" />
+    <Content Include="Scripts\BForms\Bundles\images\select2x2.png" />
+    <Content Include="Scripts\BForms\Bundles\js\components.js" />
+    <Content Include="Scripts\BForms\Bundles\js\iefix.js" />
+    <Content Include="Scripts\BForms\Bundles\js\plugins.js" />
+    <Content Include="Scripts\BForms\Bundles\js\widgets.js" />
+    <Content Include="Scripts\BForms\Components\Amplify\amplify.js" />
+    <Content Include="Scripts\BForms\Components\Bootstrap\css\bootstrap.css" />
+    <Content Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\BForms\Components\Bootstrap\js\bootstrap.js" />
+    <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload.js" />
+    <Content Include="Scripts\BForms\Components\FileUpload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\BForms\Components\Gremlins\gremlins.min.js" />
+    <Content Include="Scripts\BForms\Components\HistoryJS\jquery.history.js" />
+    <Content Include="Scripts\BForms\Components\Html5shiv\html5shiv.js" />
+    <Content Include="Scripts\BForms\Components\ICanHaz\ICanHaz.js" />
+    <Content Include="Scripts\BForms\Components\ICanHaz\singleton-ich.js" />
+    <Content Include="Scripts\BForms\Components\jQuery-ui\jquery-ui.core.js" />
+    <Content Include="Scripts\BForms\Components\jQuery\jquery-migrate.js" />
+    <Content Include="Scripts\BForms\Components\jQuery\jquery.js" />
+    <Content Include="Scripts\BForms\Components\NestedSortable\jquery.mjs.nestedSortable.js" />
+    <Content Include="Scripts\BForms\Components\PlaceholderShim\jquery.html5-placeholder-shim.js" />
+    <Content Include="Scripts\BForms\Components\RequireJS\depend.js" />
+    <Content Include="Scripts\BForms\Components\RequireJS\i18n.js" />
+    <Content Include="Scripts\BForms\Components\RequireJS\require.js" />
+    <Content Include="Scripts\BForms\Components\RequireJS\text.js" />
+    <Content Include="Scripts\BForms\Components\Respond\respond.js" />
+    <Content Include="Scripts\BForms\Components\SelectorSet\jquery.selector-set.js" />
+    <Content Include="Scripts\BForms\Components\SelectorSet\selector-set.js" />
+    <Content Include="Scripts\BForms\Images\bg-user.png" />
+    <Content Include="Scripts\BForms\Images\icn-down_arrow-small.png" />
+    <Content Include="Scripts\BForms\Images\icn-grippy.png" />
+    <Content Include="Scripts\BForms\Images\icn-order_down.png" />
+    <Content Include="Scripts\BForms\Images\icn-order_up.png" />
+    <Content Include="Scripts\BForms\Images\icn-right_arrow-small.png" />
+    <Content Include="Scripts\BForms\Images\preloader-small.gif" />
+    <Content Include="Scripts\BForms\Images\preloader.gif" />
+    <Content Include="Scripts\BForms\Plugins\CheckBoxList\bforms.checklist.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\css\bforms.datepicker.css" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-arr-down.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-arr-left.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-arr-right.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-arr-up.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-calendar.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-remove.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-time.png" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\bforms.datepicker.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\bforms.datepicker.range.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\bforms.datepicker.tmpl.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\i18n\lang.bundle.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\lib\moment.isocalendar.js" />
+    <Content Include="Scripts\BForms\Plugins\Datepicker\js\lib\moment.js" />
+    <Content Include="Scripts\BForms\Plugins\NavScroll\bforms.navScroll.js" />
+    <Content Include="Scripts\BForms\Plugins\RadioButtonList\bforms.radiolist.js" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\css\bforms.rangepicker.css" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\css\bforms.rangepicker.min.css" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\images\icn-arr-down.png" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\images\icn-arr-up.png" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\images\icn-remove.png" />
+    <Content Include="Scripts\BForms\Plugins\Rangepicker\js\bforms.rangepicker.js" />
+    <Content Include="Scripts\BForms\Plugins\Select2\css\select2.css" />
+    <Content Include="Scripts\BForms\Plugins\Select2\images\select2-spinner.gif" />
+    <Content Include="Scripts\BForms\Plugins\Select2\images\select2.png" />
+    <Content Include="Scripts\BForms\Plugins\Select2\images\select2x2.png" />
+    <Content Include="Scripts\BForms\Plugins\Select2\js\bforms.select2.js" />
+    <Content Include="Scripts\BForms\Plugins\Select2\js\i18n\select2-ro.js" />
+    <Content Include="Scripts\BForms\Plugins\Select2\js\select2.js" />
+    <Content Include="Scripts\BForms\Plugins\Typeahead\bforms.typeahead.js" />
+    <Content Include="Scripts\BForms\Plugins\Typeahead\typeahead.js" />
+    <Content Include="Scripts\BForms\Plugins\UI\bforms.extensions.js" />
+    <Content Include="Scripts\BForms\Plugins\UI\bforms.initUI.js" />
+    <Content Include="Scripts\BForms\Plugins\UI\bforms.resetInput.js" />
+    <Content Include="Scripts\BForms\Plugins\Validation\bforms.validate.js" />
+    <Content Include="Scripts\BForms\Plugins\Validation\bforms.validate.unobtrusive.js" />
+    <Content Include="Scripts\BForms\Plugins\Validation\i18n\bforms.validate-ro.js" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.core.css" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.grid.css" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.groupeditor.css" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.groupeditor.min.css" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.pager.css" />
+    <Content Include="Scripts\BForms\Widgets\FileUpload\bforms.fileUpload.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.editable.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.form.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.grid.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.pager.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.toolbar.add.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.toolbar.advancedSearch.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.toolbar.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.toolbar.order.js" />
+    <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.toolbar.quickSearch.js" />
+    <Content Include="Scripts\BForms\Widgets\GroupEditor\bforms.groupEditor.js" />
+    <Content Include="Scripts\BForms\Widgets\InlineQuestion\bforms.inlineQuestion.js" />
+    <Content Include="Scripts\BForms\Widgets\Panel\bforms.panel.js" />
+    <Content Include="Scripts\BForms\Widgets\Sortable\bforms.sortable.js" />
+    <Content Include="Scripts\BForms\Widgets\Taglist\bforms.taglist.js" />
+    <Content Include="Scripts\BForms\Widgets\Utils\bforms.ajax.js" />
+    <Content Include="Scripts\BForms\Widgets\Utils\bforms.namespace.js" />
+    <Content Include="Scripts\BForms\Widgets\Utils\bforms.themeSelect.js" />
+    <Content Include="Scripts\minimal.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RequireJsNet.Compressor\RequireJsNet.Compressor.csproj">
+      <Project>{27FBCFC2-9AD7-4042-BC47-0A61B8078264}</Project>
+      <Name>RequireJsNet.Compressor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
