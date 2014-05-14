@@ -175,7 +175,9 @@
     <Content Include="Scripts\BForms\Plugins\Typeahead\bforms.typeahead.js" />
     <Content Include="Scripts\BForms\Plugins\Typeahead\typeahead.js" />
     <Content Include="Scripts\BForms\Plugins\UI\bforms.extensions.js" />
-    <Content Include="Scripts\BForms\Plugins\UI\bforms.initUI.js" />
+    <Content Include="Scripts\BForms\Plugins\UI\bforms.initUI.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\BForms\Plugins\UI\bforms.resetInput.js" />
     <Content Include="Scripts\BForms\Plugins\Validation\bforms.validate.js" />
     <Content Include="Scripts\BForms\Plugins\Validation\bforms.validate.unobtrusive.js" />

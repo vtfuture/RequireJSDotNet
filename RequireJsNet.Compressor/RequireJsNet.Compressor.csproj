@@ -57,6 +57,7 @@
     <Compile Include="Models\BundleDefinition.cs" />
     <Compile Include="Models\BundleItem.cs" />
     <Compile Include="Models\FileSpec.cs" />
+    <Compile Include="Models\NodeWithChildren.cs" />
     <Compile Include="Models\PathItem.cs" />
     <Compile Include="Models\RequireConfiguration.cs" />
     <Compile Include="Parsing\RequireCall.cs" />
