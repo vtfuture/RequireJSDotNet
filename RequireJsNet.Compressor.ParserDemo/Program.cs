@@ -8,8 +8,10 @@ namespace RequireJsNet.Compressor.ParserDemo
 {
     using System.IO;
     using System.Reflection;
+    using System.Text.RegularExpressions;
 
     using Jint.Parser;
+    using Jint.Parser.Ast;
 
     using RequireJsNet.Compressor.Parsing;
 
@@ -26,6 +28,49 @@ namespace RequireJsNet.Compressor.ParserDemo
             var program = parser.Parse(text);
             var visitor = new RequireVisitor();
             var result = visitor.Visit(program);
+
+            //var scriptLines = 
+            //var requireLines = new List<string>();
+            //foreach (var requireCall in result.RequireCalls)
+            //{
+            //    var pnode = requireCall.ParentNode.Node.As<CallExpression>();
+            //    var node = pnode.Arguments.ElementAt(1).As<ArrayExpression>();
+            //    requireLines.Add(GetTextFromLines(
+            //        pnode.Location.Start.Column,
+            //        pnode.Location.Start.Line,
+            //        pnode.Location.End.Column,
+            //        pnode.Location.End.Line,
+            //        lines));
+            //}
+
+            var a = 5;
+        }
+
+        static string GetTextFromLines(int startCol, int startLine, int endCol, int endLine, List<string> lines)
+        {
+            startLine = startLine - 1;
+            endLine = endLine - 1;
+            if (startLine == endLine)
+            {
+                return GetTextFromSingleLine(startCol, endCol, lines[startLine]);
+            }
+
+            var builder = new StringBuilder();
+
+            // take only what we need from the first line
+            builder.AppendLine(GetTextFromSingleLine(startCol, lines[startLine].Length, lines[startLine]));
+            for (var i = startLine + 1; i < endLine; i++)
+            {
+                builder.AppendLine(lines[i]);
+            }
+
+            builder.AppendLine(GetTextFromSingleLine(0, endCol, lines[endLine]));
+            return builder.ToString();
+        }
+
+        static string GetTextFromSingleLine(int startIndex, int endIndex, string line)
+        {
+            return line.Substring(startIndex, endIndex - startIndex);
         }
 
         static string GetPath(string relativePath)
@@ -36,6 +81,36 @@ namespace RequireJsNet.Compressor.ParserDemo
                 relativePath);
         }
 
+        static void EnsureHasRange(SyntaxNode node, List<string> lineList)
+        {
+            if (node.Range != null)
+            {
+                return;
+            }
 
+        }
+
+        static List<ScriptLine> GetScriptLines(string scriptText)
+        {
+
+            for (var i = 0; i < scriptText.Length; i++)
+            {
+                
+            }
+
+            var lines = Regex.Split(scriptText, "\r\n|\r|\n").ToList();
+            var scriptLines = new List<ScriptLine>();
+            ScriptLine prevLine = null;
+            foreach (var line in lines)
+            {
+                // add an extra character for the previous line to account for line endings
+                var prevCount = prevLine == null ? 0 : prevLine.StartingIndex + prevLine.LineText.Length + 1;
+                var currentLine = new ScriptLine { LineText = line, StartingIndex = prevCount };
+                scriptLines.Add(currentLine);
+                prevLine = currentLine;
+            }
+
+            return null;
+        }
     }
 }

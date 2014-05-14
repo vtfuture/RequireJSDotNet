@@ -295,7 +295,8 @@ namespace RequireJsNet.Compressor.Parsing
 
             var requireCall = new RequireCall
                                   {
-                                      Type = RequireCallType.Require
+                                      Type = RequireCallType.Require,
+                                      ParentNode = parentNode
                                   };
 
             if (parentCall != null)
@@ -320,15 +321,16 @@ namespace RequireJsNet.Compressor.Parsing
                     throw new Exception("Could not read argument for require() call");
                 }
 
+                requireCall.SingleDependencyNode = singleDep;
                 requireCall.Dependencies.Add(singleDep.Value.ToString());
             }
             else if (argCount == 2)
             {
                 requireCall.IsModule = true;
-                var deps = this.ProcessDependencyArray(firstArg);
+                var deps = this.ProcessDependencyArray(firstArg, requireCall);
                 requireCall.Dependencies.AddRange(deps);
 
-                this.VisitExpression(secondArg, parentCall, parentNode);
+                this.ProcessModuleDefinition(secondArg, parentCall, parentNode);
             }
         }
 
@@ -343,7 +345,8 @@ namespace RequireJsNet.Compressor.Parsing
             var defineCall = new RequireCall
                                  {
                                      Type = RequireCallType.Define,
-                                     IsModule = true
+                                     IsModule = true,
+                                     ParentNode = parentNode
                                  };
 
             if (parentCall != null)
@@ -372,20 +375,23 @@ namespace RequireJsNet.Compressor.Parsing
                     throw new Exception("The first argument in a define call with 3 arguments was not a string literal.");
                 }
 
+                parentCall.ModuleIdentifierNode = identifierLiteral;
                 defineCall.Id = identifierLiteral.Value.ToString();
             }
 
-            defineCall.Dependencies.AddRange(this.ProcessDependencyArray(depsArray));
+            defineCall.Dependencies.AddRange(this.ProcessDependencyArray(depsArray, parentCall));
             ProcessModuleDefinition(moduleDefinition, parentCall, parentNode);
         }
 
-        private IEnumerable<string> ProcessDependencyArray(Expression depsNode)
+        private IEnumerable<string> ProcessDependencyArray(Expression depsNode, RequireCall parentCall)
         {
             var depsArray = depsNode.As<ArrayExpression>();
             if (depsArray == null)
             {
                 throw new Exception("Dependency array node was not an ArrayExpression");    
             }
+
+            parentCall.DependencyArrayNode = depsArray;
 
             foreach (var expression in depsArray.Elements)
             {
@@ -466,7 +472,8 @@ namespace RequireJsNet.Compressor.Parsing
                 {
                     return;
                 }
-                
+
+                parentCall.ModuleDefinitionNode = argumentFunction;
                 this.VisitExpression(argumentFunction, parentCall, currentParent);
                 this.nodesToSkip.Add(argumentFunction.Location);
             }

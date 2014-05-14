@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Compressor.Parsing
 {
+    using Jint.Parser.Ast;
+
+    using RequireJsNet.Compressor.Models;
+
     internal enum RequireCallType
     {
         Define,
@@ -22,12 +26,22 @@ namespace RequireJsNet.Compressor.Parsing
 
         public string Id { get; set; }
 
+        public NodeWithChildren ParentNode { get; set; }
+
         public bool IsModule { get; set; }
 
         public RequireCallType Type { get; set; }
 
         public List<string> Dependencies { get; set; }
 
-        public List<RequireCall> Children { get; set; } 
+        public List<RequireCall> Children { get; set; }
+
+        public Literal SingleDependencyNode { get; set; }
+
+        public Literal ModuleIdentifierNode { get; set; }
+
+        public ArrayExpression DependencyArrayNode { get; set; }
+
+        public FunctionExpression ModuleDefinitionNode { get; set; }
     }
 }
