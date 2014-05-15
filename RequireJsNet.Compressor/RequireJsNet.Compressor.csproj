@@ -70,6 +70,12 @@
     <Compile Include="Tasks\CssCompressorTask.cs" />
     <Compile Include="Tasks\JavaScriptCompressorTask.cs" />
     <Compile Include="Tasks\RequireCompressorTask.cs" />
+    <Compile Include="Transformations\RenameDependencyTransformation.cs" />
+    <Compile Include="Transformations\ToDefineTransformation.cs" />
+    <Compile Include="Transformations\AddIdentifierTransformation.cs" />
+    <Compile Include="Transformations\IRequireTransformation.cs" />
+    <Compile Include="Transformations\RequireTransformationType.cs" />
+    <Compile Include="Transformations\TransformationCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="YuiCompressor.NET.license.txt">
@@ -81,6 +87,7 @@
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
