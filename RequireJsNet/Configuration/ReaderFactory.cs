@@ -5,13 +5,13 @@ namespace RequireJsNet.Configuration
 {
     internal static class ReaderFactory
     {
-        public static IConfigReader CreateReader(string path)
+        public static IConfigReader CreateReader(string path, ConfigLoaderOptions options)
         {
             var type = GetReaderType(path);
             switch (type)
             {
                     case ReaderType.Xml:
-                        return new XmlReader(path);
+                        return new XmlReader(path, options);
                     case ReaderType.Json:
                         throw new NotImplementedException("No reader for json config implemented.");
                     default:

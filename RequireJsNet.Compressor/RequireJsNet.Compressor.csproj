@@ -55,12 +55,8 @@
     <Compile Include="Logging\MsBuildLogAdapter.cs" />
     <Compile Include="Models\ActionType.cs" />
     <Compile Include="Models\Bundle.cs" />
-    <Compile Include="Models\BundleDefinition.cs" />
-    <Compile Include="Models\BundleItem.cs" />
     <Compile Include="Models\FileSpec.cs" />
     <Compile Include="Models\NodeWithChildren.cs" />
-    <Compile Include="Models\PathItem.cs" />
-    <Compile Include="Models\RequireConfiguration.cs" />
     <Compile Include="AutoDependency\Parsing\RequireCall.cs" />
     <Compile Include="AutoDependency\Parsing\RequireVisitor.cs" />
     <Compile Include="AutoDependency\Parsing\ScriptLine.cs" />
@@ -87,7 +83,12 @@
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RequireJsNet\RequireJsNet.csproj">
+      <Project>{EA33DE7B-1269-4000-8C33-F6B0632D1872}</Project>
+      <Name>RequireJsNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

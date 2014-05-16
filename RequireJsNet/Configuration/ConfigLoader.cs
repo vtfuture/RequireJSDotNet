@@ -7,12 +7,16 @@ namespace RequireJsNet.Configuration
     internal class ConfigLoader
     {
         private readonly IList<string> paths = new List<string>();
+
         private readonly IRequireJsLogger logger;
 
-        public ConfigLoader(IList<string> paths, IRequireJsLogger logger)
+        private readonly ConfigLoaderOptions options; 
+
+        public ConfigLoader(IList<string> paths, IRequireJsLogger logger, ConfigLoaderOptions options = null)
         {
             this.paths = paths;
             this.logger = logger ?? new ExceptionThrowingLogger();
+            this.options = options ?? new ConfigLoaderOptions();
         }
 
         public ConfigurationCollection Get()
@@ -20,13 +24,13 @@ namespace RequireJsNet.Configuration
             var collectionList = new List<ConfigurationCollection>();
             foreach (var path in paths)
             {
-                var reader = ReaderFactory.CreateReader(path);
+                var reader = ReaderFactory.CreateReader(path, options);
                 var config = reader.ReadConfig();
                 ValidateCollection(config, path);
                 collectionList.Add(config);
             }
 
-            var configMerger = new ConfigMerger(collectionList);
+            var configMerger = new ConfigMerger(collectionList, options);
             var merged = configMerger.GetMerged();
             ValidateCollection(merged, null);
             return merged;

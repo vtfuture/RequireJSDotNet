@@ -9,5 +9,7 @@
         public RequireShim Shim { get; set; }
 
         public RequireMap Map { get; set; }
+
+        public RequireBundles Bundles { get; set; }
     }
 }

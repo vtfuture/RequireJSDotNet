@@ -74,16 +74,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigLoader.cs" />
+    <Compile Include="Configuration\ConfigLoaderOptions.cs" />
     <Compile Include="Configuration\ConfigMerger.cs" />
     <Compile Include="ExceptionThrowingLogger.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Helpers\JavaScriptHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
+    <Compile Include="Helpers\XmlReaderHelpers.cs" />
     <Compile Include="IRequireJsLogger.cs" />
     <Compile Include="JavaScriptBuilder.cs" />
+    <Compile Include="Models\BundleItem.cs" />
     <Compile Include="Models\JsonConfig.cs" />
     <Compile Include="Models\JsonRequireDeps.cs" />
     <Compile Include="Models\JsonRequireOptions.cs" />
+    <Compile Include="Models\RequireBundle.cs" />
+    <Compile Include="Models\RequireBundles.cs" />
     <Compile Include="Models\RequireMap.cs" />
     <Compile Include="Models\RequireMapElement.cs" />
     <Compile Include="Models\RequireReplacement.cs" />

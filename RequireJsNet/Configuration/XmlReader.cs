@@ -7,13 +7,20 @@ using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
+    using System;
+
+    using RequireJsNet.Helpers;
+
     internal class XmlReader : IConfigReader
     {
         private readonly string path;
 
-        public XmlReader(string path)
+        private readonly ConfigLoaderOptions options;
+
+        public XmlReader(string path, ConfigLoaderOptions options)
         {
             this.path = path;
+            this.options = options;
         }
 
         public string Path
@@ -34,6 +41,12 @@ namespace RequireJsNet.Configuration
                 collection.Paths = GetPaths(doc.Root);
                 collection.Shim = GetShim(doc.Root);
                 collection.Map = GetMap(doc.Root);
+
+                if (options.ProcessBundles)
+                {
+                    collection.Bundles = this.GetBundles(doc.Root);    
+                }
+
                 return collection;    
             }
         }
@@ -48,8 +61,9 @@ namespace RequireJsNet.Configuration
                 paths.PathList = pathEl.Descendants("path")
                                         .Select(r => new RequirePath
                                                     {
-                                                        Key = r.Attribute("key").Value,
-                                                        Value = r.Attribute("value").Value
+                                                        Key = r.ReadStringAttribute("key"),
+                                                        Value = r.ReadStringAttribute("value"),
+                                                        DefaultBundle = r.ReadStringAttribute("bundle", AttributeReadType.Optional)
                                                     }).ToList();
             }
 
@@ -71,12 +85,25 @@ namespace RequireJsNet.Configuration
             return shim;
         }
 
+        private RequireBundles GetBundles(XElement root)
+        {
+            var bundles = new RequireBundles();
+            bundles.BundleEntries = new List<RequireBundle>();
+            var bundlesEl = root.Descendants("bundles").FirstOrDefault();
+            if (bundlesEl != null)
+            {
+                bundles.BundleEntries = root.Descendants("bundle").Select(this.BundleEntryReader).ToList();
+            }
+
+            return bundles;
+        }
+
         private ShimEntry ShimEntryReader(XElement element)
         {
             return new ShimEntry
             {
-                Exports = element.Attribute("exports") != null ? element.Attribute("exports").Value : string.Empty,
-                For = element.Attribute("for").Value,
+                Exports = element.ReadStringAttribute("exports", AttributeReadType.Optional),
+                For = element.ReadStringAttribute("for"),
                 Dependencies = DependenciesReader(element)
             };
         }
@@ -86,8 +113,28 @@ namespace RequireJsNet.Configuration
             return element.Descendants("add")
                         .Select(x => new RequireDependency
                         {
-                            Dependency = x.Attribute("dependency").Value
+                            Dependency = x.ReadStringAttribute("dependency")
                         }).ToList();
+        }
+
+        private RequireBundle BundleEntryReader(XElement element)
+        {
+            return new RequireBundle
+                       {
+                           Name = element.ReadStringAttribute("name"),
+                           Includes = element.ReadStringListAttribute("includes", AttributeReadType.Optional),
+                           OutputPath = element.ReadStringAttribute("outputPath", AttributeReadType.Optional),
+                           IsVirtual = element.ReadBooleanAttribute("virtual", AttributeReadType.Optional) ?? false,
+                           BundleItems = element.Descendants("bundleItem")
+                                                .Select(r => new BundleItem
+                                                                {
+                                                                    ModuleName = r.ReadStringAttribute("path"),
+                                                                    CompressionType = r.ReadStringAttribute(
+                                                                                        "compression", 
+                                                                                        AttributeReadType.Optional)
+                                                                })
+                                                .ToList()
+                       };
         }
 
         private RequireMap GetMap(XElement root)
@@ -109,7 +156,7 @@ namespace RequireJsNet.Configuration
         {
             return new RequireMapElement
                    {
-                       For = element.Attribute("for").Value,
+                       For = element.ReadStringAttribute("for"),
                        Replacements = ReplacementsReader(element)
                    };
         }
@@ -119,8 +166,8 @@ namespace RequireJsNet.Configuration
             return element.Descendants("add")
                             .Select(x => new RequireReplacement
                                          {
-                                             NewKey = x.Attribute("new").Value,
-                                             OldKey = x.Attribute("old").Value
+                                             NewKey = x.ReadStringAttribute("new"),
+                                             OldKey = x.ReadStringAttribute("old")
                                          }).ToList();
         }
     }
