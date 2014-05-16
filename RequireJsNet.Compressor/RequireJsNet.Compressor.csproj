@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDependency\ScriptProcessor.cs" />
     <Compile Include="Compression\CompressorTaskEngine.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\MsBuildLogAdapter.cs" />
@@ -60,21 +61,21 @@
     <Compile Include="Models\NodeWithChildren.cs" />
     <Compile Include="Models\PathItem.cs" />
     <Compile Include="Models\RequireConfiguration.cs" />
-    <Compile Include="Parsing\RequireCall.cs" />
-    <Compile Include="Parsing\RequireVisitor.cs" />
-    <Compile Include="Parsing\ScriptLine.cs" />
-    <Compile Include="Parsing\VisitorResult.cs" />
+    <Compile Include="AutoDependency\Parsing\RequireCall.cs" />
+    <Compile Include="AutoDependency\Parsing\RequireVisitor.cs" />
+    <Compile Include="AutoDependency\Parsing\ScriptLine.cs" />
+    <Compile Include="AutoDependency\Parsing\VisitorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireProcessing\RequireConfigReader.cs" />
     <Compile Include="Tasks\CompressorTask.cs" />
     <Compile Include="Tasks\CssCompressorTask.cs" />
     <Compile Include="Tasks\JavaScriptCompressorTask.cs" />
     <Compile Include="Tasks\RequireCompressorTask.cs" />
-    <Compile Include="Transformations\RenameDependencyTransformation.cs" />
-    <Compile Include="Transformations\ToDefineTransformation.cs" />
-    <Compile Include="Transformations\AddIdentifierTransformation.cs" />
-    <Compile Include="Transformations\IRequireTransformation.cs" />
-    <Compile Include="Transformations\TransformationCollection.cs" />
+    <Compile Include="AutoDependency\Transformations\RenameDependencyTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\ToDefineTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\AddIdentifierTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\IRequireTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\TransformationCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="YuiCompressor.NET.license.txt">
