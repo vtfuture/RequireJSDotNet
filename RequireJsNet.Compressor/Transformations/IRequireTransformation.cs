@@ -4,8 +4,6 @@ namespace RequireJsNet.Compressor.Transformations
 
     internal interface IRequireTransformation
     {
-        object TransformationData { get; set; }
-
         RequireCall RequireCall { get; set; }
 
         void Execute(ref string script);

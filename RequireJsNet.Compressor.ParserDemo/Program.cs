@@ -14,6 +14,7 @@ namespace RequireJsNet.Compressor.ParserDemo
     using Jint.Parser.Ast;
 
     using RequireJsNet.Compressor.Parsing;
+    using RequireJsNet.Compressor.Transformations;
 
     class Program
     {
@@ -29,29 +30,39 @@ namespace RequireJsNet.Compressor.ParserDemo
             var visitor = new RequireVisitor();
             var result = visitor.Visit(program);
 
-            //var scriptLines = 
-            //var requireLines = new List<string>();
-            //foreach (var requireCall in result.RequireCalls)
-            //{
-            //    var pnode = requireCall.ParentNode.Node.As<CallExpression>();
-            //    var node = pnode.Arguments.ElementAt(1).As<ArrayExpression>();
-            //    requireLines.Add(GetTextFromLines(
-            //        pnode.Location.Start.Column,
-            //        pnode.Location.Start.Line,
-            //        pnode.Location.End.Column,
-            //        pnode.Location.End.Line,
-            //        lines));
-            //}
-
             var lines = GetScriptLines(text);
 
             var flattenedResults = result.GetFlattened();
 
-            flattenedResults.ForEach(x => EnsureHasRange(x.ParentNode.Node, lines));
+            flattenedResults.ForEach(
+                x =>
+                    {
+                        EnsureHasRange(x.ParentNode.Node, lines);
+                        EnsureHasRange(x.DependencyArrayNode, lines);
+                        EnsureHasRange(x.ModuleDefinitionNode, lines);
+                        EnsureHasRange(x.ModuleIdentifierNode, lines);
+                        EnsureHasRange(x.SingleDependencyNode, lines);
+                        var arguments = x.ParentNode.Node.As<CallExpression>().Arguments;
+                        foreach (var arg in arguments)
+                        {
+                            EnsureHasRange(arg, lines);    
+                        }
+                    });
 
             var reqLines = flattenedResults.Select(x => GetTextFromFullScript(x.ParentNode.Node.Range, text)).ToList();
+            
+            var modifiedString = text;
+            var transformCollection = new TransformationCollection();
+            foreach (var req in flattenedResults)
+            {
+                transformCollection.Add(ToDefineTransformation.Create(req));
+                if (req.Type != RequireCallType.Define)
+                {
+                    transformCollection.Add(AddIdentifierTransformation.Create(req, "gogu"));
+                }
+            }
 
-            var a = 5;
+            transformCollection.ExecuteAll(ref modifiedString);    
         }
 
         static string GetTextFromLines(int startCol, int startLine, int endCol, int endLine, List<string> lines)
@@ -96,7 +107,7 @@ namespace RequireJsNet.Compressor.ParserDemo
 
         private static void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)
         {
-            if (node.Range != null)
+            if (node == null || node.Range != null)
             {
                 return;
             }

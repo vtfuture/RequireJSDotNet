@@ -10,9 +10,21 @@ namespace RequireJsNet.Compressor.Transformations
 
     internal class RenameDependencyTransformation : IRequireTransformation
     {
-        public object TransformationData { get; set; }
-
         public RequireCall RequireCall { get; set; }
+
+        protected string OriginalName { get; set; }
+
+        protected string NewName { get; set; }
+
+        public static RenameDependencyTransformation Create(RequireCall requireCall, string originalName, string newName)
+        {
+            return new RenameDependencyTransformation
+            {
+                RequireCall = requireCall,
+                NewName = newName,
+                OriginalName = originalName
+            };
+        }
 
         public void Execute(ref string script)
         {
