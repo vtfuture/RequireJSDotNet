@@ -62,7 +62,10 @@
     <Compile Include="AutoDependency\Parsing\ScriptLine.cs" />
     <Compile Include="AutoDependency\Parsing\VisitorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequireProcessing\RequireConfigReader.cs" />
+    <Compile Include="RequireProcessing\AutoBundleConfigProcessor.cs" />
+    <Compile Include="RequireProcessing\ConfigProcessor.cs" />
+    <Compile Include="RequireProcessing\ConfigProcessorFactory.cs" />
+    <Compile Include="RequireProcessing\SimpleBundleConfigProcessor.cs" />
     <Compile Include="Tasks\CompressorTask.cs" />
     <Compile Include="Tasks\CssCompressorTask.cs" />
     <Compile Include="Tasks\JavaScriptCompressorTask.cs" />

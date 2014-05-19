@@ -10,9 +10,11 @@ using Yahoo.Yui.Compressor;
 
 namespace RequireJsNet.Compressor
 {
+    using RequireJsNet.Compressor.RequireProcessing;
+
     public class RequireCompressorTask : Task
     {
-        private RequireConfigReader configReader;
+        private ConfigProcessor configProcessor;
 
         public string LoggingType { get; set; }
 
@@ -21,6 +23,8 @@ namespace RequireJsNet.Compressor
         public string EncodingType { get; set; }
 
         public int LineBreakPosition { get; set; }
+
+        public bool AutoCompressor { get; set; }
 
         [Required]
         public string ProjectPath { get; set; }
@@ -34,7 +38,7 @@ namespace RequireJsNet.Compressor
 
         public override bool Execute()
         {
-            var files =  new List<string>();
+            var files = new List<string>();
             if (RequireConfigs != null)
             {
                 files = RequireConfigs.Select(r => r.GetMetadata("FullPath")).ToList();    
@@ -47,11 +51,12 @@ namespace RequireJsNet.Compressor
                 entryPointOveride = EntryPointOverride.GetMetadata("FullPath");
             }
 
-            this.configReader = new RequireConfigReader(ProjectPath, PackagePath, entryPointOveride,  files);
+            this.configProcessor = ConfigProcessorFactory.Create(AutoCompressor, ProjectPath, PackagePath, entryPointOveride, files);
+
             var bundles = new List<Bundle>();
             try
             {
-                bundles = this.configReader.ParseConfigs();
+                bundles = this.configProcessor.ParseConfigs();
             }
             catch (Exception ex)
             {
