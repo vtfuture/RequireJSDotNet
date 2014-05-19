@@ -122,7 +122,7 @@ namespace RequireJsNet.Configuration
             return new RequireBundle
                        {
                            Name = element.ReadStringAttribute("name"),
-                           Includes = element.ReadStringListAttribute("includes", AttributeReadType.Optional),
+                           Includes = element.ReadStringListAttribute("includes", AttributeReadType.Optional) ?? new List<string>(),
                            OutputPath = element.ReadStringAttribute("outputPath", AttributeReadType.Optional),
                            IsVirtual = element.ReadBooleanAttribute("virtual", AttributeReadType.Optional) ?? false,
                            BundleItems = element.Descendants("bundleItem")

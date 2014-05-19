@@ -8,6 +8,12 @@ namespace RequireJsNet.Models
 {
     public class RequireBundle
     {
+        public RequireBundle()
+        {
+            Includes = new List<string>();    
+            BundleItems = new List<BundleItem>();
+        }
+
         public string Name { get; set; }
 
         public bool IsVirtual { get; set; }
