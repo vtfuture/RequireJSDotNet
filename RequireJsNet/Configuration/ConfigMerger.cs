@@ -108,6 +108,7 @@ namespace RequireJsNet.Configuration
 
         private void MergeBundles(List<ConfigurationCollection> collection)
         {
+            this.MergeExistingBundles(collection);
             this.ResolveDefaultBundles();
             this.ResolveBundleItemsRelativePaths();
             this.ResolveBundleIncludes();
@@ -266,6 +267,28 @@ namespace RequireJsNet.Configuration
                                                             .Select(r => r.FirstOrDefault())
                                                             .ToList();
             }
+        }
+
+        private void MergeExistingBundles(List<ConfigurationCollection> collection)
+        {
+            foreach (var configuration in collection)
+            {
+                foreach (var bundle in configuration.Bundles.BundleEntries)
+                {
+                    var existingBundle = finalCollection.Bundles.BundleEntries.Where(r => r.Name == bundle.Name).FirstOrDefault();
+                    if (existingBundle == null)
+                    {
+                        existingBundle = bundle;
+                        finalCollection.Bundles.BundleEntries.Add(existingBundle);
+                    }
+                    else
+                    {
+                        // add without checking for duplicates, we'll filter them out later
+                        existingBundle.BundleItems.AddRange(bundle.BundleItems);
+                    }
+                }
+            }
+            
         }
     }
 }
