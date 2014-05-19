@@ -8,6 +8,7 @@ using RequireJsNet.Models;
 namespace RequireJsNet.Configuration
 {
     using System;
+    using System.Web.UI;
 
     using RequireJsNet.Helpers;
 
@@ -46,6 +47,8 @@ namespace RequireJsNet.Configuration
                 {
                     collection.Bundles = this.GetBundles(doc.Root);    
                 }
+
+                collection.AutoBundles = this.GetAutoBundles(doc.Root);
 
                 return collection;    
             }
@@ -169,6 +172,39 @@ namespace RequireJsNet.Configuration
                                              NewKey = x.ReadStringAttribute("new"),
                                              OldKey = x.ReadStringAttribute("old")
                                          }).ToList();
+        }
+
+        private AutoBundles GetAutoBundles(XElement root)
+        {
+            var autoBundles = new AutoBundles();
+            autoBundles.Bundles = new List<AutoBundle>();
+            var autoBundlesEl = root.Descendants("autoBundles").FirstOrDefault();
+            if (autoBundlesEl != null)
+            {
+                autoBundles.Bundles = root.Descendants("autoBundle").Select(this.AutoBundleReader).ToList();
+            }
+
+            return autoBundles;
+        }
+
+        private AutoBundle AutoBundleReader(XElement element)
+        {
+            return new AutoBundle
+                       {
+                           Id = element.ReadStringAttribute("id"),
+                           Includes = element.Descendants("include").Select(AutoBundleItemReader).ToList(),
+                           Excludes = element.Descendants("exclude").Select(AutoBundleItemReader).ToList()
+                       };
+        }
+
+        private AutoBundleItem AutoBundleItemReader(XElement element)
+        {
+            return new AutoBundleItem
+                       {
+                           BundleId = element.ReadStringAttribute("bundleId", AttributeReadType.Optional),
+                           Directory = element.ReadStringAttribute("directory", AttributeReadType.Optional),
+                           File = element.ReadStringAttribute("file", AttributeReadType.Optional)
+                       };
         }
     }
 }

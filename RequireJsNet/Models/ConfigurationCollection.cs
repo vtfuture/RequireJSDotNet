@@ -11,5 +11,7 @@
         public RequireMap Map { get; set; }
 
         public RequireBundles Bundles { get; set; }
+
+        public AutoBundles AutoBundles { get; set; }
     }
 }

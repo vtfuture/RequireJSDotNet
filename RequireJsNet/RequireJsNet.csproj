@@ -83,7 +83,11 @@
     <Compile Include="Helpers\XmlReaderHelpers.cs" />
     <Compile Include="IRequireJsLogger.cs" />
     <Compile Include="JavaScriptBuilder.cs" />
+    <Compile Include="Models\AutoBundle.cs" />
+    <Compile Include="Models\AutoBundleItem.cs" />
+    <Compile Include="Models\AutoBundles.cs" />
     <Compile Include="Models\BundleItem.cs" />
+    <Compile Include="Models\ConfigurationOverride.cs" />
     <Compile Include="Models\JsonConfig.cs" />
     <Compile Include="Models\JsonRequireDeps.cs" />
     <Compile Include="Models\JsonRequireOptions.cs" />

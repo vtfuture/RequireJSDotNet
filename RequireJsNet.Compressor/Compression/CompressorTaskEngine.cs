@@ -305,7 +305,9 @@ namespace RequireJsNet.Compressor
                     // Load up the file.
                     try
                     {
-                        var originalContent = File.ReadAllText(file.FileName, this.Encoding);
+                        var originalContent = string.IsNullOrEmpty(file.FileContent) 
+                                                    ? File.ReadAllText(file.FileName, this.Encoding) 
+                                                    : file.FileContent;
                         totalOriginalContentLength += originalContent.Length;
 
                         if (string.IsNullOrEmpty(originalContent))

@@ -25,6 +25,8 @@ namespace RequireJsNet.Configuration
             finalCollection.Map.MapElements = new List<RequireMapElement>();
             finalCollection.Bundles = new RequireBundles();
             finalCollection.Bundles.BundleEntries = new List<RequireBundle>();
+            finalCollection.AutoBundles = new AutoBundles();
+            finalCollection.AutoBundles.Bundles = new List<AutoBundle>();
         }
 
         public ConfigurationCollection GetMerged()
@@ -34,6 +36,7 @@ namespace RequireJsNet.Configuration
                 MergePaths(coll);
                 MergeShims(coll);
                 MergeMaps(coll);
+                this.MergeAutoBundles(coll);
             }
 
             if (options.ProcessBundles)
@@ -102,6 +105,31 @@ namespace RequireJsNet.Configuration
                 else
                 {
                     finalMaps.Add(map);
+                }
+            }
+        }
+
+        private void MergeAutoBundles(ConfigurationCollection collection)
+        {
+            var finalAutoBundles = finalCollection.AutoBundles.Bundles;
+            foreach (var autoBundle in collection.AutoBundles.Bundles)
+            {
+                var existing = finalAutoBundles.Where(r => r.Id == autoBundle.Id).FirstOrDefault();
+                if (existing != null)
+                {
+                    foreach (var include in autoBundle.Includes)
+                    {
+                        existing.Includes.Add(include);
+                    }
+
+                    foreach (var exclude in autoBundle.Excludes)
+                    {
+                        existing.Excludes.Add(exclude);
+                    }
+                }
+                else
+                {
+                    finalAutoBundles.Add(autoBundle);
                 }
             }
         }

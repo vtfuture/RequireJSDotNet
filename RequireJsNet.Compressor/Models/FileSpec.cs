@@ -23,6 +23,8 @@
             }
         }
 
+        public string FileContent { get; set; }
+
         public string CompressionType { get; set; }
     }
 }
