@@ -13,5 +13,6 @@ namespace RequireJsNet.Models
         public List<AutoBundleItem> Includes { get; set; }
 
         public List<AutoBundleItem> Excludes { get; set; }
+
     }
 }

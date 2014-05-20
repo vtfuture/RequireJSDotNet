@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Compressor.RequireProcessing
 {
+    using System.IO;
+
+    using RequireJsNet.Configuration;
+
     internal class AutoBundleConfigProcessor : ConfigProcessor
     {
         public AutoBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths)
@@ -24,7 +28,53 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         public override List<Bundle> ParseConfigs()
         {
+            if (!Directory.Exists(ProjectPath))
+            {
+                throw new DirectoryNotFoundException("Could not find project directory.");
+            }
+
+            FindConfigs();
+
+            var loader = new ConfigLoader(
+                FilePaths,
+                new ExceptionThrowingLogger(),
+                new ConfigLoaderOptions { ProcessBundles = true });
+
+            Configuration = loader.Get();
+            
+            foreach (var bundle in Configuration.AutoBundles.Bundles)
+            {
+                var files = new List<string>();
+                foreach (var include in bundle.Includes)
+                {
+                    if (!string.IsNullOrEmpty(include.File))
+                    {
+                        files.Add(this.ResolvePhysicalPath(include.File));
+                    }
+                    else if(!string.IsNullOrEmpty(include.Directory))
+                    {
+                        var absDirectory = this.GetAbsoluteDirectory(include.Directory);
+
+                        // not using filter for this since we're going to use the one the user provided in the future
+                        var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
+                        files.AddRange(dirFiles);
+                    }
+                }
+
+                files = files.Distinct().ToList();
+            }
+
             return new List<Bundle>();
+        }
+
+        private string GetAbsoluteDirectory(string relativeDirectory)
+        {
+            relativeDirectory = relativeDirectory.Replace("/", "\\");
+            if (relativeDirectory.StartsWith("\\"))
+            {
+                relativeDirectory = relativeDirectory.Substring(1);
+            }
+            return Path.Combine(EntryPoint + Path.DirectorySeparatorChar, relativeDirectory);
         }
     }
 }

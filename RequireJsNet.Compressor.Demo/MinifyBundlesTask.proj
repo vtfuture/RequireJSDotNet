@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask TaskName="RequireCompressorTask" AssemblyFile="bin\RequireJsNet.Compressor.dll" />
 	<Target Name="Minify" AfterTargets="AfterBuild">
-    <RequireCompressorTask ProjectPath="$(MSBuildProjectDirectory)" PackagePath="C:\packageOutput\" />
+    <RequireCompressorTask AutoCompressor="true" ProjectPath="$(MSBuildProjectDirectory)" PackagePath="C:\packageOutput\" />
 	</Target>
 </Project>
