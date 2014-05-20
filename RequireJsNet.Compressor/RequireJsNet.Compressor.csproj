@@ -50,7 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoDependency\ScriptProcessor.cs" />
+    <Compile Include="AutoDependency\Transformations\ShimFileTransformation.cs" />
     <Compile Include="Compression\CompressorTaskEngine.cs" />
+    <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\MsBuildLogAdapter.cs" />
     <Compile Include="Models\ActionType.cs" />

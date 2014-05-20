@@ -9,14 +9,21 @@ namespace RequireJsNet.Compressor.AutoDependency
     using Jint.Parser;
     using Jint.Parser.Ast;
 
+    using RequireJsNet.Compressor.AutoDependency.Transformations;
+    using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Parsing;
+    using RequireJsNet.Compressor.Transformations;
+    using RequireJsNet.Models;
 
-    public class ScriptProcessor
+    internal class ScriptProcessor
     {
-        public ScriptProcessor(string relativeFileName, string scriptText)
+        private readonly ConfigurationCollection configuration;
+
+        public ScriptProcessor(string relativeFileName, string scriptText, ConfigurationCollection configuration)
         {
             RelativeFileName = relativeFileName;
             OriginalString = scriptText;
+            this.configuration = configuration;
         }
 
         public string OriginalString { get; set; }
@@ -50,6 +57,64 @@ namespace RequireJsNet.Compressor.AutoDependency
                         EnsureHasRange(arg, lines);
                     }
                 });
+
+            var transformations = this.GetTransformations(result, flattenedResults);
+            var text = OriginalString;
+            transformations.ExecuteAll(ref text);
+            ProcessedString = text;
+        }
+
+        private TransformationCollection GetTransformations(VisitorResult result, List<RequireCall> flattened)
+        {
+            var trans = new TransformationCollection();
+
+            if (!result.RequireCalls.Any())
+            {
+                var shim = configuration.Shim.ShimEntries.Where(r => r.For == RelativeFileName 
+                                                                    || r.For == this.CheckForConfigPath(RelativeFileName))
+                                                        .FirstOrDefault();
+                if (shim != null)
+                {
+                    var deps = shim.Dependencies.Select(r => r.Dependency).ToList();
+                    trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName), deps));        
+                }
+            }
+            else
+            {
+                // if there are no define calls but there is at least one require module call, transform that into a define call
+                if (!result.RequireCalls.Where(r => r.Type == RequireCallType.Define).Any())
+                {
+                    if (result.RequireCalls.Where(r => r.IsModule).Any())
+                    {
+                        var call = result.RequireCalls.Where(r => r.IsModule).FirstOrDefault();
+                        trans.Add(ToDefineTransformation.Create(call));
+                        trans.Add(AddIdentifierTransformation.Create(call, RelativeFileName.ToModuleName()));
+                    }
+                    else
+                    {
+                        var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
+                        if (string.IsNullOrEmpty(defineCall.Id))
+                        {
+                            trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
+                        }
+                    }
+                }
+                
+            }
+
+            return trans;
+        }
+
+        private string CheckForConfigPath(string name)
+        {
+            var result = name;
+            var pathEl = configuration.Paths.PathList.Where(r => r.Value == name).FirstOrDefault();
+            if (pathEl != null)
+            {
+                result = pathEl.Key;
+            }
+
+            return result;
         }
 
         private void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)
@@ -84,8 +149,14 @@ namespace RequireJsNet.Compressor.AutoDependency
                 var separatorLength = 1;
 
                 // this is either a legacy maCOs newline, or it will be followed by \n for the windows one
-                if (currChar == '\r' || currChar == '\n')
+                // we could also be at the last character of the file when that isn't a newline
+                if ((currChar == '\r' || currChar == '\n') || i == scriptText.Length - 1)
                 {
+                    if (currChar != '\r' && currChar != '\n')
+                    {
+                        currentLineBuilder.Append(scriptText[i]); 
+                    }
+
                     if (currChar == '\r' && i < scriptText.Length - 1 && scriptText[i + 1] == '\n')
                     {
                         // skip the next character since it's part of an \r\n sequence
