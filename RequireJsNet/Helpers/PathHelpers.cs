@@ -54,5 +54,10 @@ namespace RequireJsNet.Helpers
                             + originalPath.Substring(beforeExtension, originalPath.Length - beforeExtension);
             return newName;
         }
+
+        public static string GetRequirePath(this string path)
+        {
+            return path.GetPathWithoutExtension().Replace("\\\\", "/").Replace("\\", "/");
+        }
     }
 }

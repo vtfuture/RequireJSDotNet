@@ -63,6 +63,7 @@
     <Compile Include="AutoDependency\Parsing\RequireVisitor.cs" />
     <Compile Include="AutoDependency\Parsing\ScriptLine.cs" />
     <Compile Include="AutoDependency\Parsing\VisitorResult.cs" />
+    <Compile Include="Models\RequireFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireProcessing\AutoBundleConfigProcessor.cs" />
     <Compile Include="RequireProcessing\ConfigProcessor.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="Tasks\CssCompressorTask.cs" />
     <Compile Include="Tasks\JavaScriptCompressorTask.cs" />
     <Compile Include="Tasks\RequireCompressorTask.cs" />
-    <Compile Include="AutoDependency\Transformations\RenameDependencyTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\DepsToLowerTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\ToDefineTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\AddIdentifierTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\IRequireTransformation.cs" />

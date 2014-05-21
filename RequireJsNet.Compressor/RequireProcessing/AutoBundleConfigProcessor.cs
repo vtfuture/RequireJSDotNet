@@ -11,6 +11,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
     using RequireJsNet.Compressor.AutoDependency;
     using RequireJsNet.Compressor.Helpers;
+    using RequireJsNet.Compressor.Models;
     using RequireJsNet.Configuration;
     using RequireJsNet.Models;
 
@@ -59,6 +60,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                                        };
                 bundles.Add(bundleResult);
 
+                var tempFileList = new List<RequireFile>();
+
                 foreach (var include in bundle.Includes)
                 {
                     if (!string.IsNullOrEmpty(include.File))
@@ -78,7 +81,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 files = files.Distinct().ToList();
 
                 var fileQueue = new Queue<string>();
-                this.EnqueueFileList(bundleResult, fileQueue, files);
+                this.EnqueueFileList(tempFileList, fileQueue, files);
                 
 
                 while (fileQueue.Any())
@@ -89,9 +92,32 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();
                     var result = processor.ProcessedString;
-                    bundleResult.Files.Add(new FileSpec(file, string.Empty) { FileContent = result });
                     var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
-                    this.EnqueueFileList(bundleResult, fileQueue, dependencies);
+                    tempFileList.Add(new RequireFile
+                                         {
+                                             Name = file,
+                                             Content = result,
+                                             Dependencies = dependencies
+                                         });
+
+                    this.EnqueueFileList(tempFileList, fileQueue, dependencies);
+                }
+
+                while (tempFileList.Any())
+                {
+                    var addedFiles = bundleResult.Files.Select(r => r.FileName).ToList();
+                    var noDeps = tempFileList.Where(r => !r.Dependencies.Any()
+                                                        || r.Dependencies.All(x => addedFiles.Contains(x))).ToList();
+                    if (!noDeps.Any())
+                    {
+                        noDeps = tempFileList.ToList();
+                    }
+
+                    foreach (var requireFile in noDeps)
+                    {
+                        bundleResult.Files.Add(new FileSpec(requireFile.Name, string.Empty) { FileContent = requireFile.Content });
+                        tempFileList.Remove(requireFile);
+                    }    
                 }
             }
 
@@ -118,7 +144,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
             conf.Overrides = new List<CollectionOverride>();
             foreach (var bundle in bundles)
             {
-                var scripts = bundle.Files.Select(r => PathHelpers.GetRequirePath(EntryPoint, r.FileName)).ToList();
+                var scripts = bundle.Files.Select(r => PathHelpers.GetRequireRelativePath(EntryPoint, r.FileName)).ToList();
                 var paths = new RequirePaths
                                 {
                                     PathList = new List<RequirePath>()
@@ -128,7 +154,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     paths.PathList.Add(new RequirePath
                                            {
                                                Key = script,
-                                               Value = PathHelpers.GetRequirePath(EntryPoint, bundle.Output)
+                                               Value = PathHelpers.GetRequireRelativePath(EntryPoint, bundle.Output)
                                            });
                 }
 
@@ -144,11 +170,11 @@ namespace RequireJsNet.Compressor.RequireProcessing
             return conf;
         }
 
-        private void EnqueueFileList(Bundle bundle, Queue<string> queue, List<string> files)
+        private void EnqueueFileList(List<RequireFile> fileList, Queue<string> queue, List<string> files)
         {
             foreach (var file in files)
             {
-                if (!bundle.Files.Where(r => r.FileName.ToLower() == file.ToLower()).Any()
+                if (!fileList.Where(r => r.Name.ToLower() == file.ToLower()).Any()
                     && !queue.Where(r => r.ToLower() == file.ToLower()).Any())
                 {
                     queue.Enqueue(file);

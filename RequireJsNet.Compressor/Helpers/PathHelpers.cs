@@ -31,9 +31,9 @@ namespace RequireJsNet.Compressor.Helpers
         }
         
 
-        public static string GetRequirePath(string folder, string file)
+        public static string GetRequireRelativePath(string folder, string file)
         {
-            return RequireJsNet.Helpers.PathHelpers.GetPathWithoutExtension(GetRelativePath(file, folder)).Replace("\\\\", "/").Replace("\\", "/");
+            return GetRelativePath(file, folder).GetRequirePath();
         }
     }
 }

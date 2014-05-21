@@ -13,6 +13,7 @@ namespace RequireJsNet.Compressor.AutoDependency
     using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Parsing;
     using RequireJsNet.Compressor.Transformations;
+    using RequireJsNet.Helpers;
     using RequireJsNet.Models;
 
     internal class ScriptProcessor
@@ -79,17 +80,22 @@ namespace RequireJsNet.Compressor.AutoDependency
 
             if (!result.RequireCalls.Any())
             {
-                var shim = configuration.Shim.ShimEntries.Where(r => r.For == RelativeFileName 
-                                                                    || r.For == this.CheckForConfigPath(RelativeFileName))
+                var shim = configuration.Shim.ShimEntries.Where(r => r.For == RelativeFileName.GetRequirePath()
+                                                                    || r.For == this.CheckForConfigPath(RelativeFileName.GetRequirePath()))
                                                         .FirstOrDefault();
                 if (shim != null)
                 {
                     var deps = shim.Dependencies.Select(r => r.Dependency).ToList();
-                    trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName), deps));        
+                    trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName.GetRequirePath()), deps));        
                 }
             }
             else
             {
+                foreach (var reqCall in result.RequireCalls)
+                {
+                    trans.Add(DepsToLowerTransformation.Create(reqCall));
+                }
+
                 // if there are no define calls but there is at least one require module call, transform that into a define call
                 if (!result.RequireCalls.Where(r => r.Type == RequireCallType.Define).Any())
                 {

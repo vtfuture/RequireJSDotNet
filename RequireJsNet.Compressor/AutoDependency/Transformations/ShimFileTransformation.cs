@@ -33,9 +33,9 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
 
         public void Execute(ref string script)
         {
-            var depString = string.Format("[{0}]", string.Join(",", dependencies));
+            var depString = string.Format("[{0}]", string.Join(",", dependencies.Select(r => "'" + r.ToLower() + "'")));
 
-            script = string.Format("define({0}, {1}, function () {{{2}}})", moduleName.ToModuleName(), depString, script);
+            script = string.Format("define('{0}', {1}, function () {{{2}{3}{2}}});", moduleName.ToModuleName(), depString, Environment.NewLine, script);
         }
 
         public int[] GetAffectedRange()
