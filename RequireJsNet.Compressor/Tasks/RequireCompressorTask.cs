@@ -75,20 +75,21 @@ namespace RequireJsNet.Compressor
                         continue;
                     }
 
-                    var text = string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileContent));
-                    File.WriteAllText(bundle.Output, text);
+                    // TODO: actually make this a feature, useful for debugging stuff
+                    //var text = string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileContent));
+                    //File.WriteAllText(bundle.Output, text);
 
-                    //var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
-                    //{
-                    //    CompressionType = CompressionType,
-                    //    DeleteSourceFiles = false,
-                    //    EncodingType = EncodingType,
-                    //    LineBreakPosition = -1,
-                    //    LoggingType = LoggingType,
-                    //    OutputFile = bundle.Output,
-                    //    SourceFiles = bundle.Files.ToArray()
-                    //};
-                    //taskEngine.Execute();
+                    var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
+                    {
+                        CompressionType = CompressionType,
+                        DeleteSourceFiles = false,
+                        EncodingType = EncodingType,
+                        LineBreakPosition = -1,
+                        LoggingType = LoggingType,
+                        OutputFile = bundle.Output,
+                        SourceFiles = bundle.Files.ToArray()
+                    };
+                    taskEngine.Execute();
                 }
             }
             
