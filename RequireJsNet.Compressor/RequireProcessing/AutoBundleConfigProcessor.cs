@@ -54,7 +54,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                                        {
                                            Files = new List<FileSpec>(),
                                            Output = this.GetOutputPath(bundle.OutputPath, bundle.Id),
-                                           ContainingConfig = bundle.ContainingConfig
+                                           ContainingConfig = bundle.ContainingConfig,
+                                           BundleId = bundle.Id
                                        };
                 bundles.Add(bundleResult);
 
@@ -92,21 +93,55 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
                     this.EnqueueFileList(bundleResult, fileQueue, dependencies);
                 }
-
-                this.WriteOverrideConfig(bundleResult);
             }
+
+            this.WriteOverrideConfigs(bundles);
 
             return bundles;
         }
 
-        private void WriteOverrideConfig(Bundle bundle)
+        private void WriteOverrideConfigs(List<Bundle> bundles)
         {
-            var originalName = Path.GetFileName(bundle.ContainingConfig);
-            var beforeExtension = originalName.LastIndexOf(".");
-            var newName = originalName.Substring(0, beforeExtension) + ".override"
-                          + originalName.Substring(beforeExtension, originalName.Length - beforeExtension);
-            File.WriteAllText(newName, string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileName)));
+            var groupings = bundles.GroupBy(r => r.ContainingConfig).ToList();
+            foreach (var grouping in groupings)
+            {
+                var path = RequireJsNet.Helpers.PathHelpers.GetOverridePath(grouping.Key);
+                var writer = WriterFactory.CreateWriter(path, null);
+                var collection = this.ComposeCollection(grouping.ToList());
+                writer.WriteConfig(collection);    
+            }
+        }
 
+        private ConfigurationCollection ComposeCollection(List<Bundle> bundles)
+        {
+            var conf = new ConfigurationCollection();
+            conf.Overrides = new List<CollectionOverride>();
+            foreach (var bundle in bundles)
+            {
+                var scripts = bundle.Files.Select(r => PathHelpers.GetRequirePath(EntryPoint, r.FileName)).ToList();
+                var paths = new RequirePaths
+                                {
+                                    PathList = new List<RequirePath>()
+                                };
+                foreach (var script in scripts)
+                {
+                    paths.PathList.Add(new RequirePath
+                                           {
+                                               Key = script,
+                                               Value = PathHelpers.GetRequirePath(EntryPoint, bundle.Output)
+                                           });
+                }
+
+                var over = new CollectionOverride
+                               {
+                                   BundleId = bundle.BundleId,
+                                   BundledScripts = scripts,
+                                   Paths = paths
+                               };
+                conf.Overrides.Add(over);
+            }
+
+            return conf;
         }
 
         private void EnqueueFileList(Bundle bundle, Queue<string> queue, List<string> files)

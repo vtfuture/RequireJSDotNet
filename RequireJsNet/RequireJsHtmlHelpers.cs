@@ -63,14 +63,15 @@ namespace RequireJS
             string urlArgs = "",
             string configPath = "", 
             string entryPointRoot = "~/Scripts/", 
-            IRequireJsLogger logger = null)
+            IRequireJsLogger logger = null,
+            bool loadOverrides = true)
         {
             if (string.IsNullOrEmpty(configPath))
             {
                 configPath = DefaultConfigPath;
             }
 
-            return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, entryPointRoot, logger);
+            return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, entryPointRoot, logger, loadOverrides);
         }
 
         /// <summary>
@@ -103,9 +104,10 @@ namespace RequireJS
             string requireUrl,
             IList<string> configsList,
             string entryPointRoot = "~/Scripts/",
-            IRequireJsLogger logger = null)
+            IRequireJsLogger logger = null,
+            bool loadOverrides = true)
         {
-            return html.RenderRequireJsSetup(baseUrl, requireUrl, null, configsList, entryPointRoot, logger);
+            return html.RenderRequireJsSetup(baseUrl, requireUrl, null, configsList, entryPointRoot, logger, loadOverrides);
         }
 
         /// <summary>
@@ -141,7 +143,8 @@ namespace RequireJS
             string urlArgs,
             IList<string> configsList,
             string entryPointRoot = "~/Scripts/",
-            IRequireJsLogger logger = null)
+            IRequireJsLogger logger = null,
+            bool loadOverrides = true)
         {
             var entryPointPath = html.RequireJsEntryPoint(entryPointRoot);
 
@@ -162,8 +165,10 @@ namespace RequireJS
                 return resultingPath;
             }).ToList();
 
-            var loader = new ConfigLoader(processedConfigs, logger);
+            var loader = new ConfigLoader(processedConfigs, logger, new ConfigLoaderOptions { LoadOverrides = loadOverrides });
             var resultingConfig = loader.Get();
+            var overrider = new ConfigOverrider();
+            overrider.Override(resultingConfig, PathHelpers.GetPathWithoutExtension(entryPointPath.ToString()));
             var outputConfig = new JsonConfig
             {
                 BaseUrl = baseUrl,

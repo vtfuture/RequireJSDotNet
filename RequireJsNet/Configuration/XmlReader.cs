@@ -50,6 +50,8 @@ namespace RequireJsNet.Configuration
 
                 collection.AutoBundles = this.GetAutoBundles(doc.Root);
 
+                collection.Overrides = this.GetOverrides(doc.Root);
+
                 return collection;    
             }
         }
@@ -58,7 +60,7 @@ namespace RequireJsNet.Configuration
         {
             var paths = new RequirePaths();
             paths.PathList = new List<RequirePath>();
-            var pathEl = root.Descendants("paths").FirstOrDefault();
+            var pathEl = root.Element("paths");
             if (pathEl != null)
             {
                 paths.PathList = pathEl.Descendants("path")
@@ -77,7 +79,7 @@ namespace RequireJsNet.Configuration
         {
             var shim = new RequireShim();
             shim.ShimEntries = new List<ShimEntry>();
-            var shimEl = root.Descendants("shim").FirstOrDefault();
+            var shimEl = root.Element("shim");
             if (shimEl != null)
             {
                 shim.ShimEntries = shimEl.Descendants("dependencies")
@@ -92,13 +94,56 @@ namespace RequireJsNet.Configuration
         {
             var bundles = new RequireBundles();
             bundles.BundleEntries = new List<RequireBundle>();
-            var bundlesEl = root.Descendants("bundles").FirstOrDefault();
+            var bundlesEl = root.Element("bundles");
             if (bundlesEl != null)
             {
                 bundles.BundleEntries = root.Descendants("bundle").Select(this.BundleEntryReader).ToList();
             }
 
             return bundles;
+        }
+
+        private RequireMap GetMap(XElement root)
+        {
+            var map = new RequireMap();
+            map.MapElements = new List<RequireMapElement>();
+            var mapEl = root.Element("map");
+            if (mapEl != null)
+            {
+                map.MapElements = mapEl.Descendants("replace")
+                                        .Select(MapElementReader)
+                                        .ToList();
+            }
+
+            return map;
+        }
+
+        private AutoBundles GetAutoBundles(XElement root)
+        {
+            var autoBundles = new AutoBundles();
+            autoBundles.Bundles = new List<AutoBundle>();
+            var autoBundlesEl = root.Element("autoBundles");
+            if (autoBundlesEl != null)
+            {
+                autoBundles.Bundles = root.Descendants("autoBundle").Select(this.AutoBundleReader).ToList();
+            }
+
+            return autoBundles;
+        }
+
+        private List<CollectionOverride> GetOverrides(XElement root)
+        {
+            var overrideList = root.Elements("collectionOverride")
+                                    .Select(r => new CollectionOverride
+                                                {
+                                                   BundleId = r.ReadStringAttribute("bundleId"),
+                                                   Map = this.GetMap(r),
+                                                   Paths = this.GetPaths(r),
+                                                   Shim = this.GetShim(r),
+                                                   BundledScripts = r.Elements("bundledScript").Select(x => x.ReadStringAttribute("path")).ToList()
+                                                })
+                                    .ToList();
+            return overrideList;
         }
 
         private ShimEntry ShimEntryReader(XElement element)
@@ -140,21 +185,6 @@ namespace RequireJsNet.Configuration
                        };
         }
 
-        private RequireMap GetMap(XElement root)
-        {
-            var map = new RequireMap();
-            map.MapElements = new List<RequireMapElement>();
-            var mapEl = root.Descendants("map").FirstOrDefault();
-            if (mapEl != null)
-            {
-                map.MapElements = mapEl.Descendants("replace")
-                                        .Select(MapElementReader)
-                                        .ToList();
-            }
-
-            return map;
-        }
-
         private RequireMapElement MapElementReader(XElement element)
         {
             return new RequireMapElement
@@ -172,19 +202,6 @@ namespace RequireJsNet.Configuration
                                              NewKey = x.ReadStringAttribute("new"),
                                              OldKey = x.ReadStringAttribute("old")
                                          }).ToList();
-        }
-
-        private AutoBundles GetAutoBundles(XElement root)
-        {
-            var autoBundles = new AutoBundles();
-            autoBundles.Bundles = new List<AutoBundle>();
-            var autoBundlesEl = root.Descendants("autoBundles").FirstOrDefault();
-            if (autoBundlesEl != null)
-            {
-                autoBundles.Bundles = root.Descendants("autoBundle").Select(this.AutoBundleReader).ToList();
-            }
-
-            return autoBundles;
         }
 
         private AutoBundle AutoBundleReader(XElement element)

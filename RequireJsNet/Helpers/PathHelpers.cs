@@ -22,5 +22,37 @@ namespace RequireJsNet.Helpers
                 throw new FileNotFoundException("Could not find config file", path);
             }
         }
+
+        public static string GetPathWithoutExtension(this string path)
+        {
+            if (path != null)
+            {
+                int i;
+                if ((i = path.LastIndexOf('.')) == -1)
+                {
+                    return path; // No path extension found
+                }
+                else
+                {
+                    return path.Substring(0, i);
+                }
+            }
+
+            return null;
+        }
+
+        public static string GetOverridePath(string originalPath)
+        {
+            var beforeExtension = originalPath.LastIndexOf(".");
+            if (beforeExtension == -1)
+            {
+                return null;
+            }
+
+            var newName = originalPath.Substring(0, beforeExtension) 
+                            + ".override"
+                            + originalPath.Substring(beforeExtension, originalPath.Length - beforeExtension);
+            return newName;
+        }
     }
 }

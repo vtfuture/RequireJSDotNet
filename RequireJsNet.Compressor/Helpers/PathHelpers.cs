@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Compressor.Helpers
 {
+    using RequireJsNet.Helpers;
+
     internal static class PathHelpers
     {
         public static string GetRelativePath(string filespec, string folder)
@@ -27,23 +29,11 @@ namespace RequireJsNet.Compressor.Helpers
         {
             return relativePath.GetPathWithoutExtension().Replace(Path.DirectorySeparatorChar, '/').ToLower();
         }
+        
 
-        public static string GetPathWithoutExtension(this string path)
+        public static string GetRequirePath(string folder, string file)
         {
-            if (path != null)
-            {
-                int i;
-                if ((i = path.LastIndexOf('.')) == -1)
-                {
-                    return path; // No path extension found
-                }
-                else
-                {
-                    return path.Substring(0, i);
-                }
-            }
-
-            return null; 
+            return RequireJsNet.Helpers.PathHelpers.GetPathWithoutExtension(GetRelativePath(file, folder)).Replace("\\\\", "/").Replace("\\", "/");
         }
     }
 }

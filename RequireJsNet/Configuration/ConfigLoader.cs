@@ -4,15 +4,20 @@ using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
+    using System.IO;
+    using System.Linq;
+
+    using RequireJsNet.Helpers;
+
     internal class ConfigLoader
     {
-        private readonly IList<string> paths = new List<string>();
+        private readonly List<string> paths = new List<string>();
 
         private readonly IRequireJsLogger logger;
 
         private readonly ConfigLoaderOptions options; 
 
-        public ConfigLoader(IList<string> paths, IRequireJsLogger logger, ConfigLoaderOptions options = null)
+        public ConfigLoader(List<string> paths, IRequireJsLogger logger, ConfigLoaderOptions options = null)
         {
             this.paths = paths;
             this.logger = logger ?? new ExceptionThrowingLogger();
@@ -21,6 +26,7 @@ namespace RequireJsNet.Configuration
 
         public ConfigurationCollection Get()
         {
+            ComposeFinalPathList();
             var collectionList = new List<ConfigurationCollection>();
             foreach (var path in paths)
             {
@@ -34,6 +40,17 @@ namespace RequireJsNet.Configuration
             var merged = configMerger.GetMerged();
             ValidateCollection(merged, null);
             return merged;
+        }
+
+        private void ComposeFinalPathList()
+        {
+            if (!options.LoadOverrides)
+            {
+                return;
+            }
+
+            var potential = this.paths.Select(r => PathHelpers.GetOverridePath(r)).ToList();
+            paths.AddRange(potential.Where(r => File.Exists(r)));
         }
 
         private void ValidateCollection(ConfigurationCollection collection, string path)

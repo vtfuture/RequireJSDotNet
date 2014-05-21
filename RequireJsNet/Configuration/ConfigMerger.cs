@@ -27,6 +27,7 @@ namespace RequireJsNet.Configuration
             finalCollection.Bundles.BundleEntries = new List<RequireBundle>();
             finalCollection.AutoBundles = new AutoBundles();
             finalCollection.AutoBundles.Bundles = new List<AutoBundle>();
+            finalCollection.Overrides = new List<CollectionOverride>();
         }
 
         public ConfigurationCollection GetMerged()
@@ -37,6 +38,11 @@ namespace RequireJsNet.Configuration
                 MergeShims(coll);
                 MergeMaps(coll);
                 this.MergeAutoBundles(coll);
+
+                if (options.LoadOverrides)
+                {
+                    this.MergeOverrides(coll);
+                }
             }
 
             if (options.ProcessBundles)
@@ -45,6 +51,12 @@ namespace RequireJsNet.Configuration
             }
             
             return finalCollection;
+        }
+
+        private void MergeOverrides(ConfigurationCollection collection)
+        {
+            var finalOverrides = finalCollection.Overrides;
+            finalOverrides.AddRange(collection.Overrides);
         }
 
         private void MergePaths(ConfigurationCollection collection)
