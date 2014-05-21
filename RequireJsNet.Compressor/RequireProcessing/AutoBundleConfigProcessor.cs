@@ -74,6 +74,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     processor.Process();
                     var result = processor.ProcessedString;
                 }
+
+                var outputPath = this.GetOutputPath(bundle.OutputPath, bundle.Id);
             }
 
             return new List<Bundle>();

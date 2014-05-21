@@ -46,7 +46,7 @@ namespace RequireJsNet.Compressor
             foreach (var bundleDefinition in Configuration.Bundles.BundleEntries.Where(r => !r.IsVirtual))
             {
                 var bundle = new Bundle();
-                bundle.Output = GetOutputPath(bundleDefinition);
+                bundle.Output = GetOutputPath(bundleDefinition.OutputPath, bundleDefinition.Name);
                 bundle.Files = bundleDefinition.BundleItems
                                                 .Select(r => new FileSpec(this.ResolvePhysicalPath(r.RelativePath), r.CompressionType))
                                                 .ToList();

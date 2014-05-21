@@ -41,18 +41,18 @@ namespace RequireJsNet.Compressor
             return filePath;
         }
 
-        protected string GetOutputPath(RequireBundle bundle)
+        protected string GetOutputPath(string outputPath, string bundleName)
         {
-            if (string.IsNullOrEmpty(bundle.OutputPath))
+            if (string.IsNullOrEmpty(outputPath))
             {
-                return Path.GetFullPath(Path.Combine(OutputPath, bundle.Name + ".js"));
+                return Path.GetFullPath(Path.Combine(OutputPath, bundleName + ".js"));
             }
 
-            var directory = Path.GetDirectoryName(bundle.OutputPath) ?? string.Empty;
-            var fileName = Path.GetFileName(bundle.OutputPath);
+            var directory = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            var fileName = Path.GetFileName(outputPath);
             if (string.IsNullOrEmpty(fileName))
             {
-                fileName = bundle.Name + ".js";
+                fileName = bundleName + ".js";
             }
 
             return Path.GetFullPath(Path.Combine(OutputPath, directory, fileName));
