@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Compressor.RequireProcessing
 {
+    using System.Diagnostics;
     using System.IO;
 
     using RequireJsNet.Compressor.AutoDependency;
@@ -31,6 +32,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         public override List<Bundle> ParseConfigs()
         {
+            var bundles = new List<Bundle>();
             if (!Directory.Exists(ProjectPath))
             {
                 throw new DirectoryNotFoundException("Could not find project directory.");
@@ -48,6 +50,13 @@ namespace RequireJsNet.Compressor.RequireProcessing
             foreach (var bundle in Configuration.AutoBundles.Bundles)
             {
                 var files = new List<string>();
+                var bundleResult = new Bundle
+                                       {
+                                           Files = new List<FileSpec>(),
+                                           Output = this.GetOutputPath(bundle.OutputPath, bundle.Id)
+                                       };
+                bundles.Add(bundleResult);
+
                 foreach (var include in bundle.Includes)
                 {
                     if (!string.IsNullOrEmpty(include.File))
@@ -66,19 +75,35 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
                 files = files.Distinct().ToList();
 
-                foreach (var file in files)
+                var fileQueue = new Queue<string>();
+                this.EnqueueFileList(bundleResult, fileQueue, files);
+                
+
+                while (fileQueue.Any())
                 {
+                    var file = fileQueue.Dequeue();
                     var fileText = File.ReadAllText(file);
                     var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();
                     var result = processor.ProcessedString;
+                    bundleResult.Files.Add(new FileSpec(file, string.Empty) { FileContent = result });
+                    this.EnqueueFileList(bundleResult, fileQueue, processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).ToList());
                 }
-
-                var outputPath = this.GetOutputPath(bundle.OutputPath, bundle.Id);
             }
 
-            return new List<Bundle>();
+            return bundles;
+        }
+
+        private void EnqueueFileList(Bundle bundle, Queue<string> queue, List<string> files)
+        {
+            foreach (var file in files)
+            {
+                if (!bundle.Files.Where(r => r.FileName == file).Any())
+                {
+                    queue.Enqueue(file);
+                }
+            }
         }
 
         private string GetAbsoluteDirectory(string relativeDirectory)
@@ -88,6 +113,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
             {
                 relativeDirectory = relativeDirectory.Substring(1);
             }
+
             return Path.Combine(EntryPoint + Path.DirectorySeparatorChar, relativeDirectory);
         }
     }

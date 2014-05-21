@@ -32,6 +32,8 @@ namespace RequireJsNet.Compressor.AutoDependency
 
         public string RelativeFileName { get; set; }
 
+        public List<string> Dependencies { get; set; }
+
         public void Process()
         {
             var parser = new JavaScriptParser();
@@ -42,6 +44,8 @@ namespace RequireJsNet.Compressor.AutoDependency
             var lines = GetScriptLines(OriginalString);
 
             var flattenedResults = result.GetFlattened();
+
+            Dependencies = flattenedResults.SelectMany(r => r.Dependencies).Select(r => GetModulePath(r)).Distinct().ToList();
 
             flattenedResults.ForEach(
                 x =>
@@ -108,10 +112,22 @@ namespace RequireJsNet.Compressor.AutoDependency
         private string CheckForConfigPath(string name)
         {
             var result = name;
-            var pathEl = configuration.Paths.PathList.Where(r => r.Value == name).FirstOrDefault();
+            var pathEl = configuration.Paths.PathList.Where(r => r.Value.ToLower() == name.ToLower()).FirstOrDefault();
             if (pathEl != null)
             {
                 result = pathEl.Key;
+            }
+
+            return result;
+        }
+
+        private string GetModulePath(string name)
+        {
+            var result = name;
+            var pathEl = configuration.Paths.PathList.Where(r => r.Key.ToLower() == name.ToLower()).FirstOrDefault();
+            if (pathEl != null)
+            {
+                result = pathEl.Value;
             }
 
             return result;
