@@ -26,15 +26,17 @@ namespace RequireJsNet.Compressor.Parsing
 
         private List<NodeWithChildren> visitedNodes = new List<NodeWithChildren>(); 
 
-        private List<Location> nodesToSkip = new List<Location>(); 
+        private List<Location> nodesToSkip = new List<Location>();
 
-        public VisitorResult Visit(Program program)
+        private string relativeFileName;
+
+        public VisitorResult Visit(Program program, string relativeFileName)
         {
             if (program == null)
             {
                 return null;
             }
-
+            this.relativeFileName = relativeFileName;
             this.program = program;
 
             this.VisitNodeEnumerator(program.Body, null, null);
@@ -290,7 +292,7 @@ namespace RequireJsNet.Compressor.Parsing
             var argCount = callExpression.Arguments.Count();
             if (argCount < 1 || argCount > 2)
             {
-                throw new Exception("Invalid number of arguments for require() call");
+                throw new Exception("Invalid number of arguments for require() call " + relativeFileName);
             }
 
             var requireCall = new RequireCall
@@ -318,7 +320,7 @@ namespace RequireJsNet.Compressor.Parsing
                 var singleDep = firstArg.As<Literal>();
                 if (singleDep == null)
                 {
-                    throw new Exception("Could not read argument for require() call");
+                    throw new Exception("Could not read argument for require() call " + relativeFileName);
                 }
 
                 requireCall.SingleDependencyNode = singleDep;
@@ -339,7 +341,7 @@ namespace RequireJsNet.Compressor.Parsing
             var argCount = callExpression.Arguments.Count();
             if (argCount < 2 || argCount > 3)
             {
-                throw new Exception("Invalid number of arguments for define() call");
+                throw new Exception("Invalid number of arguments for define() call " + relativeFileName);
             }
 
             var defineCall = new RequireCall
@@ -372,7 +374,7 @@ namespace RequireJsNet.Compressor.Parsing
                 var identifierLiteral = callExpression.Arguments.ElementAt(0).As<Literal>();
                 if (identifierLiteral == null)
                 {
-                    throw new Exception("The first argument in a define call with 3 arguments was not a string literal.");
+                    throw new Exception("The first argument in a define call with 3 arguments was not a string literal." + relativeFileName);
                 }
 
                 parentCall.ModuleIdentifierNode = identifierLiteral;
@@ -388,7 +390,9 @@ namespace RequireJsNet.Compressor.Parsing
             var depsArray = depsNode.As<ArrayExpression>();
             if (depsArray == null)
             {
-                throw new Exception("Dependency array node was not an ArrayExpression");    
+                yield break;
+
+                // throw new Exception("Dependency array node was not an ArrayExpression " + relativeFileName);    
             }
 
             parentCall.DependencyArrayNode = depsArray;
@@ -404,14 +408,7 @@ namespace RequireJsNet.Compressor.Parsing
                     //// throw new Exception("One of the elements in a require() dependency array was not a string literal");
                     continue;
                 }
-
-                // TODO: this probably shouldn't be here
-                // we could also take a list of languages and convert this to the appropiate script
-                if (val.Value.ToString().StartsWith("i18n!"))
-                {
-                    continue;
-                }
-
+               
                 yield return val.Value.ToString();
             }
         }

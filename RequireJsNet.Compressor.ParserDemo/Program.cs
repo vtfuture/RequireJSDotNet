@@ -28,7 +28,7 @@ namespace RequireJsNet.Compressor.ParserDemo
             var parser = new JavaScriptParser();
             var program = parser.Parse(text);
             var visitor = new RequireVisitor();
-            var result = visitor.Visit(program);
+            var result = visitor.Visit(program, initUIPath);
 
             var lines = GetScriptLines(text);
 

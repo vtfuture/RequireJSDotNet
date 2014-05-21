@@ -39,13 +39,18 @@ namespace RequireJsNet.Compressor.AutoDependency
             var parser = new JavaScriptParser();
             var program = parser.Parse(OriginalString);
             var visitor = new RequireVisitor();
-            var result = visitor.Visit(program);
+            var result = visitor.Visit(program, RelativeFileName);
 
             var lines = GetScriptLines(OriginalString);
 
             var flattenedResults = result.GetFlattened();
 
-            Dependencies = flattenedResults.SelectMany(r => r.Dependencies).Select(r => GetModulePath(r)).Distinct().ToList();
+            var deps =
+                flattenedResults.SelectMany(r => r.Dependencies)
+                    .Where(r => !r.StartsWith("i18n"))
+                    .Except(new List<string> { "require", "module" });
+
+            Dependencies = deps.Select(r => GetModulePath(r)).Distinct().ToList();
 
             flattenedResults.ForEach(
                 x =>

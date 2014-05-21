@@ -16,5 +16,6 @@ namespace RequireJsNet.Models
 
         public List<AutoBundleItem> Excludes { get; set; }
 
+        public string ContainingConfig { get; set; }
     }
 }

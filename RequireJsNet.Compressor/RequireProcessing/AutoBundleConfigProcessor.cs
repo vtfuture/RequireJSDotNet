@@ -53,7 +53,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 var bundleResult = new Bundle
                                        {
                                            Files = new List<FileSpec>(),
-                                           Output = this.GetOutputPath(bundle.OutputPath, bundle.Id)
+                                           Output = this.GetOutputPath(bundle.OutputPath, bundle.Id),
+                                           ContainingConfig = bundle.ContainingConfig
                                        };
                 bundles.Add(bundleResult);
 
@@ -91,9 +92,21 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
                     this.EnqueueFileList(bundleResult, fileQueue, dependencies);
                 }
+
+                this.WriteOverrideConfig(bundleResult);
             }
 
             return bundles;
+        }
+
+        private void WriteOverrideConfig(Bundle bundle)
+        {
+            var originalName = Path.GetFileName(bundle.ContainingConfig);
+            var beforeExtension = originalName.LastIndexOf(".");
+            var newName = originalName.Substring(0, beforeExtension) + ".override"
+                          + originalName.Substring(beforeExtension, originalName.Length - beforeExtension);
+            File.WriteAllText(newName, string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileName)));
+
         }
 
         private void EnqueueFileList(Bundle bundle, Queue<string> queue, List<string> files)
