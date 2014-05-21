@@ -75,10 +75,6 @@ namespace RequireJsNet.Compressor
                         continue;
                     }
 
-                    // TODO: actually make this a feature, useful for debugging stuff
-                    //var text = string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileContent));
-                    //File.WriteAllText(bundle.Output, text);
-
                     var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
                     {
                         CompressionType = CompressionType,
