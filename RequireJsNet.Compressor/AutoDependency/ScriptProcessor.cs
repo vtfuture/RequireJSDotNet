@@ -94,16 +94,15 @@ namespace RequireJsNet.Compressor.AutoDependency
                         trans.Add(ToDefineTransformation.Create(call));
                         trans.Add(AddIdentifierTransformation.Create(call, RelativeFileName.ToModuleName()));
                     }
-                    else
+                }
+                else
+                {
+                    var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
+                    if (string.IsNullOrEmpty(defineCall.Id))
                     {
-                        var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
-                        if (string.IsNullOrEmpty(defineCall.Id))
-                        {
-                            trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
-                        }
+                        trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
                     }
                 }
-                
             }
 
             return trans;

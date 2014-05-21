@@ -88,7 +88,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     processor.Process();
                     var result = processor.ProcessedString;
                     bundleResult.Files.Add(new FileSpec(file, string.Empty) { FileContent = result });
-                    this.EnqueueFileList(bundleResult, fileQueue, processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).ToList());
+                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
+                    this.EnqueueFileList(bundleResult, fileQueue, dependencies);
                 }
             }
 
@@ -99,7 +100,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
         {
             foreach (var file in files)
             {
-                if (!bundle.Files.Where(r => r.FileName == file).Any())
+                if (!bundle.Files.Where(r => r.FileName.ToLower() == file.ToLower()).Any()
+                    && !queue.Where(r => r.ToLower() == file.ToLower()).Any())
                 {
                     queue.Enqueue(file);
                 }

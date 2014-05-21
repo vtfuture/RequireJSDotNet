@@ -405,6 +405,13 @@ namespace RequireJsNet.Compressor.Parsing
                     continue;
                 }
 
+                // TODO: this probably shouldn't be here
+                // we could also take a list of languages and convert this to the appropiate script
+                if (val.Value.ToString().StartsWith("i18n!"))
+                {
+                    continue;
+                }
+
                 yield return val.Value.ToString();
             }
         }

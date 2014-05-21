@@ -136,6 +136,11 @@ namespace RequireJsNet.Configuration
 
         private void MergeBundles(List<ConfigurationCollection> collection)
         {
+            if (!collection.SelectMany(r => r.Bundles.BundleEntries).Any())
+            {
+                return;
+            }
+
             this.MergeExistingBundles(collection);
             this.ResolveDefaultBundles();
             this.ResolveBundleItemsRelativePaths();
