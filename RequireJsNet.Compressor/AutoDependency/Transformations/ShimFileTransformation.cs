@@ -35,7 +35,7 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
         {
             var depString = string.Format("[{0}]", string.Join(",", dependencies.Select(r => "'" + r.ToLower() + "'")));
 
-            script = string.Format("define('{0}', {1}, function () {{{2}{3}{2}}});", moduleName.ToModuleName(), depString, Environment.NewLine, script);
+            script = string.Format("define('{0}', {1}, function () {{{2}{3}{2}}});", moduleName.ToModuleName().ToLower(), depString, Environment.NewLine, script);
         }
 
         public int[] GetAffectedRange()

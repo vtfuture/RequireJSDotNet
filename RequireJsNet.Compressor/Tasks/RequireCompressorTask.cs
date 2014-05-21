@@ -75,17 +75,20 @@ namespace RequireJsNet.Compressor
                         continue;
                     }
 
-                    var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
-                    {
-                        CompressionType = CompressionType,
-                        DeleteSourceFiles = false,
-                        EncodingType = EncodingType,
-                        LineBreakPosition = -1,
-                        LoggingType = LoggingType,
-                        OutputFile = bundle.Output,
-                        SourceFiles = bundle.Files.ToArray()
-                    };
-                    taskEngine.Execute();
+                    var text = string.Join(Environment.NewLine, bundle.Files.Select(r => r.FileContent));
+                    File.WriteAllText(bundle.Output, text);
+
+                    //var taskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor)
+                    //{
+                    //    CompressionType = CompressionType,
+                    //    DeleteSourceFiles = false,
+                    //    EncodingType = EncodingType,
+                    //    LineBreakPosition = -1,
+                    //    LoggingType = LoggingType,
+                    //    OutputFile = bundle.Output,
+                    //    SourceFiles = bundle.Files.ToArray()
+                    //};
+                    //taskEngine.Execute();
                 }
             }
             

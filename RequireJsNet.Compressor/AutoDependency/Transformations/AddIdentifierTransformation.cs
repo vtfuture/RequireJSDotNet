@@ -32,7 +32,7 @@ namespace RequireJsNet.Compressor.Transformations
             // we'll split the script right before the first argument of the current call
             var beforeInsertPoint = script.Substring(0, firstArg.Range[0]);
             var afterInsertPoint = script.Substring(firstArg.Range[0], script.Length - firstArg.Range[0]);
-            script = beforeInsertPoint + string.Format("'{0}', ", IdentifierName) + afterInsertPoint;
+            script = beforeInsertPoint + string.Format("'{0}', ", IdentifierName.ToLower()) + afterInsertPoint;
             RequireCall.Id = IdentifierName;
         }
 

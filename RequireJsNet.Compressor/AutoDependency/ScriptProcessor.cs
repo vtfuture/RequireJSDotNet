@@ -94,6 +94,10 @@ namespace RequireJsNet.Compressor.AutoDependency
                 foreach (var reqCall in result.RequireCalls)
                 {
                     trans.Add(DepsToLowerTransformation.Create(reqCall));
+                    if (!string.IsNullOrEmpty(reqCall.Id))
+                    {
+                        trans.Add(IdToLowerTransformation.Create(reqCall));
+                    }
                 }
 
                 // if there are no define calls but there is at least one require module call, transform that into a define call
