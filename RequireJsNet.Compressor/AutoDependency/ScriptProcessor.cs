@@ -51,7 +51,14 @@ namespace RequireJsNet.Compressor.AutoDependency
                     .Where(r => !r.StartsWith("i18n"))
                     .Except(new List<string> { "require", "module" });
 
-            Dependencies = deps.Select(r => GetModulePath(r)).Distinct().ToList();
+            Dependencies = deps.Select(r => GetModulePath(r)).ToList();
+            var shim = this.GetShim(RelativeFileName);
+            if (shim != null)
+            {
+                Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
+            }
+
+            Dependencies = Dependencies.Distinct().ToList();
 
             flattenedResults.ForEach(
                 x =>
@@ -80,26 +87,17 @@ namespace RequireJsNet.Compressor.AutoDependency
 
             if (!result.RequireCalls.Any())
             {
-                var shim = configuration.Shim.ShimEntries.Where(r => r.For == RelativeFileName.GetRequirePath()
-                                                                    || r.For == this.CheckForConfigPath(RelativeFileName.GetRequirePath()))
-                                                        .FirstOrDefault();
+                var shim = GetShim(RelativeFileName);
+                var deps = new List<string>();
                 if (shim != null)
                 {
-                    var deps = shim.Dependencies.Select(r => r.Dependency).ToList();
-                    trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName.GetRequirePath()), deps));        
+                    deps = shim.Dependencies.Select(r => r.Dependency).ToList();
                 }
+
+                trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName.ToModuleName()), deps));
             }
             else
             {
-                foreach (var reqCall in result.RequireCalls)
-                {
-                    trans.Add(DepsToLowerTransformation.Create(reqCall));
-                    if (!string.IsNullOrEmpty(reqCall.Id))
-                    {
-                        trans.Add(IdToLowerTransformation.Create(reqCall));
-                    }
-                }
-
                 // if there are no define calls but there is at least one require module call, transform that into a define call
                 if (!result.RequireCalls.Where(r => r.Type == RequireCallType.Define).Any())
                 {
@@ -107,7 +105,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     {
                         var call = result.RequireCalls.Where(r => r.IsModule).FirstOrDefault();
                         trans.Add(ToDefineTransformation.Create(call));
-                        trans.Add(AddIdentifierTransformation.Create(call, RelativeFileName.ToModuleName()));
+                        trans.Add(AddIdentifierTransformation.Create(call,this.CheckForConfigPath(RelativeFileName.ToModuleName())));
                     }
                 }
                 else
@@ -115,12 +113,19 @@ namespace RequireJsNet.Compressor.AutoDependency
                     var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
                     if (string.IsNullOrEmpty(defineCall.Id))
                     {
-                        trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
+                        trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
                     }
                 }
             }
 
             return trans;
+        }
+
+        private ShimEntry GetShim(string relativeFileName)
+        {
+            return configuration.Shim.ShimEntries.Where(r => r.For.ToLower() == relativeFileName.ToModuleName().ToLower()
+                                                                    || r.For.ToLower() == this.CheckForConfigPath(relativeFileName.ToModuleName()).ToLower())
+                                                        .FirstOrDefault();
         }
 
         private string CheckForConfigPath(string name)

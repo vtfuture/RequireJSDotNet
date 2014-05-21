@@ -25,15 +25,10 @@ namespace RequireJsNet.Compressor.Helpers
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
-        public static string ToModuleName(this string relativePath)
-        {
-            return relativePath.GetPathWithoutExtension().Replace(Path.DirectorySeparatorChar, '/').ToLower();
-        }
-        
 
         public static string GetRequireRelativePath(string folder, string file)
         {
-            return GetRelativePath(file, folder).GetRequirePath();
+            return GetRelativePath(file, folder).ToModuleName();
         }
     }
 }

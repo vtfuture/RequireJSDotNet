@@ -168,7 +168,7 @@ namespace RequireJS
             var loader = new ConfigLoader(processedConfigs, logger, new ConfigLoaderOptions { LoadOverrides = loadOverrides });
             var resultingConfig = loader.Get();
             var overrider = new ConfigOverrider();
-            overrider.Override(resultingConfig, PathHelpers.GetPathWithoutExtension(entryPointPath.ToString()));
+            overrider.Override(resultingConfig, entryPointPath.ToString().ToModuleName());
             var outputConfig = new JsonConfig
             {
                 BaseUrl = baseUrl,

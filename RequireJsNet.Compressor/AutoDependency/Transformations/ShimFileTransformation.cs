@@ -11,6 +11,7 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
     using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Parsing;
     using RequireJsNet.Compressor.Transformations;
+    using RequireJsNet.Helpers;
 
     internal class ShimFileTransformation : IRequireTransformation
     {
@@ -33,9 +34,9 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
 
         public void Execute(ref string script)
         {
-            var depString = string.Format("[{0}]", string.Join(",", dependencies.Select(r => "'" + r.ToLower() + "'")));
+            var depString = string.Format("[{0}]", string.Join(",", dependencies.Select(r => "'" + r + "'")));
 
-            script = string.Format("define('{0}', {1}, function () {{{2}{3}{2}}});", moduleName.ToModuleName().ToLower(), depString, Environment.NewLine, script);
+            script = string.Format("define('{0}', {1}, function () {{{2}{3}{2}}});", moduleName.ToModuleName(), depString, Environment.NewLine, script);
         }
 
         public int[] GetAffectedRange()

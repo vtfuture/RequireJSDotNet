@@ -59,5 +59,19 @@ namespace RequireJsNet.Helpers
         {
             return path.GetPathWithoutExtension().Replace("\\\\", "/").Replace("\\", "/");
         }
+
+        public static string ToModuleName(this string relativePath)
+        {
+            var directory = Path.GetDirectoryName(relativePath);
+            var file = relativePath.EndsWith(".js") ? Path.GetFileNameWithoutExtension(relativePath)
+                                                    : Path.GetFileName(relativePath);
+            var name = file;
+            if (!string.IsNullOrEmpty(directory))
+            {
+                name = directory.ToLower() + Path.DirectorySeparatorChar + name;
+            }
+            name = name.Replace(Path.DirectorySeparatorChar, '/');
+            return name;
+        }
     }
 }

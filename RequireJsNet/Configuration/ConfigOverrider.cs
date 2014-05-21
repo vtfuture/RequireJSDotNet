@@ -35,7 +35,7 @@ namespace RequireJsNet.Configuration
             }
             
             // otherwise put the bundle containing the entrypoint last, if such a bundle exists, so that it gets priority
-            var entryBundle = result.Where(r => r.BundledScripts.Where(x => x.ToLower() == entryPoint).Any()).FirstOrDefault();
+            var entryBundle = result.Where(r => r.BundledScripts.Where(x => x.ToLower() == entryPoint.ToLower()).Any()).FirstOrDefault();
             if (entryBundle != null)
             {
                 result.Remove(entryBundle);
@@ -58,7 +58,7 @@ namespace RequireJsNet.Configuration
         {
             foreach (var mapEl in overrideMap.MapElements)
             {
-                var existing = originalMap.MapElements.Where(r => r.For == mapEl.For).FirstOrDefault();
+                var existing = originalMap.MapElements.Where(r => r.For.ToLower() == mapEl.For.ToLower()).FirstOrDefault();
                 if (existing != null)
                 {
                     var finalReplacements = existing.Replacements
@@ -79,7 +79,7 @@ namespace RequireJsNet.Configuration
         {
             foreach (var pathEl in overridePaths.PathList)
             {
-                var existing = originalPaths.PathList.Where(r => r.Key == pathEl.Key).FirstOrDefault();
+                var existing = originalPaths.PathList.Where(r => r.Key.ToLower() == pathEl.Key.ToLower()).FirstOrDefault();
                 if (existing != null)
                 {
                     existing.Value = pathEl.Value;
@@ -87,6 +87,12 @@ namespace RequireJsNet.Configuration
                 else
                 {
                     originalPaths.PathList.Add(pathEl);
+                }
+
+                var existingValue = originalPaths.PathList.Where(r => r.Value.ToLower() == pathEl.Key.ToLower()).FirstOrDefault();
+                if (existingValue != null)
+                {
+                    existingValue.Value = pathEl.Value;
                 }
             }
         }
