@@ -16,7 +16,7 @@
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="5.0.6" />
+      <dependency id="Newtonsoft.Json" version="6.0.0" />
     </dependencies>
   </metadata>
   <files>
