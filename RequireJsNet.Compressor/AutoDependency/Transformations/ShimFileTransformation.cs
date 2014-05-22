@@ -8,7 +8,6 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
 {
     using System.IO;
 
-    using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Parsing;
     using RequireJsNet.Compressor.Transformations;
     using RequireJsNet.Helpers;

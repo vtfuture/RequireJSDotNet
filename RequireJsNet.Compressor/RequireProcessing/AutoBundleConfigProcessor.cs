@@ -10,9 +10,9 @@ namespace RequireJsNet.Compressor.RequireProcessing
     using System.IO;
 
     using RequireJsNet.Compressor.AutoDependency;
-    using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Models;
     using RequireJsNet.Configuration;
+    using RequireJsNet.Helpers;
     using RequireJsNet.Models;
 
     internal class AutoBundleConfigProcessor : ConfigProcessor

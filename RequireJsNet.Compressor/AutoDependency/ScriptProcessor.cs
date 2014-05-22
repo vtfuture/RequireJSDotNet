@@ -10,7 +10,6 @@ namespace RequireJsNet.Compressor.AutoDependency
     using Jint.Parser.Ast;
 
     using RequireJsNet.Compressor.AutoDependency.Transformations;
-    using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.Parsing;
     using RequireJsNet.Compressor.Transformations;
     using RequireJsNet.Helpers;

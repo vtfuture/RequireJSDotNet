@@ -20,6 +20,9 @@ using RequireJsNet.Models;
 
 namespace RequireJS
 {
+    using System.Diagnostics;
+    using System.Web;
+
     public static class RequireJsHtmlHelpers
     {
         private const string DefaultConfigPath = "~/RequireJS.config";
@@ -232,6 +235,7 @@ namespace RequireJS
             var routingInfo = html.GetRoutingInfo();
             var rootUrl = string.Empty;
             var withBaseUrl = true;
+            var server = html.ViewContext.HttpContext.Server;
 
             if (root != DefaultEntryPointRoot)
             {
@@ -241,43 +245,55 @@ namespace RequireJS
 
             // search for controller/action.js in current area
             var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
-            var entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
-            var filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
+            var entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
+            var filePath = server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
+                var computedEntry = GetEntryPoint(server, filePath, root);
+                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
             }
 
             // search for controller/action.js in common area
-            entryPoint = string.Format(entryPointTmpl, DefaultArea);
-            filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
+            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
+            filePath = server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
+                var computedEntry = GetEntryPoint(server, filePath, root);
+                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
             }
 
             // search for controller/controller-action.js in current area
             entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action;
-            entryPoint = string.Format(entryPointTmpl, routingInfo.Area);
-            filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
+            entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
+            filePath = server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
+                var computedEntry = GetEntryPoint(server, filePath, root);
+                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
             }
 
             // search for controller/controller-action.js in common area
-            entryPoint = string.Format(entryPointTmpl, DefaultArea);
-            filePath = html.ViewContext.HttpContext.Server.MapPath(root + entryPoint + ".js");
+            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
+            filePath = server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
             {
-                return new MvcHtmlString(withBaseUrl ? entryPoint : rootUrl + entryPoint + ".js");
+                var computedEntry = GetEntryPoint(server, filePath, root);
+                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
             }
 
             return null;
+        }
+
+        private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
+        {
+            
+            var fileName = PathHelpers.GetExactFilePath(filePath);
+            var folder = server.MapPath(root);
+            return PathHelpers.GetRequireRelativePath(folder, fileName);
         }
 
         public static string CurrentCulture(this HtmlHelper html)
