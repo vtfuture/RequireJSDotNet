@@ -18,6 +18,7 @@
     <dependencies>
       <dependency id="Newtonsoft.Json" version="5.0.6" />
       <dependency id="YUICompressor.NET" version="2.3.0.0" />
+      <dependency id="Jint" version="2.1.0.0" />
       <dependency id="RequireJsNet" />
     </dependencies>
   </metadata>
