@@ -17,12 +17,15 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
     internal class AutoBundleConfigProcessor : ConfigProcessor
     {
-        public AutoBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths)
+        private Encoding encoding;
+
+        public AutoBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths, Encoding encoding)
         {
             ProjectPath = projectPath;
             FilePaths = filePaths;
             OutputPath = projectPath;
             EntryOverride = entryPointOverride;
+            this.encoding = encoding;
             if (!string.IsNullOrWhiteSpace(packagePath))
             {
                 OutputPath = packagePath;
@@ -87,7 +90,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 while (fileQueue.Any())
                 {
                     var file = fileQueue.Dequeue();
-                    var fileText = File.ReadAllText(file);
+                    var fileText = File.ReadAllText(file, encoding);
                     var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();

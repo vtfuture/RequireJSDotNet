@@ -10,6 +10,7 @@ using Yahoo.Yui.Compressor;
 
 namespace RequireJsNet.Compressor
 {
+    using RequireJsNet.Compressor.Helpers;
     using RequireJsNet.Compressor.RequireProcessing;
 
     public class RequireCompressorTask : Task
@@ -51,7 +52,7 @@ namespace RequireJsNet.Compressor
                 entryPointOveride = EntryPointOverride.GetMetadata("FullPath");
             }
 
-            this.configProcessor = ConfigProcessorFactory.Create(AutoCompressor, ProjectPath, PackagePath, entryPointOveride, files);
+            this.configProcessor = ConfigProcessorFactory.Create(AutoCompressor, ProjectPath, PackagePath, entryPointOveride, files, FileHelpers.ParseEncoding(EncodingType));
 
             var bundles = new List<Bundle>();
             try
@@ -67,7 +68,10 @@ namespace RequireJsNet.Compressor
             if (bundles.Any())
             {
                 EnsureOutputDirectoriesExist(bundles);
-                var compressor = new JavaScriptCompressor();
+                var compressor = new JavaScriptCompressor
+                                     {
+                                         Encoding = FileHelpers.ParseEncoding(EncodingType)
+                                     };
                 foreach (var bundle in bundles)
                 {
                     if (!bundle.Files.Any())
@@ -85,6 +89,8 @@ namespace RequireJsNet.Compressor
                         OutputFile = bundle.Output,
                         SourceFiles = bundle.Files.ToArray()
                     };
+             
+
                     taskEngine.Execute();
                 }
             }

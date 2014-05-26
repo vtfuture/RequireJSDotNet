@@ -53,6 +53,7 @@
     <Compile Include="AutoDependency\Transformations\IdToLowerTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\ShimFileTransformation.cs" />
     <Compile Include="Compression\CompressorTaskEngine.cs" />
+    <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\MsBuildLogAdapter.cs" />
     <Compile Include="Models\ActionType.cs" />
@@ -95,9 +96,7 @@
       <Name>RequireJsNet</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

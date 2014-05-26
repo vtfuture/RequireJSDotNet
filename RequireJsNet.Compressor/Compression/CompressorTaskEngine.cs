@@ -13,6 +13,8 @@ using Yahoo.Yui.Compressor;
 
 namespace RequireJsNet.Compressor
 {
+    using RequireJsNet.Compressor.Helpers;
+
     public class CompressorTaskEngine
     {
         private readonly ICompressor compressor;
@@ -164,7 +166,7 @@ namespace RequireJsNet.Compressor
                 compressionType = ParseCompressionType(CompressionType);
             }
 
-            ParseEncoding();
+            this.Encoding = FileHelpers.ParseEncoding(EncodingType);
             if (this.ParseAdditionalTaskParameters != null)
             {
                 ParseAdditionalTaskParameters();
@@ -233,45 +235,6 @@ namespace RequireJsNet.Compressor
                     break;
                 default:
                     throw new ArgumentException("Logging Type: " + LoggingType + " is invalid.", "LoggingType");
-            }
-        }
-
-        private void ParseEncoding()
-        {
-            if (string.IsNullOrEmpty(this.EncodingType))
-            {
-                this.Encoding = Encoding.Default;
-                return;
-            }
-
-            switch (this.EncodingType.ToLowerInvariant())
-            {
-                case "ascii":
-                    this.Encoding = Encoding.ASCII;
-                    break;
-                case "bigendianunicode":
-                    this.Encoding = Encoding.BigEndianUnicode;
-                    break;
-                case "unicode":
-                    this.Encoding = Encoding.Unicode;
-                    break;
-                case "utf32":
-                case "utf-32":
-                    this.Encoding = Encoding.UTF32;
-                    break;
-                case "utf7":
-                case "utf-7":
-                    this.Encoding = Encoding.UTF7;
-                    break;
-                case "utf8":
-                case "utf-8":
-                    this.Encoding = Encoding.UTF8;
-                    break;
-                case "default":
-                    this.Encoding = Encoding.Default;
-                    break;
-                default:
-                    throw new ArgumentException("Encoding: " + EncodingType + " is invalid.", "EncodingType");
             }
         }
 
