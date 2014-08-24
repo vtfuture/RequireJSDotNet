@@ -32,7 +32,12 @@ namespace RequireJsNet.Compressor
 
         protected string ResolvePhysicalPath(string relativePath)
         {
-            var filePath = Path.GetFullPath(Path.Combine(ProjectPath, this.EntryPoint, relativePath + ".js"));
+            string entry = this.EntryPoint;
+            if (!string.IsNullOrEmpty(EntryOverride))
+            {
+                entry = this.EntryOverride;
+            }
+            var filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException("Could not load script" + filePath, filePath);
