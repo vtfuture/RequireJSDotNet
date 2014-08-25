@@ -24,59 +24,44 @@ namespace RequireJsNet
 
         private const string PageOptionsKey = "pageOptions";
 
-        private static Dictionary<string, object> GlobalOptions 
+        private static HttpContext GetCurrentContext()
         {
-            get
+            if (HttpContext.Current == null)
             {
-                var global = CurrentContext.Items[GlobalOptionsKey] as Dictionary<string, object>;
-                if (global == null)
-                {
-                    global = new Dictionary<string, object>();
-                    CurrentContext.Items[GlobalOptionsKey] = global;
-                }
-
-                return global;
+                throw new Exception("HttpContext.Current is null. RequireJsNet needs a HttpContext in order to work.");
             }
-        }
 
-        private static Dictionary<string, object> PageOptions
-        {
-            get
-            {
-                var page = CurrentContext.Items[PageOptionsKey] as Dictionary<string, object>;
-                if (page == null)
-                {
-                    page = new Dictionary<string, object>();
-                    CurrentContext.Items[GlobalOptionsKey] = page;
-                }
-
-                return page;
-            }
-        }
-
-        private static HttpContext CurrentContext
-        {
-            get
-            {
-                if (HttpContext.Current == null)
-                {
-                    throw new Exception("HttpContext.Current is null. RequireJsNet needs a HttpContext in order to work.");
-                }
-
-                return HttpContext.Current;
-            }
+            return HttpContext.Current;
         }
 
         public static Dictionary<string, object> GetGlobalOptions(HttpContextBase context)
         {
-            return CurrentContext.Items[GlobalOptionsKey] as Dictionary<string, object>
-                   ?? new Dictionary<string, object>();
+            var page = context.Items[GlobalOptionsKey] as Dictionary<string, object>;
+            if (page == null)
+            {
+                context.Items[GlobalOptionsKey] = new Dictionary<string, object>();
+            }
+            return (Dictionary<string, object>)context.Items[GlobalOptionsKey];
+        }
+
+        public static Dictionary<string, object> GetGlobalOptions()
+        {
+            return GetGlobalOptions(new HttpContextWrapper(GetCurrentContext()));
         }
 
         public static Dictionary<string, object> GetPageOptions(HttpContextBase context)
         {
-            return CurrentContext.Items[PageOptionsKey] as Dictionary<string, object>
-                   ?? new Dictionary<string, object>();
+            var page = context.Items[PageOptionsKey] as Dictionary<string, object>;
+            if (page == null)
+            {
+                context.Items[PageOptionsKey] = new Dictionary<string, object>();
+            }
+            return (Dictionary<string, object>)context.Items[PageOptionsKey];
+        }
+
+        public static Dictionary<string, object> GetPageOptions()
+        {
+            return GetPageOptions(new HttpContextWrapper(GetCurrentContext()));
         }
        
 
@@ -85,20 +70,22 @@ namespace RequireJsNet
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    if (PageOptions.Keys.Contains(key))
+                    var pageOptions = GetPageOptions();
+                    if (pageOptions.Keys.Contains(key))
                     {
-                        PageOptions.Remove(key);
+                        pageOptions.Remove(key);
                     }
 
-                    PageOptions.Add(key, value);
+                    pageOptions.Add(key, value);
                     break;
                 case RequireJsOptionsScope.Global:
-                    if (GlobalOptions.Keys.Contains(key))
+                    var globalOptions = GetGlobalOptions();
+                    if (globalOptions.Keys.Contains(key))
                     {
-                        GlobalOptions.Remove(key);
+                        globalOptions.Remove(key);
                     }
 
-                    GlobalOptions.Add(key, value);
+                    globalOptions.Add(key, value);
                     break;
             }
         }
@@ -114,10 +101,10 @@ namespace RequireJsNet
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    dictToModify = PageOptions;
+                    dictToModify = GetPageOptions();
                     break;
                 case RequireJsOptionsScope.Global:
-                    dictToModify = GlobalOptions;
+                    dictToModify = GetGlobalOptions();
                     break;
             }
 
@@ -142,8 +129,8 @@ namespace RequireJsNet
 
         public static object GetByKey(string key, RequireJsOptionsScope scope)
         {
-            return scope == RequireJsOptionsScope.Page ? PageOptions.FirstOrDefault(r => r.Key == key)
-                                                       : GlobalOptions.FirstOrDefault(r => r.Key == key);
+            return scope == RequireJsOptionsScope.Page ? GetPageOptions().FirstOrDefault(r => r.Key == key)
+                                                       : GetGlobalOptions().FirstOrDefault(r => r.Key == key);
         }
 
         public static void Clear(RequireJsOptionsScope scope)
@@ -151,18 +138,18 @@ namespace RequireJsNet
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    PageOptions.Clear();
+                    GetPageOptions().Clear();
                     break;
                 case RequireJsOptionsScope.Global:
-                    GlobalOptions.Clear();
+                    GetGlobalOptions().Clear();
                     break;
             }
         }
 
         public static void ClearAll()
         {
-            PageOptions.Clear();
-            GlobalOptions.Clear();
+            Clear(RequireJsOptionsScope.Global);
+            Clear(RequireJsOptionsScope.Page);
         }
         
 

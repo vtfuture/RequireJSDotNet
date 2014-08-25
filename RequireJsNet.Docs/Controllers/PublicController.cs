@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 
 using RequireJsNet;
 using RequireJsNet.Docs.Helpers;
