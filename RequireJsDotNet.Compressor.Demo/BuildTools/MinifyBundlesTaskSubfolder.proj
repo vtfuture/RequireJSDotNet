@@ -1,6 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask TaskName="RequireCompressorTask" AssemblyFile="..\bin\RequireJsNet.Compressor.dll" />
-	<Target Name="MinifySubfolder" AfterTargets="AfterBuild">
-    <RequireCompressorTask LoggingType="Debug" AutoCompressor="true" EncodingType="UTF8" ProjectPath="$(MSBuildProjectDirectory)" />
-	</Target>
-</Project>

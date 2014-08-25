@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Docs", "RequireJsNet.Docs\RequireJsNet.Docs.csproj", "{7EE6D196-E631-4526-8615-45E2A24F4088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet", "RequireJsNet\RequireJsNet.csproj", "{EA33DE7B-1269-4000-8C33-F6B0632D1872}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{42DBB597-F3FA-4C05-9BCF-51CCC081ECDE}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4AF3C-C654-4210-9A23-F74693A574EC}"
+	ProjectSection(SolutionItems) = preProject
+		RequireJsNet.Compressor.nuspec = RequireJsNet.Compressor.nuspec
+		RequireJsNet.nuspec = RequireJsNet.nuspec
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor", "RequireJsNet.Compressor\RequireJsNet.Compressor.csproj", "{27FBCFC2-9AD7-4042-BC47-0A61B8078264}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor.Demo", "RequireJsNet.Compressor.Demo\RequireJsNet.Compressor.Demo.csproj", "{9D7A9019-25DE-4128-BB84-600C53838A2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor.ParserDemo", "RequireJsNet.Compressor.ParserDemo\RequireJsNet.Compressor.ParserDemo.csproj", "{3FBD9FF5-7556-4EAC-8B15-364564E78594}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EE6D196-E631-4526-8615-45E2A24F4088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EE6D196-E631-4526-8615-45E2A24F4088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EE6D196-E631-4526-8615-45E2A24F4088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EE6D196-E631-4526-8615-45E2A24F4088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA33DE7B-1269-4000-8C33-F6B0632D1872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA33DE7B-1269-4000-8C33-F6B0632D1872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA33DE7B-1269-4000-8C33-F6B0632D1872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA33DE7B-1269-4000-8C33-F6B0632D1872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27FBCFC2-9AD7-4042-BC47-0A61B8078264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D7A9019-25DE-4128-BB84-600C53838A2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FBD9FF5-7556-4EAC-8B15-364564E78594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FBD9FF5-7556-4EAC-8B15-364564E78594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FBD9FF5-7556-4EAC-8B15-364564E78594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FBD9FF5-7556-4EAC-8B15-364564E78594}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
