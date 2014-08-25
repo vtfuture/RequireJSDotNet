@@ -116,8 +116,6 @@
     <Compile Include="Models\RequirePaths.cs" />
     <Compile Include="Models\RequireShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequireJsConfigAttribute.cs" />
-    <Compile Include="RequireJsController.cs" />
     <Compile Include="RequireJsHtmlHelpers.cs" />
     <Compile Include="RequireJsOptions.cs" />
     <Compile Include="Validation\ConfigValidationError.cs" />

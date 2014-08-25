@@ -189,8 +189,8 @@ namespace RequireJsNet
             var options = new JsonRequireOptions
             {
                 Locale = html.CurrentCulture(),
-                PageOptions = html.ViewBag.PageOptions,
-                WebsiteOptions = html.ViewBag.GlobalOptions
+                PageOptions = RequireJsOptions.GetPageOptions(html.ViewContext.HttpContext),
+                WebsiteOptions = RequireJsOptions.GetGlobalOptions(html.ViewContext.HttpContext)
             };
 
             var configBuilder = new JavaScriptBuilder();
@@ -284,14 +284,6 @@ namespace RequireJsNet
             return null;
         }
 
-        private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
-        {
-            
-            var fileName = PathHelpers.GetExactFilePath(filePath);
-            var folder = server.MapPath(root);
-            return PathHelpers.GetRequireRelativePath(folder, fileName);
-        }
-
         public static string CurrentCulture(this HtmlHelper html)
         {
             // split the ro-Ro string by '-' so it returns eg. ro / en
@@ -304,5 +296,12 @@ namespace RequireJsNet
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
 
+        private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
+        {
+
+            var fileName = PathHelpers.GetExactFilePath(filePath);
+            var folder = server.MapPath(root);
+            return PathHelpers.GetRequireRelativePath(folder, fileName);
+        }
     }
 }

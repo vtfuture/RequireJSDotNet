@@ -5,12 +5,10 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-
-using Newtonsoft.Json;
+using System.Web;
 
 namespace RequireJsNet
 {
@@ -20,47 +18,93 @@ namespace RequireJsNet
         Global
     }
 
-    public class RequireJsOptions
+    public static class RequireJsOptions
     {
-        private readonly Controller controller;
-        private readonly Dictionary<string, object> globalOptions;
-        private readonly Dictionary<string, object> pageOptions;
+        private const string GlobalOptionsKey = "globalOptions";
 
-        public RequireJsOptions(Controller controller)
+        private const string PageOptionsKey = "pageOptions";
+
+        private static Dictionary<string, object> GlobalOptions 
         {
-            this.controller = controller;
+            get
+            {
+                var global = CurrentContext.Items[GlobalOptionsKey] as Dictionary<string, object>;
+                if (global == null)
+                {
+                    global = new Dictionary<string, object>();
+                    CurrentContext.Items[GlobalOptionsKey] = global;
+                }
 
-            pageOptions = new Dictionary<string, object>();
-            globalOptions = new Dictionary<string, object>();
-
-            // save in case the RequireJsOptions is never used
-            this.SaveAll();
+                return global;
+            }
         }
 
-        public void Add(string key, object value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page)
+        private static Dictionary<string, object> PageOptions
+        {
+            get
+            {
+                var page = CurrentContext.Items[PageOptionsKey] as Dictionary<string, object>;
+                if (page == null)
+                {
+                    page = new Dictionary<string, object>();
+                    CurrentContext.Items[GlobalOptionsKey] = page;
+                }
+
+                return page;
+            }
+        }
+
+        private static HttpContext CurrentContext
+        {
+            get
+            {
+                if (HttpContext.Current == null)
+                {
+                    throw new Exception("HttpContext.Current is null. RequireJsNet needs a HttpContext in order to work.");
+                }
+
+                return HttpContext.Current;
+            }
+        }
+
+        public static Dictionary<string, object> GetGlobalOptions(HttpContextBase context)
+        {
+            return CurrentContext.Items[GlobalOptionsKey] as Dictionary<string, object>
+                   ?? new Dictionary<string, object>();
+        }
+
+        public static Dictionary<string, object> GetPageOptions(HttpContextBase context)
+        {
+            return CurrentContext.Items[PageOptionsKey] as Dictionary<string, object>
+                   ?? new Dictionary<string, object>();
+        }
+       
+
+        public static void Add(string key, object value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page)
         {
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    if (pageOptions.Keys.Contains(key))
+                    if (PageOptions.Keys.Contains(key))
                     {
-                        pageOptions.Remove(key);
+                        PageOptions.Remove(key);
                     }
 
-                    pageOptions.Add(key, value);
+                    PageOptions.Add(key, value);
                     break;
                 case RequireJsOptionsScope.Global:
-                    if (globalOptions.Keys.Contains(key))
+                    if (GlobalOptions.Keys.Contains(key))
                     {
-                        globalOptions.Remove(key);
+                        GlobalOptions.Remove(key);
                     }
 
-                    globalOptions.Add(key, value);
+                    GlobalOptions.Add(key, value);
                     break;
             }
         }
 
-        public void Add(
+
+        public static void Add(
             string key,
             Dictionary<string, object> value,
             RequireJsOptionsScope scope = RequireJsOptionsScope.Page,
@@ -70,10 +114,10 @@ namespace RequireJsNet
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    dictToModify = pageOptions;
+                    dictToModify = PageOptions;
                     break;
                 case RequireJsOptionsScope.Global:
-                    dictToModify = globalOptions;
+                    dictToModify = GlobalOptions;
                     break;
             }
 
@@ -96,74 +140,33 @@ namespace RequireJsNet
             }
         }
 
-        public object GetByKey(string key, RequireJsOptionsScope scope)
+        public static object GetByKey(string key, RequireJsOptionsScope scope)
         {
-            return scope == RequireJsOptionsScope.Page ? pageOptions.FirstOrDefault(r => r.Key == key)
-                                                       : globalOptions.FirstOrDefault(r => r.Key == key);
+            return scope == RequireJsOptionsScope.Page ? PageOptions.FirstOrDefault(r => r.Key == key)
+                                                       : GlobalOptions.FirstOrDefault(r => r.Key == key);
         }
 
-        public void Clear(RequireJsOptionsScope scope)
+        public static void Clear(RequireJsOptionsScope scope)
         {
             switch (scope)
             {
                 case RequireJsOptionsScope.Page:
-                    pageOptions.Clear();
+                    PageOptions.Clear();
                     break;
                 case RequireJsOptionsScope.Global:
-                    globalOptions.Clear();
+                    GlobalOptions.Clear();
                     break;
             }
         }
 
-        public void ClearAll()
+        public static void ClearAll()
         {
-            pageOptions.Clear();
-            globalOptions.Clear();
+            PageOptions.Clear();
+            GlobalOptions.Clear();
         }
+        
 
-        public void Save(RequireJsOptionsScope scope)
-        {
-            // sends options to view using the ViewBag
-            switch (scope)
-            {
-                case RequireJsOptionsScope.Page:
-                    controller.ViewBag.PageOptions = pageOptions;
-                    break;
-                case RequireJsOptionsScope.Global:
-                    controller.ViewBag.GlobalOptions = globalOptions;
-                    break;
-            }
-        }
-
-        public void SaveAll()
-        {
-            Save(RequireJsOptionsScope.Global);
-            Save(RequireJsOptionsScope.Page);
-        }
-
-        internal static string ConvertToJsObject(Dictionary<string, object> options)
-        {
-            var config = new StringBuilder();
-
-            config.Append("{");
-
-            if (options != null)
-            {
-                foreach (var item in options)
-                {
-                    config.AppendFormat(
-                        " {0}: {1}{2} ",
-                        item.Key,
-                        JsonConvert.SerializeObject(item.Value),
-                        options.Last().Equals(item) ? string.Empty : ",");
-                }
-            }
-
-            config.Append("}");
-            return config.ToString();
-        }
-
-        private void AppendItems(Dictionary<string, object> to, Dictionary<string, object> from)
+        private static void AppendItems(Dictionary<string, object> to, Dictionary<string, object> from)
         {
             foreach (var item in from)
             {
