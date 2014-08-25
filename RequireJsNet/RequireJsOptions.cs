@@ -1,16 +1,16 @@
-﻿/*
- * RequireJS.NET
- * Copyright Stefan Prodan
- *   http://stefanprodan.eu
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
- */
-using Newtonsoft.Json;
+﻿// RequireJS.NET
+// Copyright VeriTech.io
+// http://veritech.io
+// Dual licensed under the MIT and GPL licenses:
+// http://www.opensource.org/licenses/mit-license.php
+// http://www.gnu.org/licenses/gpl.html
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+
+using Newtonsoft.Json;
 
 namespace RequireJsNet
 {
