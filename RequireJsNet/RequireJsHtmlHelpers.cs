@@ -284,16 +284,16 @@ namespace RequireJsNet
             return null;
         }
 
-        public static string CurrentCulture(this HtmlHelper html)
-        {
-            // split the ro-Ro string by '-' so it returns eg. ro / en
-            return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
-        }
-
         public static Dictionary<string, int> ToJsonDictionary<TEnum>()
         {
             var enumType = typeof(TEnum);
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
+        }
+
+        private static string CurrentCulture(this HtmlHelper html)
+        {
+            // split the ro-Ro string by '-' so it returns eg. ro / en
+            return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
         }
 
         private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
