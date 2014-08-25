@@ -24,16 +24,6 @@ namespace RequireJsNet
 
         private const string PageOptionsKey = "pageOptions";
 
-        private static HttpContext GetCurrentContext()
-        {
-            if (HttpContext.Current == null)
-            {
-                throw new Exception("HttpContext.Current is null. RequireJsNet needs a HttpContext in order to work.");
-            }
-
-            return HttpContext.Current;
-        }
-
         public static Dictionary<string, object> GetGlobalOptions(HttpContextBase context)
         {
             var page = context.Items[GlobalOptionsKey] as Dictionary<string, object>;
@@ -41,6 +31,7 @@ namespace RequireJsNet
             {
                 context.Items[GlobalOptionsKey] = new Dictionary<string, object>();
             }
+
             return (Dictionary<string, object>)context.Items[GlobalOptionsKey];
         }
 
@@ -56,6 +47,7 @@ namespace RequireJsNet
             {
                 context.Items[PageOptionsKey] = new Dictionary<string, object>();
             }
+
             return (Dictionary<string, object>)context.Items[PageOptionsKey];
         }
 
@@ -165,6 +157,16 @@ namespace RequireJsNet
 
                 to.Add(item.Key, item.Value);
             }
+        }
+
+        private static HttpContext GetCurrentContext()
+        {
+            if (HttpContext.Current == null)
+            {
+                throw new Exception("HttpContext.Current is null. RequireJsNet needs a HttpContext in order to work.");
+            }
+
+            return HttpContext.Current;
         }
     }
 }
