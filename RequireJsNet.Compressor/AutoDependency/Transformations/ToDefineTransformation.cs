@@ -1,9 +1,9 @@
+using Jint.Parser.Ast;
+
+using RequireJsNet.Compressor.Parsing;
+
 namespace RequireJsNet.Compressor.Transformations
 {
-    using Jint.Parser.Ast;
-
-    using RequireJsNet.Compressor.Parsing;
-
     internal class ToDefineTransformation : IRequireTransformation
     {
         public RequireCall RequireCall { get; set; }

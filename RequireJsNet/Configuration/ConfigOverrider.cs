@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
-    using System.IO;
-
-    using RequireJsNet.Models;
-
     internal class ConfigOverrider
     {
         public void Override(ConfigurationCollection collection, string entryPoint)

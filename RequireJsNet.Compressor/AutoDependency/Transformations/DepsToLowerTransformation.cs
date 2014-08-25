@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RequireJsNet.Compressor.Parsing;
 
 namespace RequireJsNet.Compressor.Transformations
 {
-    using RequireJsNet.Compressor.Parsing;
-
     internal class DepsToLowerTransformation : IRequireTransformation
     {
         public RequireCall RequireCall { get; set; }

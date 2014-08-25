@@ -3,8 +3,6 @@ using System.Web.Mvc;
 
 namespace RequireJsNet
 {
-    using System;
-
     internal class JavaScriptBuilder
     {
         private const string Type = "application/javascript";

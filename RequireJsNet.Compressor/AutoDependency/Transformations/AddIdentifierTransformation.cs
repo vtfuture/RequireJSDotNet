@@ -1,13 +1,11 @@
+using System.Linq;
+
+using Jint.Parser.Ast;
+
+using RequireJsNet.Compressor.Parsing;
+
 namespace RequireJsNet.Compressor.Transformations
 {
-    using System;
-    using System.Dynamic;
-    using System.Linq;
-
-    using Jint.Parser.Ast;
-
-    using RequireJsNet.Compressor.Parsing;
-
     internal class AddIdentifierTransformation : IRequireTransformation
     {
         public RequireCall RequireCall { get; set; }

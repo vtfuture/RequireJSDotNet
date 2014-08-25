@@ -1,7 +1,7 @@
+using RequireJsNet.Compressor.Parsing;
+
 namespace RequireJsNet.Compressor.Transformations
 {
-    using RequireJsNet.Compressor.Parsing;
-
     internal interface IRequireTransformation
     {
         RequireCall RequireCall { get; set; }

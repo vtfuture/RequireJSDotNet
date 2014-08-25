@@ -3,15 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+using RequireJsNet.Helpers;
 using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
-    using System;
-    using System.Web.UI;
-
-    using RequireJsNet.Helpers;
-
     internal class XmlReader : IConfigReader
     {
         private readonly string path;

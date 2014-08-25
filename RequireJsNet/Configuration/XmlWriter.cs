@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
+
+using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
-    using System.IO;
-    using System.Xml.Linq;
-
-    using RequireJsNet.Models;
-
     internal class XmlWriter : IConfigWriter
     {
         private readonly ConfigLoaderOptions options;

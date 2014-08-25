@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using RequireJsNet.Compressor.AutoDependency;
+using RequireJsNet.Compressor.Models;
+using RequireJsNet.Configuration;
+using RequireJsNet.Helpers;
+using RequireJsNet.Models;
 
 namespace RequireJsNet.Compressor.RequireProcessing
 {
-    using System.Diagnostics;
-    using System.IO;
-
-    using RequireJsNet.Compressor.AutoDependency;
-    using RequireJsNet.Compressor.Models;
-    using RequireJsNet.Configuration;
-    using RequireJsNet.Helpers;
-    using RequireJsNet.Models;
-
     internal class AutoBundleConfigProcessor : ConfigProcessor
     {
         private Encoding encoding;

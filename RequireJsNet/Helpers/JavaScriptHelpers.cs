@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+
+using Newtonsoft.Json;
 
 namespace RequireJsNet.Helpers
 {
-    using System.Text;
 
     internal static class JavaScriptHelpers
     {

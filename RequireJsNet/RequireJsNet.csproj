@@ -94,7 +94,6 @@
     <Compile Include="Models\AutoBundles.cs" />
     <Compile Include="Models\BundleItem.cs" />
     <Compile Include="Models\CollectionOverride.cs" />
-    <Compile Include="Models\ConfigurationOverride.cs" />
     <Compile Include="Models\JsonConfig.cs" />
     <Compile Include="Models\JsonRequireDeps.cs" />
     <Compile Include="Models\JsonRequireOptions.cs" />

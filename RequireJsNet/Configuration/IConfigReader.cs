@@ -1,6 +1,6 @@
 ﻿using RequireJsNet.Models;
 
-namespace RequireJsNet
+namespace RequireJsNet.Configuration
 {
     internal interface IConfigReader
     {

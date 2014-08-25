@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
+
+using RequireJsNet.Configuration;
 
 namespace RequireJsNet.Compressor
 {
-    using RequireJsNet.Compressor.RequireProcessing;
-    using RequireJsNet.Configuration;
-    using RequireJsNet.Models;
-
     internal class SimpleBundleConfigProcessor : ConfigProcessor
     {
         public SimpleBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths)

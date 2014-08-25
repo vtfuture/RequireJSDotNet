@@ -13,14 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
-using RequireJsNet;
 using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
 using RequireJsNet.Models;
 
 namespace RequireJsNet
 {
-    using System.Diagnostics;
     using System.Web;
 
     public static class RequireJsHtmlHelpers

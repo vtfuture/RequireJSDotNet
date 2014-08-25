@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Jint;
+using Jint.Parser;
+using Jint.Parser.Ast;
+
+using RequireJsNet.Compressor.Models;
 
 namespace RequireJsNet.Compressor.Parsing
 {
-    using EcmaScript.NET;
-
-    using Jint;
-    using Jint.Parser;
-    using Jint.Parser.Ast;
-
-    using RequireJsNet.Compressor.Models;
-
     /// <summary>
     /// A specialized visitor class that will extract require() and define() calls
     /// TODO: could make this an actual visitor and implement the require() specific code in another class

@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace RequireJsNet.Configuration
 {
-    using System.IO;
-
     internal static class ConfigHelpers
     {
         public static ConfigType GetReaderType(string path)

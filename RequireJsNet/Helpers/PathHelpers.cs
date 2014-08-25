@@ -1,11 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web;
 
 namespace RequireJsNet.Helpers
 {
-    using System;
-    using System.Linq;
-
     internal static class PathHelpers
     {
         public static string MapPath(this HttpContextBase context, string path)

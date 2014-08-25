@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using RequireJsNet.Compressor.Parsing;
+using RequireJsNet.Compressor.Transformations;
+using RequireJsNet.Helpers;
 
 namespace RequireJsNet.Compressor.AutoDependency.Transformations
 {
-    using System.IO;
-
-    using RequireJsNet.Compressor.Parsing;
-    using RequireJsNet.Compressor.Transformations;
-    using RequireJsNet.Helpers;
-
     internal class ShimFileTransformation : IRequireTransformation
     {
         private List<string> dependencies;

@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
+using RequireJsNet.Helpers;
 using RequireJsNet.Models;
 using RequireJsNet.Validation;
 
 namespace RequireJsNet.Configuration
 {
-    using System.IO;
-    using System.Linq;
-
-    using RequireJsNet.Helpers;
-
     internal class ConfigLoader
     {
         private readonly List<string> paths = new List<string>();

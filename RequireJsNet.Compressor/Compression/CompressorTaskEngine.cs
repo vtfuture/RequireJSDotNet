@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -9,12 +8,12 @@ using System.Threading;
 
 using EcmaScript.NET;
 
+using RequireJsNet.Compressor.Helpers;
+
 using Yahoo.Yui.Compressor;
 
 namespace RequireJsNet.Compressor
 {
-    using RequireJsNet.Compressor.Helpers;
-
     public class CompressorTaskEngine
     {
         private readonly ICompressor compressor;

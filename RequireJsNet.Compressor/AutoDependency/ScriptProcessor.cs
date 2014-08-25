@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using Jint.Parser;
+using Jint.Parser.Ast;
+
+using RequireJsNet.Compressor.AutoDependency.Transformations;
+using RequireJsNet.Compressor.Parsing;
+using RequireJsNet.Compressor.Transformations;
+using RequireJsNet.Helpers;
+using RequireJsNet.Models;
 
 namespace RequireJsNet.Compressor.AutoDependency
 {
-    using Jint.Parser;
-    using Jint.Parser.Ast;
-
-    using RequireJsNet.Compressor.AutoDependency.Transformations;
-    using RequireJsNet.Compressor.Parsing;
-    using RequireJsNet.Compressor.Transformations;
-    using RequireJsNet.Helpers;
-    using RequireJsNet.Models;
-
     internal class ScriptProcessor
     {
         private readonly ConfigurationCollection configuration;

@@ -1,7 +1,7 @@
-﻿namespace RequireJsNet.Models
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace RequireJsNet.Models
+{
     internal class ConfigurationCollection
     {
         public string FilePath { get; set; }

@@ -8,11 +8,11 @@ using Microsoft.Build.Utilities;
 
 using Yahoo.Yui.Compressor;
 
+using RequireJsNet.Compressor.Helpers;
+using RequireJsNet.Compressor.RequireProcessing;
+
 namespace RequireJsNet.Compressor
 {
-    using RequireJsNet.Compressor.Helpers;
-    using RequireJsNet.Compressor.RequireProcessing;
-
     public class RequireCompressorTask : Task
     {
         private ConfigProcessor configProcessor;

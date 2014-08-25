@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using RequireJsNet.Models;
 
 namespace RequireJsNet.Compressor
 {
-    using System.IO;
-
-    using RequireJsNet.Models;
-
     internal abstract class ConfigProcessor
     {
         protected const string ConfigFileName = "RequireJS.config";
