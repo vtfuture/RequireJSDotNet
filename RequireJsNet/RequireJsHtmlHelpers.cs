@@ -295,7 +295,7 @@ namespace RequireJsNet
         public static string CurrentCulture(this HtmlHelper html)
         {
             // split the ro-Ro string by '-' so it returns eg. ro / en
-            return System.Threading.Thread.CurrentThread.CurrentCulture.Name.Split('-')[0];
+            return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
         }
 
         public static Dictionary<string, int> ToJsonDictionary<TEnum>()
