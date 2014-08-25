@@ -1,0 +1,21 @@
+﻿using System;
+
+using EcmaScript.NET;
+
+namespace RequireJsDotNet.Compressor
+{
+    public interface ILog
+    {
+        void LogMessage(string message);
+
+        void LogBoolean(string name, bool value);
+
+        void LogError(string message, params object[] messageArgs);
+
+        void LogErrorFromException(Exception exception);
+
+        void LogErrorFromException(Exception exception, bool showStackTrace);
+
+        void LogEcmaError(EcmaScriptException ecmaScriptException);
+    }
+}
