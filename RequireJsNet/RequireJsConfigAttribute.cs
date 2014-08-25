@@ -9,7 +9,7 @@
 
 using System.Web.Mvc;
 
-namespace RequireJS
+namespace RequireJsNet
 {
     public class RequireJsConfigAttribute : ActionFilterAttribute
     {

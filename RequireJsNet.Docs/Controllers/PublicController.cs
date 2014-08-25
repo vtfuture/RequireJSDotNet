@@ -1,4 +1,4 @@
-﻿using RequireJS;
+﻿using RequireJsNet;
 using RequireJsNet.Docs.Helpers;
 
 namespace RequireJsNet.Docs.Controllers

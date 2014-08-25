@@ -18,7 +18,7 @@ using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
 using RequireJsNet.Models;
 
-namespace RequireJS
+namespace RequireJsNet
 {
     using System.Diagnostics;
     using System.Web;

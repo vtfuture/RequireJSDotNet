@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using RequireJsNet.Models;
-using RequireJsNet.Validation;
 
-namespace RequireJsNet
+namespace RequireJsNet.Validation
 {
     internal class ConfigValidator
     {

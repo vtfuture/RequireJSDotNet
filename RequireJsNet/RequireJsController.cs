@@ -9,7 +9,7 @@
 
 using System.Web.Mvc;
 
-namespace RequireJS
+namespace RequireJsNet
 {
     [RequireJsConfig]
     public abstract class RequireJsController : Controller

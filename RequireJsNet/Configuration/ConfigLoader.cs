@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using RequireJsNet.Models;
+using RequireJsNet.Validation;
 
 namespace RequireJsNet.Configuration
 {

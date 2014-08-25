@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
-namespace RequireJS
+namespace RequireJsNet
 {
     public enum RequireJsOptionsScope
     {
