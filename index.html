@@ -18,20 +18,12 @@
 	<meta name="twitter:description" content="RequireJS for ASP.NET MVC">
 	<meta name="twitter:image:src" content="http://veritech.io/img/vt-avatar-255x255.png">
 	
-	<meta property="fb:admins" content="306126079558384" />
-	<meta property="og:locale" content="en_US" />
-	<meta property="og:title" content="RequireJS.NET" />
-	<meta property="og:url" content="http://requirejsnet.veritech.io" />
-	<meta property="og:image" content="http://veritech.io/img/vt-avatar-255x255.png" />
-	<meta property="og:type" content="website" />
-
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 	<link rel="shortcut icon" href="img/favicon.png">
 	<link rel="icon" type="image/png" href="img/favicon.png" />
 	
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -41,32 +33,94 @@
 
 <body id="home">
 	
-	<div class="footer" id="contact">
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header" data-scroll-header="">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://requirejs.veritech.io"><img src="img/require-logo.png" alt="RequireJS.Net" width="136" height="51"></a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a>
+                    </li>
+                    <li><a href="#">Setup</a>
+                    </li>
+                    <li><a href="#">Bundeling</a>
+                    </li>
+					<li><a href="#">Internationalization</a>
+                    </li>
+	            </ul>
+            </div>
+        </div>
+    </nav>
 	
+	<div class="feature">
 		<div class="container">
-			<div class="contact-info">
-				<div class="row">
-					<div class="col-md-3 col-sm-4 contact-column right">
-						<h4>Let’s keep in touch</h4>
-						<p>Say hellow to us on:</p>
-						<p class="social-media">
-							<a href="https://twitter.com/vtfuture" class="tw" title="Twitter" target="_blank">Twitter</a>
-							<a href="https://www.facebook.com/vtfuture" class="fb" title="Facebook" target="_blank">Facebook</a> 
-							<a href="https://www.google.com/+VeritechIosolutions" rel="publisher" class="gplus" title="Google+" target="_blank">Google+</a>                 
-							<a href="https://www.linkedin.com/company/veritech-io" class="lnkd" title="Linkedin" target="_blank">Linkedin</a>
-						</p>
-					</div>
-				</div>	
-			</div>		
+			<h1>
+				<strong>RequireJs.NET</strong> helps you structure the JavaScript code in such a manner that any C# programmer can understand and use it without advanced js programming skills. 
+			</h1>
 		</div>
 		
-		<div class="copy">
-			<div class="container">
-				<p class="pull-left">2014 © VeriTech Solutions. ALL Rights Reserved.</p>
-				<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="86" height="55"></a>
+	</div>
+	
+	<div class="site-content">
+		<div class="container">
+			<div class="text-center wrapper-feature-btn"><a href="#" class="button-feature">Download RequireJS.Net</a></div>
+			<div class="site-text">
+				<p>
+					<strong>RequireJS</strong> is an implementation of Asynchronous Module Definition (AMD) that provides all the tools you need to write modular JavaScript. If you are working on a large project with lots of JavaScript code, many external components and frameworks, RequireJS will help you manage the complexity of dependencies.
+				</p>
+				<p><strong>Writing modular JavaScript</strong> is the first step in bringing the front-end development closer to the server-side OOP, for a C# programmer, the Module Pattern applied to JavaScript means that you can emulate the .NET class behavior by having public/private members and methods. With RequireJS you can go even further, by declaring a module you can specify dependencies to other modules, the same way as you do in a .NET project when you add references to other .NET components. Before a module is loaded by the browser, RequireJS will look for the dependencies required by that module to function, it will fetch asynchronously from the server all the other modules needed and then will let the browser execute your module code.</p>
+				<p><strong>Advantages</strong> of using RequireJS with Asp.Net MVC:</p>
+				<div class="site-list">
+					<ul>
+						<li>better JavaScript code reusability</li>
+						<li>reliable object and dependency management</li>
+						<li>suitable for large and complex applications</li>
+						<li>loads JavaScript files asynchronously</li>
+					</ul>
+				</div>
+				<div class="site-feature">
+					You can read all about RequireJS and AMD on <a href="http://requirejs.org">requirejs.org</a>
+				</div>
+				<p><strong>The .NET implementation</strong> has the following features:</p>
+				<div class="site-list">
+					<ul>
+						<li>JavaScript file structure integrated with the MVC structure</li>
+						<li>dependencies declaration and module path configuration using XML</li>
+						<li>JavaScript code-behind for each Razor view</li>
+						<li>communication from the server-side controller (C#) to js modules using .NET</li>
+						<li>Ajax requests management</li>
+					</ul>
+				</div>
 			</div>
+			
+			<ul class="bs-social-buttons" style="padding-left: 0; list-style: none; margin: 35px 0 20px;">
+				<li style="display: inline-block;">
+					<iframe src="http://ghbtns.com/github-btn.html?user=vtfuture&amp;repo=bforms&amp;type=watch&amp;count=false" allowtransparency="true" frameborder="0" scrolling="0" width="55" height="20"></iframe>
+				</li>
+				<li style="display: inline-block;">
+					<iframe src="http://ghbtns.com/github-btn.html?user=vtfuture&amp;repo=bforms&amp;type=fork&amp;count=false" allowtransparency="true" frameborder="0" scrolling="0" width="60" height="20"></iframe>
+				</li>
+				<li style="display: inline-block;">
+					<iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" src="http://platform.twitter.com/widgets/tweet_button.1409007440.html#_=1409056795685&amp;count=none&amp;id=twitter-widget-0&amp;lang=en&amp;original_referer=http%3A%2F%2Fbforms.veritech.io%2F&amp;size=m&amp;text=Bootstrap%20Forms%20for%20ASP%20NET%20MVC&amp;url=http%3A%2F%2Fbforms.veritech.io&amp;via=vtfuture" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-none" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 59px; height: 20px;"></iframe>
+					<script async="" src="//www.google-analytics.com/analytics.js"></script><script id="twitter-wjs" src="http://platform.twitter.com/widgets.js"></script><script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+				</li>
+			</ul>
 		</div>
-		
+	</div>
+	
+	<div class="footer" id="contact">	
+		<div class="container">			
+			<p class="pull-left">2014 © VeriTech Solutions. ALL Rights Reserved.</p>
+			<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="63" height="40"></a>
+		</div>		
 	</div>
 		
 	</div>

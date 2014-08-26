@@ -1,0 +1,154 @@
+$blue: #0f82d1;
+$purple: #3e297f;
+
+body {
+	font-family: Verdana, sans-serif;
+	color: #7a7a7a;
+	-webkit-font-smoothing: antialiased; 
+}
+
+.navbar {
+	font-family: "Segoe UI", Verdana, sans-serif;
+	&.navbar-default {
+		background: #fff;
+		//border: none;
+	}
+	.navbar-brand {
+		height: auto;
+		padding: 15px;
+	}
+	.navbar-nav {
+		margin-top: 25px;
+		li {
+			margin-left: 4px;
+			a {
+				padding: 7px 10px;
+				&:hover {
+					border-radius: 3px;
+					background: lighten($blue, 10%);
+					color: #fff;
+				}
+			}
+			&.active a {
+				border-radius: 3px;
+				background: $blue;
+				color: #fff;
+			}
+		}
+	}
+	.navbar-toggle {
+		margin-top: 25px;
+	}
+}
+
+.feature {
+	background-color: $purple;
+	color: #fff;	
+	margin-top: 76px;
+	text-align: center;
+	h1 {
+		font-family: Segoe UI Light, Segoe UI, Verdana, sans-serif;
+		font-size: 24px;
+		line-height: 36px;
+	}
+	.container {
+		padding: 70px 160px 90px;
+		background: url(../img/bk1.png) right top no-repeat, url(../img/bk2.png) left bottom no-repeat;	
+		@media (max-width: 767px) {
+			padding: 30px 30px 50px;
+		}	 	
+	}
+}
+
+.wrapper-feature-btn {
+	margin-top: -20px;
+	margin-bottom: 60px;
+}
+.button-feature {
+	border-radius: 10px;
+	background: $blue;
+	color: #fff;
+	padding: 15px 20px;
+	font-family: Segoe UI Light, Segoe UI, Verdana, sans-serif;
+	font-size: 24px;
+	&:hover {
+		background: lighten($blue, 10%);
+		color: #fff;
+		text-decoration: none;
+	}
+	
+}
+
+.site-text {
+	p, .site-list {
+		font-size: 13px;
+		line-height: 22px;
+		padding-left: 25px;		
+		margin: 0 0 50px;
+		text-align: justify;
+	}
+	p {
+		border-left: 10px solid #e3e3e3;
+	}
+	.site-list ul {		
+		margin-top: -30px;
+		margin-left: 0;
+		text-align: left;
+		li {
+			margin: 0 0 5px;
+		}
+	}
+}
+
+.site-feature {
+	background: #e3e3e3;
+	font-family: Segoe UI Light, Segoe UI, Verdana, sans-serif;
+	font-size: 24px;
+	padding: 25px;
+	margin-bottom: 50px;
+	a {
+		color: $blue;
+	}
+}
+
+.footer {
+	font-size: 13px;
+	background: #4a4a4a;
+	color: #fff;
+	padding: 15px 0 5px;
+}
+
+@media (max-width: 767px) {
+	.feature {
+		h1 {
+			font-size: 18px;
+			line-height: 26px;
+		}
+		.container {
+			padding: 30px 20px 50px;
+		}
+	}
+	.site-feature {
+		font-size: 18px;
+		padding: 20px;
+		margin-bottom: 30px;
+	}
+	.wrapper-feature-btn {
+		margin-bottom: 40px;
+	}
+	.button-feature {
+		font-size: 16px;
+	}
+	.site-text {
+		p, .site-list {
+			margin: 0 0 30px;
+			padding-left: 15px;
+		}
+	}
+}
+
+@media (min-width: 768px) and  (max-width: 1024px) {
+	.feature .container {
+		padding: 70px 70px 90px;
+	}
+}
