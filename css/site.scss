@@ -113,10 +113,22 @@ body {
 	}
 }
 
+.bs-link-buttons {
+	font-family: Verdana, sans-serif;
+	font-size: 13px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		display: inline-block;
+		margin-right: 10px;
+	}
+}
+
 .footer {
 	font-size: 13px;
 	background: #4a4a4a;
-	color: #fff;
+	color: #999;
 	padding: 15px 0 5px;
 }
 
