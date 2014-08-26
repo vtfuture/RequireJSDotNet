@@ -31,7 +31,7 @@
 
 </head>
 
-<body id="home">
+<body class="secondary">
 	
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -61,7 +61,7 @@
     </nav>
 	
 	<div class="feature">
-		<div class="container">
+		<div class="container secondary">
 			<h1>
 				Javascript resource generation using a MSBuild task 
 			</h1>
@@ -70,74 +70,75 @@
 	</div>
 	
 	<div class="site-content">
-		<div class="container">		
-				<article>					
-					<div class="content">
-						<p>
-							ResxToJs is a MSBuild task that outputs specified keys from a resx file in RequireJS i18n format, available on nuget.
-							Here you will find a setup guide for using it in your projects.			
-						</p>			
-						<h5>Step 1</h5>
-							<p>
-								Install ResxToJs nuget packet, using the PM>Install-Package --INSERT NAME HERE--
-								<br/>
-								You should also make sure that you have installed the RequireJS.Net package
-							</p>
-						<h5>Step 2</h5>
-							<p>
-								Add your .resx files to the project. In this example we have three files, <strong>Resource.resx</strong>, <strong>Resource.en-US.resx</strong> and <strong>Resource.en-RO.resx</strong>.							
-							</p>
-							<p>
-								Add some entries to your resources and mark the ones that you want to use in javascript with the <strong>js</strong> comment. You only have to add this comment in the 
-								Resources.resx file.						
-							</p>
-							<img src="img/resxcomment.jpg"/>
-						<h5>Step 3</h5>
-							<p>
-								Create a new folder inside your scripts folder, named <strong>Nls</strong>. This is going to be the location where your javascript resource files will be generated.										
-							</p>
-							<p>
-								Inside the Nls folder add a new javascript file, named <strong>myapplication-resx.js</strong>, in which we are going to list the cultures that we want to be outputted. 								
-							</p>
-							<pre class="prettyprint">
+		<div class="container">	
+			<p>
+				ResxToJs is a MSBuild task that outputs specified keys from a resx file in RequireJS i18n format, available on nuget.
+				Here you will find a setup guide for using it in your projects.			
+			</p>			
+			<h5>Step 1</h5>
+			<p>
+				Install ResxToJs nuget packet, using the PM>Install-Package --INSERT NAME HERE--
+				<br/>
+				You should also make sure that you have installed the RequireJS.Net package
+			</p>
+			<h5>Step 2</h5>
+			<p>
+				Add your .resx files to the project. In this example we have three files, <strong>Resource.resx</strong>, <strong>Resource.en-US.resx</strong> and <strong>Resource.en-RO.resx</strong>.							
+			</p>
+			<p>
+				Add some entries to your resources and mark the ones that you want to use in javascript with the <strong>js</strong> comment. You only have to add this comment in the 
+				Resources.resx file.						
+			</p>
+			<img src="img/resxcomment.jpg"/>
+			<h5>Step 3</h5>
+			<p>
+				Create a new folder inside your scripts folder, named <strong>Nls</strong>. This is going to be the location where your javascript resource files will be generated.										
+			</p>
+			<p>
+				Inside the Nls folder add a new javascript file, named <strong>myapplication-resx.js</strong>, in which we are going to list the cultures that we want to be outputted. 								
+			</p>
+			<pre class="prettyprint">
 define({
 	'root': true,
 	'ro': true,
 	'en': true,
 });
-							</pre>
-							
-							<h5>Step 4</h5>
-								<p>
-									Create a new folder inside your project, named ".build", in which you will add the file containing the task, named <strong>ResxToJs.targets</strong>, with the following content:											
-								</p>
-							    <pre class="prettyprint">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;<br/>&lt;Project ToolsVersion=&quot;4.0&quot; xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;<br/>  &lt;UsingTask TaskName=&quot;ResxToJS.ResxToJSTask&quot; AssemblyFile=&quot;..\bin\ResxToJS.dll&quot; /&gt;<br/>  &lt;Target Name=&quot;ResxForBuild&quot; AfterTargets=&quot;AfterBuild&quot;&gt;<br/>    &lt;MsBuild Projects=&quot;$(MSBuildProjectFile)&quot; Targets=&quot;Resources&quot; Properties=&quot;DestinationDir=$(MSBuildProjectDirectory)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>  &lt;Target Name=&quot;ResourcesForDeploy&quot; AfterTargets=&quot;CopyAllFilesToSingleFolderForMsdeploy&quot;&gt;<br/>    &lt;MsBuild Projects=&quot;$(MSBuildProjectFile)&quot; Targets=&quot;Resources&quot; Properties=&quot;DestinationDir=$(_PackageTempDir)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>  &lt;Target Name=&quot;Resources&quot;&gt;<br/>    &lt;ResxToJSTask RootResx=&quot;$(MSBuildProjectDirectory)\Resources\Resource.resx&quot; RootJS=&quot;$(DestinationDir)\Scripts\Nls\myapplication-resx.js&quot;&gt;<br/>    &lt;/ResxToJSTask&gt;<br/>  &lt;/Target&gt;<br/>&lt;/Project&gt;</pre>
-							<h5> Step 5</h5>
-								<p>
-									Add the following line at the end of your .csproj to import the <strong>ResxToJs</strong> project:
-								</p>
-								<pre class="prettyprint">&lt;Import Project=&quot;.build\ResxToJs.targets&quot; /&gt;</pre>
-							<h5>Step 6</h5>
-								<p>Now you should build the project and check the Output window. If all goes according to plan you will see a message telling how long it took for the resources to be generated.</p>
-								<p>If you check the <strong>Nls</strong> folder you will see the structure generated by ResxToJs:</p>
-								<img src="img/folderstructure.jpg"/>
-								
-								
-							<h5>Javascript usage</h5>
-								<p>If you want to retrieve the resources in your client side  code you should use the <strong>i18n RequireJS</strong> plugin.</p>																									
-								<p>The current culture is determined by the System.Threading.Thread.CurrentThread.CurrentCulture property and attached to the requireConfig global object.</p>
-								<p>The following code should output an object containing the <strong>js</strong> marked keys from your resx file.</p>
-								<pre class="prettyprint">
-require([
-    'i18n!nls/myapplication-resx'
-], function (resx) {
-    console.log(resx);
-});
-								</pre>
-					</div>
-				</article>
+			</pre>
 			
+			<h5>Step 4</h5>
+				<p>
+					Create a new folder inside your project, named ".build", in which you will add the file containing the task, named <strong>ResxToJs.targets</strong>, with the following content:											
+				</p>
+				<pre class="prettyprint">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;<br/>&lt;Project ToolsVersion=&quot;4.0&quot; xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;<br/>  &lt;UsingTask TaskName=&quot;ResxToJS.ResxToJSTask&quot; AssemblyFile=&quot;..\bin\ResxToJS.dll&quot; /&gt;<br/>  &lt;Target Name=&quot;ResxForBuild&quot; AfterTargets=&quot;AfterBuild&quot;&gt;<br/>    &lt;MsBuild Projects=&quot;$(MSBuildProjectFile)&quot; Targets=&quot;Resources&quot; Properties=&quot;DestinationDir=$(MSBuildProjectDirectory)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>  &lt;Target Name=&quot;ResourcesForDeploy&quot; AfterTargets=&quot;CopyAllFilesToSingleFolderForMsdeploy&quot;&gt;<br/>    &lt;MsBuild Projects=&quot;$(MSBuildProjectFile)&quot; Targets=&quot;Resources&quot; Properties=&quot;DestinationDir=$(_PackageTempDir)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>  &lt;Target Name=&quot;Resources&quot;&gt;<br/>    &lt;ResxToJSTask RootResx=&quot;$(MSBuildProjectDirectory)\Resources\Resource.resx&quot; RootJS=&quot;$(DestinationDir)\Scripts\Nls\myapplication-resx.js&quot;&gt;<br/>    &lt;/ResxToJSTask&gt;<br/>  &lt;/Target&gt;<br/>&lt;/Project&gt;</pre>
+			<h5> Step 5</h5>
+				<p>
+					Add the following line at the end of your .csproj to import the <strong>ResxToJs</strong> project:
+				</p>
+				<pre class="prettyprint">&lt;Import Project=&quot;.build\ResxToJs.targets&quot; /&gt;</pre>
+			<h5>Step 6</h5>
+				<p>Now you should build the project and check the Output window. If all goes according to plan you will see a message telling how long it took for the resources to be generated.</p>
+				<p>If you check the <strong>Nls</strong> folder you will see the structure generated by ResxToJs:</p>
+				<img src="img/folderstructure.jpg"/>
+				
+				
+			<h5>Javascript usage</h5>
+				<p>If you want to retrieve the resources in your client side  code you should use the <strong>i18n RequireJS</strong> plugin.</p>																									
+				<p>The current culture is determined by the System.Threading.Thread.CurrentThread.CurrentCulture property and attached to the requireConfig global object.</p>
+				<p>The following code should output an object containing the <strong>js</strong> marked keys from your resx file.</p>
+			<pre class="prettyprint">
+require([
+'i18n!nls/myapplication-resx'
+], function (resx) {
+console.log(resx);
+});
+			</pre>				
+					
 		</div>
+			
+		
+	</div>
+	
+		
 	</div>
 	
 	<div class="footer" id="contact">	
@@ -145,8 +146,6 @@ require([
 			<p class="pull-left">2014 © VeriTech Solutions <br />All Rights Reserved</p>
 			<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="63" height="40"></a>
 		</div>		
-	</div>
-		
 	</div>
 	
     <script src="js/jquery.min.js"></script>
