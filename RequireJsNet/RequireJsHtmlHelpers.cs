@@ -168,10 +168,11 @@ namespace RequireJsNet
             var resultingConfig = loader.Get();
             var overrider = new ConfigOverrider();
             overrider.Override(resultingConfig, entryPointPath.ToString().ToModuleName());
+            var locale = CurrentCulture();
             var outputConfig = new JsonConfig
             {
                 BaseUrl = baseUrl,
-                Locale = html.CurrentCulture(),
+                Locale = locale,
                 UrlArgs = urlArgs,
                 Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
                 Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
@@ -188,7 +189,7 @@ namespace RequireJsNet
 
             var options = new JsonRequireOptions
             {
-                Locale = html.CurrentCulture(),
+                Locale = locale,
                 PageOptions = RequireJsOptions.GetPageOptions(html.ViewContext.HttpContext),
                 WebsiteOptions = RequireJsOptions.GetGlobalOptions(html.ViewContext.HttpContext)
             };
@@ -290,7 +291,7 @@ namespace RequireJsNet
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
 
-        private static string CurrentCulture(this HtmlHelper html)
+        private static string CurrentCulture()
         {
             // split the ro-Ro string by '-' so it returns eg. ro / en
             return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
