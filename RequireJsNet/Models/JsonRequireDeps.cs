@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace RequireJsNet.Models
 {
-    internal class JsonRequireDeps
+    public class JsonRequireDeps
     {
         [JsonProperty(PropertyName = "deps")]
         public List<string> Dependencies { get; set; }

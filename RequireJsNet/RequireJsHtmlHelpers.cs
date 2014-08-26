@@ -24,8 +24,6 @@ namespace RequireJsNet
         private const string DefaultEntryPointRoot = "~/Scripts/";
         private const string DefaultArea = "Common";
 
-
-
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
@@ -72,9 +70,9 @@ namespace RequireJsNet
             var overrider = new ConfigOverrider();
             overrider.Override(resultingConfig, entryPointPath.ToString().ToModuleName());
 
-            var locale = CurrentCulture();
+            var locale = config.LocaleSelector(html);
 
-            var outputConfig = new JsonConfig
+            var outputConfig = new JsonRequireConfig
             {
                 BaseUrl = config.BaseUrl,
                 Locale = locale,
@@ -92,12 +90,16 @@ namespace RequireJsNet
                          r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
             };
 
+            config.ProcessConfig(outputConfig);
+
             var options = new JsonRequireOptions
             {
                 Locale = locale,
                 PageOptions = RequireJsOptions.GetPageOptions(html.ViewContext.HttpContext),
                 WebsiteOptions = RequireJsOptions.GetGlobalOptions(html.ViewContext.HttpContext)
             };
+
+            config.ProcessOptions(options);
 
             var configBuilder = new JavaScriptBuilder();
             configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(options, "requireConfig"));
@@ -196,11 +198,6 @@ namespace RequireJsNet
             return Enum.GetNames(enumType).ToDictionary(r => r, r => Convert.ToInt32(Enum.Parse(enumType, r)));
         }
 
-        private static string CurrentCulture()
-        {
-            // split the ro-Ro string by '-' so it returns eg. ro / en
-            return System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
-        }
 
         private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
         {

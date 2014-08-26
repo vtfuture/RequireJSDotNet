@@ -5,19 +5,21 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
+using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace RequireJsNet.Models
 {
-    internal class JsonRequireOptions
+    public class JsonRequireOptions
     {
         [JsonProperty(PropertyName = "locale")]
         public string Locale { get; set; }
 
         [JsonProperty(PropertyName = "pageOptions")]
-        public dynamic PageOptions { get; set; }
+        public Dictionary<string, object> PageOptions { get; set; }
 
         [JsonProperty(PropertyName = "websiteOptions")]
-        public dynamic WebsiteOptions { get; set; }
+        public Dictionary<string, object> WebsiteOptions { get; set; }
     }
 }

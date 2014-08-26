@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+
+using RequireJsNet.Models;
 
 namespace RequireJsNet
 {
@@ -19,6 +22,13 @@ namespace RequireJsNet
         private bool loadOverrides = true;
 
         private IList<string> configPaths = new[] { "~/RequireJS.config" };
+
+        public RequireRendererConfiguration()
+        {
+            LocaleSelector = helper => System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0];
+            ProcessConfig = config => { };
+            ProcessOptions = options => { };
+        }
 
         /// <summary>
         /// Scripts base url
@@ -121,5 +131,14 @@ namespace RequireJsNet
                 loadOverrides = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a function that returns the current locale in short format (ex. "en")
+        /// </summary>
+        public Func<HtmlHelper, string> LocaleSelector { get; set; }
+
+        public Action<JsonRequireConfig> ProcessConfig { get; set; }
+
+        public Action<JsonRequireOptions> ProcessOptions { get; set; }
     }
 }
