@@ -72,7 +72,7 @@ namespace RequireJsNet
 
             var locale = config.LocaleSelector(html);
 
-            var outputConfig = new JsonRequireConfig
+            var outputConfig = new JsonRequireOutput
             {
                 BaseUrl = config.BaseUrl,
                 Locale = locale,

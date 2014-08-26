@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace RequireJsNet.Models
 {
-    public class JsonRequireConfig
+    public class JsonRequireOutput
     {
         [JsonProperty(PropertyName = "baseUrl")]
         public string BaseUrl { get; set; }

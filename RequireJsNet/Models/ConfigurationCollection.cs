@@ -7,22 +7,30 @@
 
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 namespace RequireJsNet.Models
 {
     internal class ConfigurationCollection
     {
         public string FilePath { get; set; }
 
+        [JsonProperty(PropertyName = "paths")]
         public RequirePaths Paths { get; set; }
 
+        [JsonProperty(PropertyName = "shim")]
         public RequireShim Shim { get; set; }
 
+        [JsonProperty(PropertyName = "map")]
         public RequireMap Map { get; set; }
 
+        [JsonProperty(PropertyName = "bundles")]
         public RequireBundles Bundles { get; set; }
 
+        [JsonProperty(PropertyName = "autoBundles")]
         public AutoBundles AutoBundles { get; set; }
 
+        [JsonProperty(PropertyName = "overrides")]
         public List<CollectionOverride> Overrides { get; set; }
     }
 }

@@ -200,6 +200,7 @@
     </Content>
     <Content Include="RequireJS.Release.config" />
     <Content Include="RequireJS.Shared.config" />
+    <Content Include="RequireJS.json" />
     <None Include="Scripts\Lib\Vendor\Amplify\amplify-vsdoc.js" />
     <Content Include="Scripts\keepalive-service.js" />
     <Content Include="Scripts\Lib\Vendor\Amplify\amplify.js" />
@@ -327,6 +328,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties RequireJS_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

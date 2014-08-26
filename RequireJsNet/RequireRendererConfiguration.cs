@@ -137,7 +137,7 @@ namespace RequireJsNet
         /// </summary>
         public Func<HtmlHelper, string> LocaleSelector { get; set; }
 
-        public Action<JsonRequireConfig> ProcessConfig { get; set; }
+        public Action<JsonRequireOutput> ProcessConfig { get; set; }
 
         public Action<JsonRequireOptions> ProcessOptions { get; set; }
     }

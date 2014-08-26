@@ -19,7 +19,7 @@ namespace RequireJsNet.Configuration
                     case ConfigType.Xml:
                         return new XmlReader(path, options);
                     case ConfigType.Json:
-                        throw new NotImplementedException("No reader for json config implemented.");
+                        return new JsonReader(path, options);
                     default:
                     throw new Exception("Unknown config reader.");
             }

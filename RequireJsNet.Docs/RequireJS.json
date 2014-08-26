@@ -1,0 +1,29 @@
+﻿{
+    "paths": {
+        "jquery-mobile": {
+            "path": "lib/vendor/jquery/mobile/jquery.mobile",
+            "defaultBundle":  "test"
+        },
+        "jquery-validate": "lib/vendor/jquery/plugins/validate/jquery.validate",
+        "jquery-validate-unobtrusive": "lib/vendor/jquery/plugins/validate/jquery.validate.unobtrusive",
+        "amplify": "lib/vendor/amplify/amplify",
+        "text": "lib/vendor/requirejs/text"
+    },
+    "shim": {
+        "jquery-mobile": {
+            "deps": [ "jquery" ],
+            "exports": ""
+        },
+        "jquery-validate": {
+            "deps": [ "jquery" ],
+            "exports": ""
+        },
+        "jquery-validate-unobtrusive": {
+            "deps": [ "jquery", "jquery-validate" ],
+            "exports": ""
+        },
+        "amplify": { 
+            "deps": ["jquery"]
+        }
+    }
+}

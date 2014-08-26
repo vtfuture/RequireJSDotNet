@@ -29,7 +29,7 @@ namespace RequireJsNet.Configuration
         public void WriteConfig(ConfigurationCollection conf)
         {
             var paths = this.GetPaths(conf.Paths);
-            var overrides = this.GetOverridess(conf.Overrides);
+            var overrides = this.GetOverrides(conf.Overrides);
             var document = new XDocument(new XElement("configuration", paths, overrides));
             File.WriteAllText(Path, document.ToString());
         }
@@ -46,14 +46,14 @@ namespace RequireJsNet.Configuration
             return pathsEl;
         }
 
-        public List<XElement> GetOverridess(List<CollectionOverride> overrides)
+        public List<XElement> GetOverrides(List<CollectionOverride> overrides)
         {
             if (overrides == null || !overrides.Any())
             {
                 return null;
             }
 
-            var elList = new List<XElement>();
+            var elementList = new List<XElement>();
             foreach (var collectionOverride in overrides)
             {
                 var el = new XElement(
@@ -61,10 +61,10 @@ namespace RequireJsNet.Configuration
                     new XAttribute("bundleId", collectionOverride.BundleId),
                     this.GetPaths(collectionOverride.Paths),
                     collectionOverride.BundledScripts.Select(r => new XElement("bundledScript", new XAttribute("path", r))));
-                elList.Add(el);
+                elementList.Add(el);
             }
 
-            return elList;
+            return elementList;
         }
 
 

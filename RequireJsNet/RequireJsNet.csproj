@@ -80,6 +80,10 @@
     <Compile Include="Configuration\ConfigMerger.cs" />
     <Compile Include="Configuration\ConfigOverrider.cs" />
     <Compile Include="Configuration\IConfigWriter.cs" />
+    <Compile Include="Configuration\JsonReader.cs" />
+    <Compile Include="Configuration\JsonWriter.cs" />
+    <Compile Include="Configuration\Json\JsonConfigFile.cs" />
+    <Compile Include="Configuration\Json\JsonPath.cs" />
     <Compile Include="Configuration\WriterFactory.cs" />
     <Compile Include="Configuration\XmlWriter.cs" />
     <Compile Include="ExceptionThrowingLogger.cs" />
@@ -94,7 +98,7 @@
     <Compile Include="Models\AutoBundles.cs" />
     <Compile Include="Models\BundleItem.cs" />
     <Compile Include="Models\CollectionOverride.cs" />
-    <Compile Include="Models\JsonRequireConfig.cs" />
+    <Compile Include="Models\JsonRequireOutput.cs" />
     <Compile Include="Models\JsonRequireDeps.cs" />
     <Compile Include="Models\JsonRequireOptions.cs" />
     <Compile Include="Models\RequireBundle.cs" />
@@ -110,7 +114,6 @@
     <Compile Include="Configuration\ConfigType.cs" />
     <Compile Include="Configuration\XmlReader.cs" />
     <Compile Include="Models\ConfigurationCollection.cs" />
-    <Compile Include="Models\RequireConfig.cs" />
     <Compile Include="Models\ShimEntry.cs" />
     <Compile Include="Models\RequireDependency.cs" />
     <Compile Include="Models\RequirePath.cs" />
