@@ -35,6 +35,10 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
-    @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"))
+    @Html.RenderRequireJsSetup(new RequireRendererConfiguration
+                                   {
+                                       BaseUrl = Url.Content("~/Scripts"),
+                                       RequireJsUrl = Url.Content("~/Scripts/require.js")
+                                   })
 </body>
 </html>

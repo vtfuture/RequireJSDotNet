@@ -21,159 +21,64 @@ namespace RequireJsNet
 
     public static class RequireJsHtmlHelpers
     {
-        private const string DefaultConfigPath = "~/RequireJS.config";
         private const string DefaultEntryPointRoot = "~/Scripts/";
         private const string DefaultArea = "Common";
 
+
+
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
-        /// <example>
-        /// @Html.RenderRequireJsSetup(Url.Content("~/Scripts"), Url.Content("~/Scripts/require.js"), "~/RequireJS.release.config")
-        /// </example>
         /// <param name="html">
-        /// HtmlHelper instance
+        /// Html helper.
         /// </param>
-        /// <param name="baseUrl">
-        /// scripts base url
-        /// </param>
-        /// <param name="requireUrl">
-        /// requirejs.js url
-        /// </param>
-        /// <param name="urlArgs">
-        /// url arguments
-        /// </param>
-        /// <param name="configPath">
-        /// RequireJS.config server local path
-        /// </param>
-        /// <param name="entryPointRoot">
-        /// Scripts folder relative path ex. ~/Scripts/
-        /// </param>
-        /// <param name="logger">
-        /// Logger to output errors
+        /// <param name="config">
+        /// Configuration object for various options.
         /// </param>
         /// <returns>
-        /// The resulting <see cref="MvcHtmlString"/>.
+        /// The <see cref="MvcHtmlString"/>.
         /// </returns>
         public static MvcHtmlString RenderRequireJsSetup(
-            this HtmlHelper html, 
-            string baseUrl, 
-            string requireUrl, 
-            string urlArgs = "",
-            string configPath = "", 
-            string entryPointRoot = "~/Scripts/", 
-            IRequireJsLogger logger = null,
-            bool loadOverrides = true)
+            this HtmlHelper html,
+            RequireRendererConfiguration config)
         {
-            if (string.IsNullOrEmpty(configPath))
+            if (config == null)
             {
-                configPath = DefaultConfigPath;
+                throw new ArgumentNullException("config");
             }
 
-            return html.RenderRequireJsSetup(baseUrl, requireUrl, urlArgs, new List<string> { configPath }, entryPointRoot, logger, loadOverrides);
-        }
-
-        /// <summary>
-        /// Setup RequireJS to be used in layouts
-        /// </summary>
-        /// <param name="html">
-        /// The html.
-        /// </param>
-        /// <param name="baseUrl">
-        /// scripts base url
-        /// </param>
-        /// <param name="requireUrl">
-        /// requirejs.js url
-        /// </param>
-        /// <param name="configsList">
-        /// RequireJS.config files path
-        /// </param>
-        /// <param name="entryPointRoot">
-        /// Scripts folder relative path ex. ~/Scripts/
-        /// </param>
-        /// <param name="logger">
-        /// The logger.
-        /// </param>
-        /// <returns>
-        /// The <see cref="MvcHtmlString"/>.
-        /// </returns>
-        public static MvcHtmlString RenderRequireJsSetup(
-            this HtmlHelper html,
-            string baseUrl,
-            string requireUrl,
-            IList<string> configsList,
-            string entryPointRoot = "~/Scripts/",
-            IRequireJsLogger logger = null,
-            bool loadOverrides = true)
-        {
-            return html.RenderRequireJsSetup(baseUrl, requireUrl, null, configsList, entryPointRoot, logger, loadOverrides);
-        }
-
-        /// <summary>
-        /// Setup RequireJS to be used in layouts
-        /// </summary>
-        /// <param name="html">
-        /// The html.
-        /// </param>
-        /// <param name="baseUrl">
-        /// scripts base url
-        /// </param>
-        /// <param name="requireUrl">
-        /// requirejs.js url
-        /// </param>
-        /// <param name="urlArgs">
-        /// </param>
-        /// <param name="configsList">
-        /// RequireJS.config files path
-        /// </param>
-        /// <param name="entryPointRoot">
-        /// Scripts folder relative path ex. ~/Scripts/
-        /// </param>
-        /// <param name="logger">
-        /// The logger.
-        /// </param>
-        /// <returns>
-        /// The <see cref="MvcHtmlString"/>.
-        /// </returns>
-        public static MvcHtmlString RenderRequireJsSetup(
-            this HtmlHelper html,
-            string baseUrl,
-            string requireUrl,
-            string urlArgs,
-            IList<string> configsList,
-            string entryPointRoot = "~/Scripts/",
-            IRequireJsLogger logger = null,
-            bool loadOverrides = true)
-        {
-            var entryPointPath = html.RequireJsEntryPoint(entryPointRoot);
+            var entryPointPath = html.RequireJsEntryPoint(config.EntryPointRoot);
 
             if (entryPointPath == null)
             {
                 return new MvcHtmlString(string.Empty);
             }
 
-            if (configsList == null || !configsList.Any())
+            if (config.ConfigurationFiles == null || !config.ConfigurationFiles.Any())
             {
                 throw new Exception("No config files to load.");
             }
 
-            var processedConfigs = configsList.Select(r =>
+            var processedConfigs = config.ConfigurationFiles.Select(r =>
             {
                 var resultingPath = html.ViewContext.HttpContext.MapPath(r);
                 PathHelpers.VerifyFileExists(resultingPath);
                 return resultingPath;
             }).ToList();
 
-            var loader = new ConfigLoader(processedConfigs, logger, new ConfigLoaderOptions { LoadOverrides = loadOverrides });
+            var loader = new ConfigLoader(processedConfigs, config.Logger, new ConfigLoaderOptions { LoadOverrides = config.LoadOverrides });
             var resultingConfig = loader.Get();
+
             var overrider = new ConfigOverrider();
             overrider.Override(resultingConfig, entryPointPath.ToString().ToModuleName());
+
             var locale = CurrentCulture();
+
             var outputConfig = new JsonConfig
             {
-                BaseUrl = baseUrl,
+                BaseUrl = config.BaseUrl,
                 Locale = locale,
-                UrlArgs = urlArgs,
+                UrlArgs = config.UrlArgs,
                 Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
                 Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
                         r => r.For,
@@ -199,7 +104,7 @@ namespace RequireJsNet
             configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(outputConfig, "require"));
 
             var requireRootBuilder = new JavaScriptBuilder();
-            requireRootBuilder.AddAttributesToStatement("src", requireUrl);
+            requireRootBuilder.AddAttributesToStatement("src", config.RequireJsUrl);
 
             var requireEntryPointBuilder = new JavaScriptBuilder();
             requireEntryPointBuilder.AddStatement(

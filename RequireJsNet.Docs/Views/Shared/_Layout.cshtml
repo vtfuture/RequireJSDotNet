@@ -49,23 +49,25 @@
 
     @if (HttpContext.Current.IsDebuggingEnabled)
     {
-        @Html.RenderRequireJsSetup(
-            baseUrl: Url.Content("~/Scripts/"),
-            requireUrl: Url.Content("~/Scripts/require.js"),
-            configsList: new[]
+        @Html.RenderRequireJsSetup(new RequireRendererConfiguration {
+            BaseUrl = Url.Content("~/Scripts/"),
+            RequireJsUrl = Url.Content("~/Scripts/require.js"),
+            ConfigurationFiles = new[]
                 {
                     "~/RequireJS.shared.config",
                     "~/RequireJS.config"
                 },
-            entryPointRoot: "~/Scripts/")
+            EntryPointRoot = "~/Scripts/"
+        });
     }
     else
     {
-        @Html.RenderRequireJsSetup(
-            baseUrl: Url.Content("~/Scripts"),
-            requireUrl: Url.Content("~/Scripts/require.js"),
-            urlArgs: MvcRenders.RenderAppVersion(),
-            configPath: Server.MapPath("~/RequireJS.release.config"))
+        @Html.RenderRequireJsSetup(new RequireRendererConfiguration{
+            BaseUrl = Url.Content("~/Scripts"),
+            RequireJsUrl = Url.Content("~/Scripts/require.js"),
+            UrlArgs = MvcRenders.RenderAppVersion(),
+            ConfigurationFiles = new []{ Server.MapPath("~/RequireJS.release.config") } 
+            });
     }
 
 </body>
