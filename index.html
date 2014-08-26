@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+    <meta charset="utf-8">
+
+	<title>RequireJS.NET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The RequireJS for .NET opens source project smoothly integrates the RequireJS framework with ASP.NET MVC on the server side using JSON or XML configuration files, action filter attributes and helper classes. With RequireJS.Compressor you can define bundles in config and combine & minify scripts using YUI and MsBuild.">
+    <meta name="keywords" content="requirejs, javascript, oop, asp.net, compression, js bundling,">
+	<meta name="author" content="VeriTech">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@vtfuture">
+	<meta name="twitter:creator" content="@vtfuture">
+	<meta name="twitter:title" content="RequireJS.NET">
+	<meta name="twitter:description" content="RequireJS for ASP.NET MVC">
+	<meta name="twitter:image:src" content="http://veritech.io/img/vt-avatar-255x255.png">
+	
+	<meta property="fb:admins" content="306126079558384" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:title" content="RequireJS.NET" />
+	<meta property="og:url" content="http://requirejsnet.veritech.io" />
+	<meta property="og:image" content="http://veritech.io/img/vt-avatar-255x255.png" />
+	<meta property="og:type" content="website" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<link rel="shortcut icon" href="img/favicon.png">
+	<link rel="icon" type="image/png" href="img/favicon.png" />
+	
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+</head>
+
+<body id="home">
+	
+	<div class="footer" id="contact">
+	
+		<div class="container">
+			<div class="contact-info">
+				<div class="row">
+					<div class="col-md-3 col-sm-4 contact-column right">
+						<h4>Let’s keep in touch</h4>
+						<p>Say hellow to us on:</p>
+						<p class="social-media">
+							<a href="https://twitter.com/vtfuture" class="tw" title="Twitter" target="_blank">Twitter</a>
+							<a href="https://www.facebook.com/vtfuture" class="fb" title="Facebook" target="_blank">Facebook</a> 
+							<a href="https://www.google.com/+VeritechIosolutions" rel="publisher" class="gplus" title="Google+" target="_blank">Google+</a>                 
+							<a href="https://www.linkedin.com/company/veritech-io" class="lnkd" title="Linkedin" target="_blank">Linkedin</a>
+						</p>
+					</div>
+				</div>	
+			</div>		
+		</div>
+		
+		<div class="copy">
+			<div class="container">
+				<p class="pull-left">2014 © VeriTech Solutions. ALL Rights Reserved.</p>
+				<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="86" height="55"></a>
+			</div>
+		</div>
+		
+	</div>
+		
+	</div>
+	
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/smoothscroll.min.js"></script>
+	<script src="js/smooth-scroll.min.js"></script>
+	
+		<script type="text/javascript">
+
+		jQuery(function () {			  
+			  
+			  //Scroll
+			  smoothScroll.init();		
+			  
+			  //Menu
+			  jQuery('.navbar-nav a').on('click',function(e){
+				var $toggleBtn = jQuery('.navbar-toggle[data-target=".navbar-ex1-collapse"]');
+			  
+				if($toggleBtn.is(':visible')){
+					jQuery('.navbar-ex1-collapse').collapse('hide');
+					e.stopPropagation();
+					e.preventDefault();
+				}
+			  });
+			  
+			  //Expanders
+			  jQuery('.feature-expander').on('click', function (e) {
+				e.preventDefault();
+				var el = jQuery("#featured"),
+					$target = jQuery(e.currentTarget);							
+				
+				if(el.is(":visible")) {
+					smoothScroll.animateScroll(null, '#' + $target.data('target'));
+				}
+				else {
+					el.slideDown(function(){					
+						smoothScroll.animateScroll(null, '#' + $target.data('target'));
+					});
+				}
+				
+			  });
+			    
+		});	
+		
+	</script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-53462137-1', 'auto');
+	  ga('send', 'pageview');
+	</script>
+</body>
+
+</html>
