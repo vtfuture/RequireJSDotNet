@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>1.00</version>
+    <authors>Cezar Cretu</authors>
+    <owners>VeriTech</owners>
+    <id>RequireJsNet.ResxToJs</id>
+    <title>RequireJsNet.ResxToJs</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MSBuild task that outputs specified keys from a resx file in RequireJS i18n format</description>
+    <copyright>VeriTech 2014</copyright>
+    <projectUrl>https://github.com/vtfuture/RequireJSDotNet/tree/master/RequireJsNet.ResxToJs</projectUrl>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="6.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\RequireJsNet.ResxToJs\bin\Release\RequireJsNet.ResxToJs.dll" target="lib\net45\" />
+  </files>
+</package>

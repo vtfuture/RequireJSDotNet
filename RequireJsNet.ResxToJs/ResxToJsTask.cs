@@ -150,16 +150,16 @@ namespace RequireJsNet.ResxToJs
                 sb.Append("// There are " + resourceInfo.Resources.Keys.Count + " keys" + Environment.NewLine);
                 sb.Append(GetDefineCall(resourceInfo.Resources));
                 var directory = Path.GetDirectoryName(resourceInfo.ProjectedJsPath);
-                if (!Directory.Exists(directory))
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 if (File.Exists(resourceInfo.ProjectedJsPath))
                 {
-                    var fInfo = new FileInfo(resourceInfo.ProjectedJsPath);
-                    fInfo.IsReadOnly = false;
-                    fInfo.Refresh();
+                    var fileInfo = new FileInfo(resourceInfo.ProjectedJsPath);
+                    fileInfo.IsReadOnly = false;
+                    fileInfo.Refresh();
                 }
 
                 File.WriteAllText(resourceInfo.ProjectedJsPath, sb.ToString());

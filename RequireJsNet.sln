@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4
 	ProjectSection(SolutionItems) = preProject
 		RequireJsNet.Compressor.nuspec = RequireJsNet.Compressor.nuspec
 		RequireJsNet.nuspec = RequireJsNet.nuspec
+		RequireJsNet.ResxToJs.nuspec = RequireJsNet.ResxToJs.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor", "RequireJsNet.Compressor\RequireJsNet.Compressor.csproj", "{27FBCFC2-9AD7-4042-BC47-0A61B8078264}"
