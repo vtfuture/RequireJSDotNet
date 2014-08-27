@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+    <meta charset="utf-8">
+
+	<title>RequireJS.NET - Bundling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Setup RequireJS for ASP.NET MVC using NuGet">
+    <meta name="keywords" content="requirejs, javascript, asp.net, compression, js bundling, i18n">
+	<meta name="author" content="VeriTech">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@vtfuture">
+	<meta name="twitter:creator" content="@vtfuture">
+	<meta name="twitter:title" content="RequireJS.NET">
+	<meta name="twitter:description" content="Setup RequireJS for ASP.NET MVC using NuGet">
+	<meta name="twitter:image:src" content="http://requirejsnet.veritech.io/img/require-logo.png">
+	
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<link rel="shortcut icon" href="img/favicon.png">
+	<link rel="icon" type="image/png" href="img/favicon.png" />
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+
+</head>
+
+<body class="secondary">
+	
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header" data-scroll-header="">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://requirejsnet.veritech.io"><img src="img/require-logo.png" alt="RequireJS.NET" width="136" height="51"></a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+					<li><a href="index.html">Home</a>
+                    </li>
+                    <li><a href="setup.html">Setup</a>
+                    </li>
+                    <li class="active"><a href="compressor.html">Bundling</a>
+                    </li>
+					<li><a href="i18n.html">i18n</a>
+                    </li>
+	            </ul>
+            </div>
+        </div>
+    </nav>
+	
+	<div class="feature">
+		<div class="container secondary">
+			<h1>
+				Bundling and minification using <strong>RequireJS.NET Compressor</strong>
+			</h1>
+		</div>
+		
+	</div>
+	
+	<div class="site-content">
+		<div class="container">	
+			
+			<p>
+			Work in progress...
+			</p>		
+					
+		</div>		
+	</div>
+	
+		
+	</div>
+	
+	<div class="footer" id="contact">	
+		<div class="container">			
+			<p class="pull-left">2014 © VeriTech Solutions <br />All Rights Reserved</p>
+			<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="63" height="40"></a>
+		</div>		
+	</div>
+	
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/smoothscroll.min.js"></script>
+	<script src="js/smooth-scroll.min.js"></script>
+	<script src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+	
+		<script type="text/javascript">
+
+		jQuery(function () {			  
+			  
+			  //Scroll
+			  smoothScroll.init();		
+			  
+			  //Menu
+			  jQuery('.navbar-nav a').on('click',function(e){
+				var $toggleBtn = jQuery('.navbar-toggle[data-target=".navbar-ex1-collapse"]');
+			  
+				if($toggleBtn.is(':visible')){
+					jQuery('.navbar-ex1-collapse').collapse('hide');
+					e.stopPropagation();
+					e.preventDefault();
+				}
+			  });
+			  
+			  //Expanders
+			  jQuery('.feature-expander').on('click', function (e) {
+				e.preventDefault();
+				var el = jQuery("#featured"),
+					$target = jQuery(e.currentTarget);							
+				
+				if(el.is(":visible")) {
+					smoothScroll.animateScroll(null, '#' + $target.data('target'));
+				}
+				else {
+					el.slideDown(function(){					
+						smoothScroll.animateScroll(null, '#' + $target.data('target'));
+					});
+				}
+				
+			  });
+			    
+		});	
+		
+	</script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-53462137-3', 'auto');
+	  ga('send', 'pageview');
+	</script> 
+</body>
+
+</html>
