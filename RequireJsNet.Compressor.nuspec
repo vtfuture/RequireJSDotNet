@@ -1,22 +1,23 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>1.0.0-alpha</version>
+    <version>2.0.0</version>
     <authors>Cezar Cretu</authors>
-    <owners>Stefan Prodan</owners>
+    <owners>VeriTech</owners>
     <id>RequireJsNet.Compressor</id>
-    <title>RequireJS.NET Compressor MSBuild task</title>
-    <copyright>Copyright Stefan Prodan 2013</copyright>
+    <title>RequireJS.NET Compressor</title>
+    <copyright>VeriTech Solutions SRL 2014</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Parses RequireJS.config files and builds bundles using YUI compressor.</description>
-    <tags>RequireJS.NET, Compressor, MSBuild</tags>
+    <description>Parses RequireJS.NET config files and builds bundles using YUI compressor.</description>
+    <tags>RequireJS.NET, Compressor, MsBuild, optimization, bundling, minification</tags>
     <language>en-US</language>
-    <projectUrl>https://github.com/stefanprodan/RequireJSDotNet</projectUrl>
+    <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
+    <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="5.0.6" />
+      <dependency id="Newtonsoft.Json" version="6.0.0" />
       <dependency id="YUICompressor.NET" version="2.3.0.0" />
       <dependency id="Jint" version="2.1.0.0" />
       <dependency id="RequireJsNet" />

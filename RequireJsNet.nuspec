@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
     <authors>Stefan Prodan</authors>
-    <owners>Stefan Prodan</owners>
+    <owners>VeriTech</owners>
     <id>RequireJsNet</id>
     <title>RequireJS.NET</title>
-    <copyright>Copyright Stefan Prodan 2013</copyright>
+    <copyright>VeriTech Solutions SRL 2014</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>RequireJS.NET integrates the RequireJS framework with ASP.NET MVC on the server side using xml configuration files, action filter attributes, a base controller for inheritance and helper classes.</description>
-    <tags>Javacript, RequireJS, ASP.NET MVC</tags>
+    <description>RequireJS.NET integrates RequireJS script loader with ASP.NET MVC</description>
+    <tags>JavaScript, AMD, RequireJS, ASP.NET MVC</tags>
     <language>en-US</language>
-    <projectUrl>https://github.com/stefanprodan/RequireJSDotNet</projectUrl>
+    <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
+    <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
@@ -22,5 +23,6 @@
   <files>
     <file src="RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net45\" />
     <file src="RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net45\" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>
