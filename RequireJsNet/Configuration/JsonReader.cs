@@ -59,25 +59,29 @@ namespace RequireJsNet.Configuration
         private RequirePaths GetPaths(JObject document)
         {
             var paths = new RequirePaths();
-            paths.PathList = document["paths"].Select(
+            if (document != null && document["paths"] != null)
+            {
+                paths.PathList = document["paths"].Select(
                 r =>
+                {
+                    var result = new RequirePath();
+                    var prop = (JProperty)r;
+                    result.Key = prop.Name;
+                    if (prop.Value.Type == JTokenType.String)
                     {
-                        var result = new RequirePath();
-                        var prop = (JProperty)r;
-                        result.Key = prop.Name;
-                        if (prop.Value.Type == JTokenType.String)
-                        {
-                            result.Value = prop.Value.ToString();
-                        }
-                        else
-                        {
-                            var pathObj = (JObject)prop.Value;
-                            result.Value = pathObj["path"].ToString();
-                            result.DefaultBundle = pathObj["defaultBundle"].ToString();
-                        }
+                        result.Value = prop.Value.ToString();
+                    }
+                    else
+                    {
+                        var pathObj = (JObject)prop.Value;
+                        result.Value = pathObj["path"].ToString();
+                        result.DefaultBundle = pathObj["defaultBundle"].ToString();
+                    }
 
-                        return result;
-                    }).ToList();
+                    return result;
+                }).ToList();    
+            }
+            
             return paths;
         }
 
@@ -85,7 +89,7 @@ namespace RequireJsNet.Configuration
         {
             var shim = new RequireShim();
             shim.ShimEntries = new List<ShimEntry>();
-            if (document["shim"] != null)
+            if (document != null && document["shim"] != null)
             {
                 shim.ShimEntries = document["shim"].Select(
                     r =>
@@ -117,7 +121,7 @@ namespace RequireJsNet.Configuration
         {
             var bundles = new RequireBundles();
             bundles.BundleEntries = new List<RequireBundle>();
-            if (document["bundles"] != null)
+            if (document != null && document["bundles"] != null)
             {
                 bundles.BundleEntries = document["bundles"].Select(
                     r =>
@@ -154,7 +158,7 @@ namespace RequireJsNet.Configuration
                                                     result.ModuleName = x["path"] != null ? x["path"].ToString() : null;
                                                     result.CompressionType = x["compression"] != null ? x["compression"].ToString() : null;
                                                 }
-                                                else if(x is JValue && x.Type == JTokenType.String)
+                                                else if (x is JValue && x.Type == JTokenType.String)
                                                 {
                                                     result.ModuleName = x.ToString();
                                                 }
@@ -179,15 +183,67 @@ namespace RequireJsNet.Configuration
 
         private RequireMap GetMap(JObject document)
         {
-            return new RequireMap
-                       {
-                           MapElements = new List<RequireMapElement>() 
-                       };
+            var map = new RequireMap();
+            map.MapElements = new List<RequireMapElement>();
+            if (document != null && document["map"] != null)
+            {
+                map.MapElements = document["map"].Select(
+                    r =>
+                        {
+                            var currentMap = new RequireMapElement();
+                            currentMap.Replacements = new List<RequireReplacement>();
+                            var prop = (JProperty)r;
+                            currentMap.For = prop.Name;
+                            var mapDefinition = prop.Value;
+                            if (mapDefinition != null)
+                            {
+                                currentMap.Replacements = mapDefinition.Select(x => new RequireReplacement()
+                                                                                        {
+                                                                                            OldKey = ((JProperty)x).Name,
+                                                                                            NewKey = ((JProperty)x).Value.ToString()
+                                                                                        }).ToList();
+                            }
+
+                            return currentMap;
+                        })
+                        .ToList();
+            }
+            
+            return map;
         }
 
         private List<CollectionOverride> GetOverrides(JObject document)
         {
-            return new List<CollectionOverride>();
+            var overrideList = new List<CollectionOverride>();
+            if (document["overrides"] != null)
+            {
+                overrideList = document["overrides"].Select(
+                    r =>
+                        {
+                            var overObj = new CollectionOverride();
+                            var prop = (JProperty)r;
+                            
+                            overObj.BundleId = prop.Name;
+                            var valObj = prop.Value as JObject;
+                            if (valObj != null)
+                            {
+                                overObj.Map = GetMap(prop.Value as JObject);
+                                overObj.Paths = GetPaths(prop.Value as JObject);
+                                overObj.Shim = GetShim(prop.Value as JObject);
+                                var bundledItems = valObj["bundledScripts"] as JArray;
+                                if (bundledItems != null)
+                                {
+                                    overObj.BundledScripts = bundledItems.Select(x => x.ToString()).ToList();
+                                }
+                                
+                            }
+
+                            return overObj;
+                        })
+                    .ToList();
+            }
+
+            return overrideList;
         }
 
         private AutoBundles GetAutoBundles(JObject document)

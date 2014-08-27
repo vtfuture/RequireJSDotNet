@@ -29,7 +29,7 @@
     "bundles": {
         "jquery": {
             "virtual": true,
-            "items": ["jquery"]
+            "items": [ "jquery" ]
         },
         "main": {
             "outputPath": "Bundles\\",
@@ -44,13 +44,13 @@
                 }
             ]
         },
-        "simplest": ["jquery", "bootstrap"],
+        "simplest": [ "jquery", "bootstrap" ],
         "mainExplicit": {
             "outputPath": "Bundles\\main.min.js",
-            "items": ["jquery", "bootstrap"]
+            "items": [ "jquery", "bootstrap" ]
         },
         "withoutPath": {
-            "items": ["jquery"]
+            "items": [ "jquery" ]
         },
         "empty": {
 
@@ -58,11 +58,11 @@
         "jqueryForInclude": {
             "virtual": true,
             "outputPath": "Bundles\\WithIncludes\\",
-            "items": ["jquery"]
+            "items": [ "jquery" ]
         },
         "bootstrapForInclude": {
             "outputPath": "Bundles\\WithIncludes\\",
-            "items": ["bootstrap"]
+            "items": [ "bootstrap" ]
         },
         "mainArea": {
             "outputPath": "Bundles\\WithIncludes\\",
@@ -71,7 +71,30 @@
         },
         "defaultBundleTest": {
             "outputPath": "Bundles\\WithDefault\\",
-            "includes": ["respond"]
+            "includes": [ "respond" ]
+        }
+    },
+    "map": {
+        "jquery": {
+            "bootstrap": "bootstrap.1.6.34"
+        }
+    },
+    "overrides": {
+        "amplify": {
+            "paths": {
+                "jquery-validate": "lib/vendor/jquery/plugins/validate/jquery.validate",
+            },
+            "shim": {
+                "amplify": {
+                    "deps": [ "jquery" ]
+                }
+            },
+            "map": {
+                "jquery": {
+                    "bootstrap": "bootstrap.1.6.34"
+                }
+            },
+            "bundledScripts": ["lib/vendor/jquery/plugins/validate/jquery.validate", "jquery"]
         }
     }
 }
