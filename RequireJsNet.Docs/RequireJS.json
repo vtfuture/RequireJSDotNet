@@ -94,7 +94,34 @@
                     "bootstrap": "bootstrap.1.6.34"
                 }
             },
-            "bundledScripts": ["lib/vendor/jquery/plugins/validate/jquery.validate", "jquery"]
+            "bundledScripts": [ "lib/vendor/jquery/plugins/validate/jquery.validate", "jquery" ]
+        }
+    },
+    "autoBundles": {
+        "root": {
+            "outputPath": "bundles\\auto\\",
+            "include": [
+                {
+                    "directory": "//controllers//Root//"
+                },
+                {
+                    "file": "//controllers/Root//index"
+                },
+                {
+                    "bundleId": "test"
+                }
+            ],
+            "exclude": [ 
+                {
+                    "directory": "//controllers//Root//"
+                },
+                {
+                    "file": "//controllers/Root//index"
+                },
+                {
+                    "bundleId": "test"
+                }
+            ]
         }
     }
 }

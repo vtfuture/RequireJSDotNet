@@ -248,7 +248,68 @@ namespace RequireJsNet.Configuration
 
         private AutoBundles GetAutoBundles(JObject document)
         {
-            return new AutoBundles{ Bundles = new List<AutoBundle>()};
+            var autoBundles = new AutoBundles();
+            autoBundles.Bundles = new List<AutoBundle>();
+            if (document != null && document["autoBundles"] != null)
+            {
+                autoBundles.Bundles = document["autoBundles"].Select(
+                    r =>
+                        {
+                            var currentBundle = new AutoBundle();
+                            var prop = (JProperty)r;
+                            currentBundle.Id = prop.Name;
+                            var valueObj = prop.Value as JObject;
+                            if (valueObj != null)
+                            {
+                                currentBundle.OutputPath = valueObj["outputPath"] != null ? valueObj["outputPath"].ToString() : null;
+                                currentBundle.ContainingConfig = Path;
+                                currentBundle.Includes = new List<AutoBundleItem>();
+                                if (valueObj["include"] != null)
+                                {
+                                    currentBundle.Includes = valueObj["include"].Select(
+                                        x =>
+                                            {
+                                                var includesObj = x as JObject;
+                                                var inclItem = new AutoBundleItem();
+                                                if (includesObj == null)
+                                                {
+                                                    return inclItem;
+                                                }
+
+                                                inclItem.BundleId = includesObj["bundleId"] != null ? includesObj["bundleId"].ToString() : null;
+                                                inclItem.File = includesObj["file"] != null ? includesObj["file"].ToString() : null;
+                                                inclItem.Directory = includesObj["directory"] != null ? includesObj["directory"].ToString() : null;
+                                                return inclItem;
+                                            })
+                                        .ToList();    
+                                }
+                                currentBundle.Excludes = new List<AutoBundleItem>();
+                                if (valueObj["exclude"] != null)
+                                {
+                                    currentBundle.Excludes = valueObj["exclude"].Select(
+                                        x =>
+                                        {
+                                            var includesObj = x as JObject;
+                                            var inclItem = new AutoBundleItem();
+                                            if (includesObj == null)
+                                            {
+                                                return inclItem;
+                                            }
+
+                                            inclItem.BundleId = includesObj["bundleId"] != null ? includesObj["bundleId"].ToString() : null;
+                                            inclItem.File = includesObj["file"] != null ? includesObj["file"].ToString() : null;
+                                            inclItem.Directory = includesObj["directory"] != null ? includesObj["directory"].ToString() : null;
+                                            return inclItem;
+                                        })
+                                        .ToList();    
+                                }
+                            }
+
+                            return currentBundle;
+                        }).ToList();
+            }
+
+            return autoBundles;
         }
     }
 }
