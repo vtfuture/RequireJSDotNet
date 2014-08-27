@@ -13,6 +13,7 @@
     <language>en-US</language>
     <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
     <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
+    <iconUrl>http://requirejsnet.veritech.io/img/require-32x32-comp.png</iconUrl>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
