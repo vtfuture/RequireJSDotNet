@@ -2,7 +2,7 @@
     "paths": {
         "jquery-mobile": {
             "path": "lib/vendor/jquery/mobile/jquery.mobile",
-            "defaultBundle":  "test"
+            "defaultBundle": "test"
         },
         "jquery-validate": "lib/vendor/jquery/plugins/validate/jquery.validate",
         "jquery-validate-unobtrusive": "lib/vendor/jquery/plugins/validate/jquery.validate.unobtrusive",
@@ -22,8 +22,56 @@
             "deps": [ "jquery", "jquery-validate" ],
             "exports": ""
         },
-        "amplify": { 
-            "deps": ["jquery"]
+        "amplify": {
+            "deps": [ "jquery" ]
+        }
+    },
+    "bundles": {
+        "jquery": {
+            "virtual": true,
+            "items": ["jquery"]
+        },
+        "main": {
+            "outputPath": "Bundles\\",
+            "items": [
+                {
+                    "path": "jquery",
+                    "compression": "none"
+                },
+                {
+                    "path": "bootstrap",
+                    "compression": "standard"
+                }
+            ]
+        },
+        "simplest": ["jquery", "bootstrap"],
+        "mainExplicit": {
+            "outputPath": "Bundles\\main.min.js",
+            "items": ["jquery", "bootstrap"]
+        },
+        "withoutPath": {
+            "items": ["jquery"]
+        },
+        "empty": {
+
+        },
+        "jqueryForInclude": {
+            "virtual": true,
+            "outputPath": "Bundles\\WithIncludes\\",
+            "items": ["jquery"]
+        },
+        "bootstrapForInclude": {
+            "outputPath": "Bundles\\WithIncludes\\",
+            "items": ["bootstrap"]
+        },
+        "mainArea": {
+            "outputPath": "Bundles\\WithIncludes\\",
+            "includes": [ "bootstrapForInclude", "jqueryForInclude" ],
+            "items": [ "controllers/root/home/index" ]
+        },
+        "defaultBundleTest": {
+            "outputPath": "Bundles\\WithDefault\\",
+            "includes": ["respond"]
         }
     }
 }

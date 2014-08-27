@@ -82,8 +82,6 @@
     <Compile Include="Configuration\IConfigWriter.cs" />
     <Compile Include="Configuration\JsonReader.cs" />
     <Compile Include="Configuration\JsonWriter.cs" />
-    <Compile Include="Configuration\Json\JsonConfigFile.cs" />
-    <Compile Include="Configuration\Json\JsonPath.cs" />
     <Compile Include="Configuration\WriterFactory.cs" />
     <Compile Include="Configuration\XmlWriter.cs" />
     <Compile Include="ExceptionThrowingLogger.cs" />

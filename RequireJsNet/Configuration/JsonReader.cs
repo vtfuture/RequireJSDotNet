@@ -84,32 +84,97 @@ namespace RequireJsNet.Configuration
         private RequireShim GetShim(JObject document)
         {
             var shim = new RequireShim();
-            shim.ShimEntries = document["shim"].Select(
-                r =>
-                    {
-                        var result = new ShimEntry();
-                        var prop = (JProperty)r;
-                        result.For = prop.Name;
-                        var shimObj = (JObject)prop.Value;
-                        result.Exports = shimObj["exports"] != null ? shimObj["exports"].ToString() : null;
-                        var depArr = (JArray)shimObj["deps"];
-                        if (depArr != null)
+            shim.ShimEntries = new List<ShimEntry>();
+            if (document["shim"] != null)
+            {
+                shim.ShimEntries = document["shim"].Select(
+                    r =>
                         {
-                            result.Dependencies = depArr.Select(dep => new RequireDependency
-                                                                           {
-                                                                               Dependency = dep.ToString()
-                                                                           })
-                                                        .ToList();
-                        }
+                            var result = new ShimEntry();
+                            var prop = (JProperty)r;
+                            result.For = prop.Name;
+                            var shimObj = (JObject)prop.Value;
+                            result.Exports = shimObj["exports"] != null ? shimObj["exports"].ToString() : null;
+                            var depArr = (JArray)shimObj["deps"];
+                            if (depArr != null)
+                            {
+                                result.Dependencies = depArr.Select(dep => new RequireDependency
+                                                                               {
+                                                                                   Dependency = dep.ToString()
+                                                                               })
+                                                            .ToList();
+                            }
 
-                        return result;
-                    }).ToList();
+                            return result;
+                        })
+                        .ToList();                
+            }
+
             return shim;
         }
 
         private RequireBundles GetBundles(JObject document)
         {
-            return new RequireBundles();
+            var bundles = new RequireBundles();
+            bundles.BundleEntries = new List<RequireBundle>();
+            if (document["bundles"] != null)
+            {
+                bundles.BundleEntries = document["bundles"].Select(
+                    r =>
+                        {
+                            var bundle = new RequireBundle();
+                            var prop = (JProperty)r;
+                            bundle.Name = prop.Name;
+                            if (prop.Value is JArray)
+                            {
+                                bundle.IsVirtual = false;
+                                var arr = prop.Value as JArray;
+                                bundle.BundleItems = arr.Select(x => new BundleItem { ModuleName = x.ToString() } ).ToList();    
+                                
+                            }
+                            else if(prop.Value is JObject)
+                            {
+                                var obj = prop.Value as JObject;
+                                bundle.OutputPath = obj["outputPath"] != null ? obj["outputPath"].ToString() : null;
+                                var inclArr = obj["includes"] as JArray;
+                                if (inclArr != null)
+                                {
+                                    bundle.Includes = inclArr.Select(x => x.ToString()).ToList();
+                                }
+
+                                var itemsArr = obj["items"] as JArray;
+                                if (itemsArr != null)
+                                {
+                                    bundle.BundleItems = itemsArr.Select(
+                                        x =>
+                                            {
+                                                var result = new BundleItem();
+                                                if (x is JObject)
+                                                {
+                                                    result.ModuleName = x["path"] != null ? x["path"].ToString() : null;
+                                                    result.CompressionType = x["compression"] != null ? x["compression"].ToString() : null;
+                                                }
+                                                else if(x is JValue && x.Type == JTokenType.String)
+                                                {
+                                                    result.ModuleName = x.ToString();
+                                                }
+
+                                                return result;
+                                            }).ToList();
+                                }
+
+                                var isVirtual = obj["virtual"];
+                                bundle.IsVirtual = isVirtual is JValue 
+                                                    && isVirtual.Type == JTokenType.Boolean
+                                                    && (bool)((JValue)isVirtual).Value;
+                            }
+
+                            return bundle;
+                        })
+                    .ToList();
+            }
+
+            return bundles;
         }
 
         private RequireMap GetMap(JObject document)
