@@ -70,7 +70,6 @@
 	
 	<div class="site-content">
 		<div class="container">			
-			<div class="alert alert-warning" role="alert">Work in progress...</div>	
 			
 			<p>RequireJS.NET components are compatible with ASP.NET MVC v3 or newer and are available for download as <a href="packages.html">nuget packages</a> on Nuget.org.</p>
 			
@@ -85,6 +84,203 @@
 				If you need internationalization support install RequireJS.NET ResxToJs package: <br/><kbd>PM> Install-Package RequireJsNet.ResxToJs</kbd>
 			</p>
 			
+			<h5>JS Code Structure</h5>
+			<p>
+				For each <code>ActionResult</code> that returns a view, you'll need to create a js file named the same as the Razor view. The requirejs entrypoint for each page will be loaded from 
+				<code>~/Scripts/Controllers/{area}/{controller}/{action}</code>. If the action you're rendering is not in an area, replace <code>{area}</code> with <code>Root</code>.
+			</p>
+			<img class="site-img" src="img/rjs-ctrls-structure.png"/>
+			<p>This is how a bare-bones AMD module corresponding to the Home/Index action looks, it just loads the bootstrap js and it's dependencies:</p>
+			<pre class="prettyprint lang-js">
+require([
+        'jquery',
+        'bootstrap'
+], function ($) {
+
+    var indexScript = function () {
+        this.init();
+    };
+
+    indexScript.prototype.init = function () {
+        //do stuff with bootstrap
+    };
+
+    //create object on DOM ready
+    $(function () {
+        var entryPoint = new indexScript();
+    });
+});
+			</pre>
+			<p>If you want to develop reusable components shared between code-behind modules, use the <code>define</code> keyword and name your AMD module, naming it will let you reference it in other modules:</p>
+			<pre class="prettyprint">
+define('menu-module', [
+    'jquery',
+    'bootstrap'
+],(function ($) {
+
+    //constructor
+    var menuScript = function() {
+    };
+
+    //public method
+    menuScript.prototype.init = function () {
+        $('.navbar-brand').text('RequireJS.NET');
+    };
+
+    //public module
+    return menuScript;
+}));
+			</pre>
+			<p>In order to use the menu-module in Home/Index js code, you'll have to add it as a dependency and pass it as a parameter to the anonymous function:</p>
+			<pre class="prettyprint">
+require([
+        'menu-module',
+        'jquery',
+        'bootstrap'
+], function (menu, $) {
+
+    var indexScript = function () {
+	
+	//create menu object
+	mainMenu = new menu();
+
+	//call menu methods
+	mainMenu.init();
+    };
+
+    $(function () {
+        var entryPoint = new indexScript();
+    });
+});
+			</pre>
+			<h5>Configure paths and dependencies</h5>
+			<p>
+				There are two formats currently supported for configuration files: JSON and XML, the XML is deprecated since v2.0 and will be removed in v3.0. If you don't specify any configuration when rendering, the default will be loaded from <code>~/RequireJS.json</code>. The configuration format is compatible with require.js api and it's composed of <code>paths, shim, map, bundles</code> and <code>autoBundles</code>, the last one is used by RequireJS Compressor. The modules included in auto bundles are scanned by the Compressor and along with their dependencies are bundled together and minified with YUI Compressor for .Net.
+			</p>
+			<p>The <code>paths</code> section is used for mapping the file location of a component to a short name, so that you don’t have to write the whole path each time you refer it in code. The <code>shim</code> section lets you declare dependencies for components that are not programmed as RequireJS modules. When you are referring such a component, the RequireJS engine will load all the dependencies specified in the shim before executing your own code. In the shim section you can use the module short name set in the paths config.<p/>
+			
+			<p>Supposing you have installed RequireJS.Scripts package, bootstrap and jquery, this is how a <code>RequireJS.json</code> file should look like:</p>
+			<pre class="prettyprint lang-js">
+{
+    "paths": {
+        "jquery": "jquery-1.10.2",
+        "jquery-validate": "jquery.validate",
+        "jquery-validate-unobtrusive": "jquery.validate.unobtrusive",
+        "bootstrap": "bootstrap",
+        "respond": "respond",
+        "i18n": "Components/RequireJS/i18n",
+        "text": "Components/RequireJS/text",
+        "menu-module" : "Controllers/Common/menu-module"
+    },
+    "shim": {
+        "jquery-validate": {
+            "deps": [ "jquery" ]
+        },
+        "jquery-validate-unobtrusive": {
+            "deps": [ "jquery", "jquery-validate" ]
+        },
+        "bootstrap": { 
+            "deps":  ["jquery"]
+        }
+    },
+    "autoBundles": {
+        "main-app": {
+            "outputPath": "Scripts/Bundles/",
+            "include": [
+                {
+                    "directory": "Controllers/Root"
+                }
+            ]
+        },
+        "require-plugins": {
+            "outputPath": "Scripts/Bundles/",
+            "include": [
+                {
+                    "file": "Components/RequireJS/i18n"
+                },
+                {
+                    "file": "Components/RequireJS/text"
+                }
+            ]
+        }
+    }
+}
+			</pre>
+			
+			<h5>Render Requirejs config in layout</h5>
+			<p>
+				Rendering is done using the <code>RenderRequireJsSetup</code> html helper. Generally you want to place this in every layout files your using, before you close the <code>body</code> tag.
+			</p>
+			<pre class="prettyprint lang-cs">
+@using RequireJsNet<br/><br/>&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;!-- head content --&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>    &lt;!-- body content --&gt;<br/><br/>    @Html.RenderRequireJsSetup(new RequireRendererConfiguration<br/>    {<br/>        // the url from where require.js will be loaded<br/>        RequireJsUrl = Url.Content(&quot;~/Scripts/Components/RequireJS/require.js&quot;),<br/>        // baseUrl to be passed to require.js, will be used when composing urls for scripts<br/>        BaseUrl = Url.Content(&quot;~/Scripts/&quot;),<br/>        // a list of all the configuration files you want to load<br/>        ConfigurationFiles = new[] { &quot;~/RequireJS.json&quot; },<br/>        // root folder for your js controllers, will be used for composing paths to entrypoint<br/>        EntryPointRoot = &quot;~/Scripts/&quot;,<br/>        // whether we should load overrides or not, used for autoBundles, set this to fals on debug mode<br/>        LoadOverrides = true,<br/>        // compute the value you want locale to have, used for i18n<br/>        LocaleSelector = html =&gt; System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],<br/>        // instance of IRequireJsLogger<br/>        Logger = null,<br/>        // extensability point for the config object<br/>        ProcessConfig = config =&gt; { },<br/>        // extensability point for the options object<br/>        ProcessOptions = options =&gt; { },<br/>        // value for urlArgs to be passed to require.js, used for versioning<br/>        UrlArgs = RenderHelper.RenderAppVersion()<br/>    })<br/><br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/>
+			</pre>
+			<p>You can use <code>RequireRendererConfiguration.UrlArgs</code> to append the assembly version value to each of the script urls for cache busting.</p>
+			<pre class="prettyprint lang-cs">
+public static class RenderHelper
+{
+	public static string RenderAppVersion()
+	{
+		return "v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+	}
+}
+			</pre>
+			
+			<h5>Passing values between ASP.NET and JavaScript</h5>
+			<p>
+				There are two collections available that you can use for passing various settings between your application and the front-end.
+				You can modify these collections using <code>RequireJsOptions.Add</code>. There are two scopes available, global (the values will be found in <code>requireConfig.websiteOptions</code>) 
+				and page (the values will be found in <code>requireConfig.pageOptions</code>).
+				It is often times useful to always have some values that don't change passed to the front-end. To accomplish this, you can call the <code>RequireJsOptions.Add</code> method from a custom filter. Please note that the collections are stored in the current request's Items hashset, so attempting to set any options outside of a thread that has a request attached will result in an exception.
+			</p>
+			
+			<p>Set global options using an action filter:</p>
+			<pre class="prettyprint lang-cs">
+public class RequireOptionFilter : ActionFilterAttribute
+{
+    public override void OnActionExecuting(ActionExecutingContext filterContext)
+    {
+        var url = new UrlHelper(filterContext.RequestContext);
+        RequireJsOptions.Add("globalUrlViaFilter", url.Action("Index", "Contact"), RequireJsOptionsScope.Global);
+    }
+}
+			</pre>
+			<p>Set page options inside an action:</p>
+			<pre class="prettyprint lang-cs">
+public ActionResult Index()
+{
+    RequireJsOptions.Add("ids", new[] { 1, 2, 3 }, RequireJsOptionsScope.Page);
+
+    return View();
+}
+			</pre>
+			<p>Read both options inside the js code-behind module:</p>
+			<pre class="prettyprint lang-js">
+require([
+        'bootstrap'
+], function () {
+
+    var indexPage = function () {
+        this.init();
+    };
+
+    indexPage.prototype.init = function () {
+
+        //read global options sent by RequireOptionFilter
+        console.log("Website Options: " + requireConfig.websiteOptions.globalUrlViaFilter);
+
+        //read page options, sent by HomeController.Index
+        console.log("Page Options: " + requireConfig.pageOptions.ids);
+    };
+
+    $(function () {
+        var entryPoint = new indexPage();
+    });
+});
+			</pre>
+			
+			<h5>Source code</h5>
+			<p>A working example with the above code is hosted on GihHub at <a href="https://github.com/stefanprodan/RequireJsNet.Samples">RequireJsNet.Samples</a>. If you have suggestion or any kind of feedback regarding RequireJS.NET project please submit an issue <a href="https://github.com/vtfuture/RequireJSDotNet/issues">here</a>.</p>
+
 		</div>		
 	</div>
 	
