@@ -1,0 +1,63 @@
+﻿@using System.Runtime.Remoting.Messaging
+@using RequireJsNet
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+    @Html.RenderRequireJsSetup(new RequireRendererConfiguration
+                                   {
+                                       // the url from where require.js will be loaded
+                                       RequireJsUrl = Url.Content("~/Scripts/require.js"),
+                                       // baseUrl to be passed to require.js, will be used when composing urls for scripts
+                                       BaseUrl = Url.Content("~/Scripts/"),
+                                       // a list of all the configuration files you want to load
+                                       ConfigurationFiles = new[] { "~/RequireJS.complex.json"},
+                                       // root folder for your scripts, will be used for composing paths to entrypoint
+                                       EntryPointRoot = "~/Scripts/",
+                                       // whether we should load overrides or not, used for autoBundles
+                                       LoadOverrides = true,
+                                       // compute the value you want locale to have, used for i18n
+                                       LocaleSelector = html => System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],
+                                       // instance of IRequireJsLogger
+                                       Logger = null,
+                                       // extensability point for the config object
+                                       ProcessConfig = config => { },
+                                       // extensability point for the options object
+                                       ProcessOptions = options => { },
+                                       // value for urlArgs to be passed to require.js
+                                       UrlArgs = ""
+                                   })
+    
+</body>
+</html>

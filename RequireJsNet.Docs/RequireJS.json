@@ -82,7 +82,7 @@
     "overrides": {
         "amplify": {
             "paths": {
-                "jquery-validate": "lib/vendor/jquery/plugins/validate/jquery.validate",
+                "jquery-validate": "lib/vendor/jquery/plugins/validate/jquery.validate"
             },
             "shim": {
                 "amplify": {
@@ -105,7 +105,7 @@
                     "directory": "\\controllers\\Root\\"
                 },
                 {
-                    "file": "\\controllers\\Root\\Home\\index"
+                    "file": "\\controllers\\Root\\Home\\basic"
                 },
                 {
                     "bundleId": "test"

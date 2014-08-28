@@ -1,0 +1,61 @@
+﻿{
+    "paths": {
+        "jquery": "jquery-1.10.2",
+        "jqMin": "jquery-1.10.2.min",
+        "req1": "req1",
+        "req2": "req2",
+        "jquery-validate": {
+            "path":  "jquery.validate",
+            "defaultBundle": "jqValidate"
+        },
+        "jquery-validate-unobtrusive": "jquery.validate.unobtrusive"
+    },
+    "shim": {
+        "jquery-validate": {
+            "deps": ["jquery"],
+            "exports": "jqVal"
+        },
+        "jquery-validate-unobtrusive": {
+            "deps": ["jquery", "jquery-validate"]
+        }
+    },
+    "map": {
+        "controllers/root/home/complexLoad": {
+            "req1": "req2"
+        }
+    },
+    "bundles": {
+        "jqueryBundle": {
+            "virtual": "true",
+            "items": [ "jquery" ]
+        },
+        "jqvalUnobtrusive": ["jquery-validate-unobtrusive", "jquery-validate"],
+        "full": {
+            "outputPath": "Bundles\\full.min.js",
+            "items": [
+                {
+                    "path": "bootstrap",
+                    "compression": "none"
+                },
+                {
+                    "path": "amplify",
+                    "compression": "standard"
+                }
+            ],
+            "includes": ["jqueryBundle", "jqvalUnobtrusive", "jqValidate"]
+        }
+    },
+    "autoBundles": {
+        "full": {
+            "outputPath": "bundles\\auto\\",
+            "include": [
+                {
+                    "directory": "\\controllers\\Root\\"
+                },
+                {
+                    "file": "jquery"
+                }
+            ]
+        }
+    }
+}
