@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Docs", "RequireJsNet.Docs\RequireJsNet.Docs.csproj", "{7EE6D196-E631-4526-8615-45E2A24F4088}"
 EndProject
@@ -16,9 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{42DBB5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4AF3C-C654-4210-9A23-F74693A574EC}"
 	ProjectSection(SolutionItems) = preProject
-		RequireJsNet.Compressor.nuspec = RequireJsNet.Compressor.nuspec
-		RequireJsNet.nuspec = RequireJsNet.nuspec
-		RequireJsNet.ResxToJs.nuspec = RequireJsNet.ResxToJs.nuspec
+		.nuspec\RequireJsNet.Compressor.nuspec = .nuspec\RequireJsNet.Compressor.nuspec
+		.nuspec\RequireJsNet.nuspec = .nuspec\RequireJsNet.nuspec
+		.nuspec\RequireJsNet.ResxToJs.nuspec = .nuspec\RequireJsNet.ResxToJs.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor", "RequireJsNet.Compressor\RequireJsNet.Compressor.csproj", "{27FBCFC2-9AD7-4042-BC47-0A61B8078264}"

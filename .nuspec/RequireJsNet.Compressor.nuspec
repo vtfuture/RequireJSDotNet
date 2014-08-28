@@ -1,0 +1,33 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>2.0.0</version>
+    <authors>Cezar Cretu</authors>
+    <owners>VeriTech</owners>
+    <id>RequireJsNet.Compressor</id>
+    <title>RequireJS.NET Compressor</title>
+    <copyright>VeriTech Solutions SRL 2014</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Parses RequireJS.NET config files and builds bundles using YUI compressor.</description>
+    <tags>RequireJS.NET, Compressor, MsBuild, optimization, bundling, minification</tags>
+    <language>en-US</language>
+    <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
+    <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
+    <iconUrl>http://requirejsnet.veritech.io/img/require-32x32-comp.png</iconUrl>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="6.0.0" />
+      <dependency id="YUICompressor.NET" version="2.3.0.0" />
+      <dependency id="Jint" version="2.1.0.0" />
+      <dependency id="RequireJsNet" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net45\" />
+    <file src="RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net45\" />
+    <file src="RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net45\" />
+    <file src="**\*.cs" target="src" />
+  </files>
+</package>
