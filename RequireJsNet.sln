@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4
 		.nuspec\RequireJsNet.Compressor.nuspec = .nuspec\RequireJsNet.Compressor.nuspec
 		.nuspec\RequireJsNet.nuspec = .nuspec\RequireJsNet.nuspec
 		.nuspec\RequireJsNet.ResxToJs.nuspec = .nuspec\RequireJsNet.ResxToJs.nuspec
+		.nuspec\RequireJsNet.Scripts.nuspec = .nuspec\RequireJsNet.Scripts.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Compressor", "RequireJsNet.Compressor\RequireJsNet.Compressor.csproj", "{27FBCFC2-9AD7-4042-BC47-0A61B8078264}"
@@ -30,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.ResxToJs", "RequireJsNet.ResxToJs\RequireJsNet.ResxToJs.csproj", "{56D31A7F-00EB-40DF-BAAD-00A0C0B4CEDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Examples", "RequireJsNet.Examples\RequireJsNet.Examples.csproj", "{9BF70792-7138-4050-80A9-4A27E6BAC611}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Scripts", "RequireJsNet.Scripts\RequireJsNet.Scripts.csproj", "{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +68,10 @@ Global
 		{9BF70792-7138-4050-80A9-4A27E6BAC611}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BF70792-7138-4050-80A9-4A27E6BAC611}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BF70792-7138-4050-80A9-4A27E6BAC611}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
