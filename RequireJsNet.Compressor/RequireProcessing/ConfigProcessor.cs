@@ -16,7 +16,7 @@ namespace RequireJsNet.Compressor
 {
     internal abstract class ConfigProcessor
     {
-        protected const string ConfigFileName = "RequireJS.config";
+        protected const string ConfigFileName = "RequireJS.*";
 
         protected const string DefaultScriptDirectory = "Scripts";
 
@@ -75,7 +75,7 @@ namespace RequireJsNet.Compressor
             }
 
             var files = Directory.GetFiles(ProjectPath, ConfigFileName);
-            foreach (var file in files)
+            foreach (var file in files.Where(r => !r.ToLower().Contains(".override.")))
             {
                 FilePaths.Add(file);
             }
