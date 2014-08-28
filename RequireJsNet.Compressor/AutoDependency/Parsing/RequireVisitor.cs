@@ -321,13 +321,21 @@ namespace RequireJsNet.Compressor.Parsing
             if (argCount == 1)
             {
                 var singleDep = firstArg.As<Literal>();
-                if (singleDep == null)
+                if (singleDep != null)
+                {
+                    requireCall.SingleDependencyNode = singleDep;
+                    requireCall.Dependencies.Add(singleDep.Value.ToString());
+                }
+                else if (firstArg is ArrayExpression)
+                {
+                    var deps = this.ProcessDependencyArray(firstArg, requireCall);
+                    requireCall.Dependencies.AddRange(deps);
+                }
+                else
                 {
                     throw new Exception("Could not read argument for require() call " + relativeFileName);
                 }
-
-                requireCall.SingleDependencyNode = singleDep;
-                requireCall.Dependencies.Add(singleDep.Value.ToString());
+                
             }
             else if (argCount == 2)
             {

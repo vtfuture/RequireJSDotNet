@@ -53,7 +53,7 @@
                     "directory": "\\controllers\\Root\\"
                 },
                 {
-                    "file": "jquery"
+                    "file": "jquery-1.10.2"
                 }
             ]
         }
