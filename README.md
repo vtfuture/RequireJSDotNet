@@ -1,6 +1,11 @@
 ![Logo](https://github.com/vtfuture/RequireJSDotNet/blob/gh-pages/img/require-logo.png)
 ===============
 
-The RequireJS for .NET project smoothly integrates the RequireJS framework with ASP.NET MVC on the server side using JSON or XML configuration files, action filter attributes, helper classes and bundling via MsBuild tasks.
+#### RequireJS for .NET integrates RequireJS JavaScript file and module loader with ASP.NET MVC featuring:
 
-Documentation and examples website http://requirejsnet.veritech.io/
+* dependencies declaration and module path configuration using JSON or XML
+* JavaScript file structure integrated with the MVC structure (js code-behind for each Razor view)
+* bundling and minification with RequireJS.NET Compressor and MsBuild
+* internationalization support for JavaScript resources with ResxToJs
+
+##### Documentation and examples website http://requirejsnet.veritech.io/
