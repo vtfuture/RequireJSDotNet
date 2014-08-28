@@ -28,6 +28,6 @@
     <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net45\" />
     <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net45\" />
     <file src="..\RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net45\" />
-    <file src="**\*.cs" target="src" />
+    <file src="..\**\*.cs" target="src" />
   </files>
 </package>
