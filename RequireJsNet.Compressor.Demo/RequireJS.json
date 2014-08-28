@@ -1,5 +1,6 @@
 ﻿{
     "paths": {
+        "jquery": "jquery-1.10.2",
         "jquery-mobile": {
             "path": "lib/vendor/jquery/mobile/jquery.mobile",
             "defaultBundle": "test"
@@ -71,7 +72,7 @@
         },
         "defaultBundleTest": {
             "outputPath": "Bundles\\WithDefault\\",
-            "includes": [ "respond" ]
+            "includes": [ "test" ]
         }
     },
     "map": {

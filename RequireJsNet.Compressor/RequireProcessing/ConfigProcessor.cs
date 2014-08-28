@@ -41,6 +41,12 @@ namespace RequireJsNet.Compressor
             {
                 entry = this.EntryOverride;
             }
+
+            if (relativePath.StartsWith("\\"))
+            {
+                relativePath = relativePath.Substring(1);
+            }
+
             var filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
             if (!File.Exists(filePath))
             {

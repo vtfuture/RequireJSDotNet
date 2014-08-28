@@ -19,7 +19,7 @@ namespace RequireJsNet.Configuration
                 case ConfigType.Xml:
                     return new XmlWriter(path, options);
                 case ConfigType.Json:
-                    throw new NotImplementedException("No writer for json config implemented.");
+                    return new JsonWriter(path, options);
                 default:
                     throw new Exception("Unknown config writer.");
             }

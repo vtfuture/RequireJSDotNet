@@ -38,7 +38,8 @@
     @Html.RenderRequireJsSetup(new RequireRendererConfiguration
                                    {
                                        BaseUrl = Url.Content("~/Scripts"),
-                                       RequireJsUrl = Url.Content("~/Scripts/require.js")
+                                       RequireJsUrl = Url.Content("~/Scripts/require.js"),
+                                       ConfigurationFiles = new []{ "~/RequireJS.json" }
                                    })
 </body>
 </html>

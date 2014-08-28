@@ -137,6 +137,7 @@
     <Content Include="RequireJS.config" />
     <Content Include="MinifyBundlesTask.proj" />
     <Content Include="BuildTools\MinifyBundlesTaskSubfolder.proj" />
+    <Content Include="RequireJS.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\diacritics.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

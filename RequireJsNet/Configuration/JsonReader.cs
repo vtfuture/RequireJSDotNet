@@ -59,6 +59,7 @@ namespace RequireJsNet.Configuration
         private RequirePaths GetPaths(JObject document)
         {
             var paths = new RequirePaths();
+            paths.PathList = new List<RequirePath>();
             if (document != null && document["paths"] != null)
             {
                 paths.PathList = document["paths"].Select(
