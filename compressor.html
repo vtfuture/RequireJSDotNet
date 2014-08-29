@@ -94,45 +94,13 @@
 	<script src="js/smooth-scroll.min.js"></script>
 	<script src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 	
-		<script type="text/javascript">
-
-		jQuery(function () {			  
-			  
+	<script type="text/javascript">
+		jQuery(function () {			  			  
 			  //Scroll
-			  smoothScroll.init();		
-			  
-			  //Menu
-			  jQuery('.navbar-nav a').on('click',function(e){
-				var $toggleBtn = jQuery('.navbar-toggle[data-target=".navbar-ex1-collapse"]');
-			  
-				if($toggleBtn.is(':visible')){
-					jQuery('.navbar-ex1-collapse').collapse('hide');
-					e.stopPropagation();
-					e.preventDefault();
-				}
-			  });
-			  
-			  //Expanders
-			  jQuery('.feature-expander').on('click', function (e) {
-				e.preventDefault();
-				var el = jQuery("#featured"),
-					$target = jQuery(e.currentTarget);							
-				
-				if(el.is(":visible")) {
-					smoothScroll.animateScroll(null, '#' + $target.data('target'));
-				}
-				else {
-					el.slideDown(function(){					
-						smoothScroll.animateScroll(null, '#' + $target.data('target'));
-					});
-				}
-				
-			  });
-			    
-		});	
-		
+			  smoothScroll.init();					    
+		});		
 	</script>
-	<script>
+	 <script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -140,7 +108,7 @@
 
 	  ga('create', 'UA-53462137-3', 'auto');
 	  ga('send', 'pageview');
-	</script> 
+	</script>
 </body>
 
 </html>
