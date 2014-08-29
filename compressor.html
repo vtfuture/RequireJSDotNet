@@ -69,11 +69,7 @@
 	</div>
 	
 	<div class="site-content">
-		<div class="container">	
-			
-			<p>
-			Work in progress...
-			</p>		
+		<div class="container">		
 					
 			<h5>Download</h5>
 			<p>
@@ -99,6 +95,121 @@
 			<p>
 				You have to keep in mind that if you've set the <code>LoadOverrides</code> property to true when rendering the require config, if an overload file is present, it will be loaded. If you're trying out the autoCompressor locally, you might want to set that property to false when in debug configuration, for example.
 			</p>
+			
+			<h5>Auto Compressor Bundling configuration</h5>
+			<p>
+				Having a bundle for each MVC area in your project is probably the best approach if your JavaScript code has different dependencies per area. 
+				For example, if you are developing a CMS site, the Admin area certainly uses more JS components (WYSIWYG editor, file upload, etc) then the Public area, so it's logical to include in the Public bundle only the JS components referenced by the code-behind code of the pages that make the Public area.  
+			</p>
+			<p>
+				Bundling per area example:
+			</p>
+			<pre class="prettyprint lang-js">
+{
+    "paths": {
+        "jquery": "jquery-1.10.2",
+        "jquery-validate": "jquery.validate",
+        "jquery-validate-unobtrusive": "jquery.validate.unobtrusive",
+        "bootstrap": "bootstrap",
+        "file-upload": "jquery.fileupload",
+        "html-editor": "tinymce"
+    },
+    "shim": {
+        "jquery-validate": {
+            "deps": [ "jquery" ]
+        },
+        "jquery-validate-unobtrusive": {
+            "deps": [ "jquery", "jquery-validate" ]
+        },
+        "bootstrap": {
+            "deps": [ "jquery" ]
+        },
+        "file-upload": {
+            "deps": [ "jquery" ]
+        },
+        "html-editor": { 
+            "deps":  ["jquery"]
+        }
+    },
+    "autoBundles": {
+        "public-app": {
+            "outputPath": "Scripts/Bundles/",
+            "include": [
+                {
+                    "directory": "Controllers/Root"
+                }
+            ]
+        },
+        "admin-app": {
+            "outputPath": "Scripts/Bundles/",
+            "include": [
+                {
+                    "directory": "Controllers/Admin"
+                }
+            ]
+        }
+    }
+}</pre>
+			<p>
+				The above configuration will generate two files in <code>~Scripts/Bundles</code>, public-app.js and admin-app.js, if the modules from <code>~Scripts/Controllers/Root</code> does not require the file-upload or html-editor then these components will be bundled only in the admin-app.js file.
+			</p>
+			
+			<h5>Compressor MsBuild task</h5>
+			<p>
+				For the bundling to take place at build, create a folder named <code>.build</code> in your ASP.NET project root and add a file named <code>Compressor.targets</code> with the following content: 
+			</p>
+			<pre class="prettyprint lang-xml">&lt;Project xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;<br/>  &lt;UsingTask TaskName=&quot;RequireCompressorTask&quot; AssemblyFile=&quot;..\bin\RequireJsNet.Compressor.dll&quot; /&gt;<br/>  &lt;ItemGroup&gt;<br/>    &lt;Configs Include=&quot;$(MSBuildProjectDirectory)\RequireJS.json&quot; /&gt;<br/>  &lt;/ItemGroup&gt;<br/>  &lt;Target Name=&quot;Minify&quot; AfterTargets=&quot;AfterBuild&quot;&gt;<br/>    &lt;RequireCompressorTask <br/>      LoggingType=&quot;Debug&quot; <br/>      RequireConfigs=&quot;@(Configs)&quot; <br/>      AutoCompressor=&quot;true&quot; <br/>      EncodingType=&quot;UTF8&quot; <br/>      ProjectPath=&quot;$(MSBuildProjectDirectory)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>  &lt;Target Name=&quot;MinifyForDeploy&quot; AfterTargets=&quot;CopyAllFilesToSingleFolderForMsdeploy&quot;&gt;<br/>    &lt;RequireCompressorTask <br/>      LoggingType=&quot;Info&quot; <br/>      RequireConfigs=&quot;@(Configs)&quot; <br/>      AutoCompressor=&quot;true&quot; <br/>      EncodingType=&quot;UTF8&quot; <br/>      ProjectPath=&quot;$(_PackageTempDir)&quot; /&gt;<br/>  &lt;/Target&gt;<br/>&lt;/Project&gt;</pre>
+			<p>The RequireCompressorTask can receive the following paramters:</p>
+			<p>
+			<strong>LoggingType</strong> - to be passed to the YUI compressor, can be <code>none</code>, <code>info</code> or <code>debug</code>
+			</p>
+			<p>
+			<strong>CompressionType</strong> - to be passed to the YUI compressor, can be <code>none</code> or <code>standard</code>
+			</p>
+			<p>
+			<strong>EncodingType</strong> - to be passed to the YUI compressor, text encoding for the minifier, can have one of the following values: <code>ascii, bigendianunicode, unicode, utf32, utf-32, utf7, utf-7, utf8, utf-8, default</code>
+			</p>
+			<p>
+			<strong>AutoCompressor</strong> - whether to run the autoCompressor or the classic one
+			</p>
+			<p>
+			<strong>PackagePath</strong> - the output directory for packages, it will default to the value of <code>ProjectPath</code> if not specified.
+			</p>
+			<p>
+			<strong>ProjectPath</strong> - the directory from which configs/scripts are read
+			</p>
+			<p>
+			<strong>RequireConfigs</strong> - the list of require configuration files. Defaults to <code>~/RequireJS.json</code>
+			</p>
+			<p>
+			<strong>EntryPointOverride</strong> - allows you to override the entrypoint used to load scripts, default is <code>ProjectPath + \Scripts\</code>
+			</p>
+			<p>Add the following line at the end of your .csproj to import the Compressor targets:</p>
+			<pre class="prettyprint lang-xml">&lt;Import Project=&quot;.build\Compressor.targets&quot; /&gt;</pre>
+			<p>When you build or deploy the MVC project, three files will get generated: the two bundles and <code>RequireJS.override.json</code>. Because these files will be generated on each build, there is no need to keep them on the source repository, in order to exclude them from git you can add the following lines to <code>.gitignore</code> file.</p>
+			<pre class="prettyprint">
+# Exclude RequireJS.NET Compressor build files
+*.override.config
+*.override.json
+*/Scripts/Bundles/</pre>
+			
+			<h5>Load bundles</h5>
+			<p>
+				In order to load the bundles made by the Compressor you'll have to set the RequireRendererConfiguration.LoadOverrides property as true, normally you'll want this to happen on the production environment, for this you can use the HttpContext.Current.IsDebuggingEnabled flag like this: 
+			</p>
+			<pre class="prettyprint lang-cs">
+@Html.RenderRequireJsSetup(new RequireRendererConfiguration
+{
+    RequireJsUrl = Url.Content("~/Scripts/Components/RequireJS/require.js"),
+    BaseUrl = Url.Content("~/Scripts/"),
+    ConfigurationFiles = new[] { "~/RequireJS.json" },
+    EntryPointRoot = "~/Scripts/",
+	
+    // whether we should load overrides or not, used for autoBundles
+    LoadOverrides = HttpContext.Current.IsDebuggingEnabled
+})</pre>
+			<h5>More info</h5>
+			<p>For more information on RequireJS.NET Compressor features please read the <a href="https://github.com/vtfuture/RequireJSDotNet/wiki">wiki</a> and try out the <a href="https://github.com/vtfuture/RequireJSDotNet/">demo projects</a>. If you have suggestion or any kind of feedback regarding RequireJS.NET project please submit an issue <a href="https://github.com/vtfuture/RequireJSDotNet/issues">here</a>.</p>
 		</div>		
 	</div>
 	
