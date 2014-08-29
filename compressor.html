@@ -75,6 +75,30 @@
 			Work in progress...
 			</p>		
 					
+			<h5>Download</h5>
+			<p>
+				To install RequireJS.NET Compressor, run the following command in the Package Manager Console: <br/><kbd>PM> Install-Package RequireJsNet.Compressor</kbd>
+			</p>
+			
+			<h5>Introduction</h5>
+			<p>
+				Script concatenation and minification is realized by processing the input (related to bundles) you provide through the config and establishing what files should and should not be in a bundle.
+			</p>
+			<p>
+				Using the classical compressor means that you also have to provide a manual override of all the paths included in bundles so that require.js can load the right version.
+			</p>
+			<p>
+				Using the autoCompressor, you only have to point it to your application's entry point(s) (easily done using a folder, generally <code>~/Scripts/Controllers/</code>). It will detect most types of require and define calls by parsing your javascript and will then generate a tree to determine what the right scripts are for that bundle. In some cases, static analysis might not be enough to determine what module you're trying to load (for example, doing something like <code>require(['jquery-' + lang]))</code>, so you can control what scripts go in your bundle using the exclude/include properties of the <code>autoBundle</code>.
+			</p>
+			<p>
+				The auto compressor will also generate proper require modules out of your shimmed script, whereas with the classic compressor you had to do that manually.
+			</p>
+			<p>
+				In order to know what files to load at runtime, the autoCompressor will automatically generate another configuration file that will be able to tell us at runtime what bundle should be loaded when. To find them, assuming your configuration file is named <code>RequireJS.json</code>, after a build using the autoCompressor you shouds find a file named <code>RequireJS.override.json</code>. You can also look at this file to debug possible dependency tree generation issues.
+			</p>
+			<p>
+				You have to keep in mind that if you've set the <code>LoadOverrides</code> property to true when rendering the require config, if an overload file is present, it will be loaded. If you're trying out the autoCompressor locally, you might want to set that property to false when in debug configuration, for example.
+			</p>
 		</div>		
 	</div>
 	
