@@ -84,7 +84,7 @@
 				Using the classical compressor means that you also have to provide a manual override of all the paths included in bundles so that require.js can load the right version.
 			</p>
 			<p>
-				Using the autoCompressor, you only have to point it to your application's entry point(s) (easily done using a folder, generally <code>~/Scripts/Controllers/</code>). It will detect most types of require and define calls by parsing your javascript and will then generate a tree to determine what the right scripts are for that bundle. In some cases, static analysis might not be enough to determine what module you're trying to load (for example, doing something like <code>require(['jquery-' + lang]))</code>, so you can control what scripts go in your bundle using the exclude/include properties of the <code>autoBundle</code>.
+				Using the autoCompressor, you only have to point it to your application's entry point(s) (easily done using a folder, generally <code>~/Scripts/Controllers/</code>). It will detect most types of require and define calls by parsing your javascript and will then generating a tree to determine what the right scripts are for that bundle. In some cases, static analysis might not be enough to determine what module you're trying to load (for example, doing something like <code>require(['jquery-' + lang]))</code>, so you can control what scripts go in your bundle using the exclude/include properties of the <code>autoBundle</code>.
 			</p>
 			<p>
 				The auto compressor will also generate proper require modules out of your shimmed script, whereas with the classic compressor you had to do that manually.
@@ -99,7 +99,7 @@
 			<h5>Auto Compressor Bundling configuration</h5>
 			<p>
 				Having a bundle for each MVC area in your project is probably the best approach if your JavaScript code has different dependencies per area. 
-				For example, if you are developing a CMS site, the Admin area certainly uses more JS components (WYSIWYG editor, file upload, etc) then the Public area, so it's logical to include in the Public bundle only the JS components referenced by the code-behind code of the pages that make the Public area.  
+				For example, if you are developing a CMS site, the Admin area certainly uses more JS components (WYSIWYG editor, file upload, etc) than the Public area, so it's logical to include in the Public bundle only the JS components referenced by the code-behind code of the pages that compose the Public area.  
 			</p>
 			<p>
 				Bundling per area example:

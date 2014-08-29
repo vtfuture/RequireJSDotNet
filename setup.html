@@ -86,7 +86,7 @@
 			
 			<h5>JS Code Structure</h5>
 			<p>
-				For each <code>ActionResult</code> that returns a view, you'll need to create a js file named the same as the Razor view. The requirejs entrypoint for each page will be loaded from 
+				For each <code>ActionResult</code> that returns a view, you'll need to create a js file named the same as the action itself. The requirejs entrypoint for each page will be loaded from 
 				<code>~/Scripts/Controllers/{area}/{controller}/{action}</code>. If the action you're rendering is not in an area, replace <code>{area}</code> with <code>Root</code>.
 			</p>
 			<img class="site-img" src="img/rjs-ctrls-structure.png"/>
@@ -155,7 +155,7 @@ require([
 			</pre>
 			<h5>Configure paths and dependencies</h5>
 			<p>
-				There are two formats currently supported for configuration files: JSON and XML, the XML is deprecated since v2.0 and will be removed in v3.0. If you don't specify any configuration when rendering, the default will be loaded from <code>~/RequireJS.json</code>. The configuration format is compatible with require.js api and it's composed of <code>paths, shim, map, bundles</code> and <code>autoBundles</code>, the last one is used by RequireJS Compressor. The modules included in auto bundles are scanned by the Compressor and along with their dependencies are bundled together and minified with YUI Compressor for .Net.
+				There are two formats currently supported for configuration files: JSON and XML. XML is deprecated since v2.0 and will be removed in v3.0. If you don't specify any configuration when rendering, the default will be loaded from <code>~/RequireJS.json</code>. The configuration format is compatible with require.js api and it's composed of <code>paths, shim, map, bundles</code> and <code>autoBundles</code>, the last one is used by RequireJS Compressor. The modules included in auto bundles are scanned by the Compressor, bundled together with their dependencies and minified with YUI Compressor for .Net.
 			</p>
 			<p>The <code>paths</code> section is used for mapping the file location of a component to a short name, so that you don’t have to write the whole path each time you refer it in code. The <code>shim</code> section lets you declare dependencies for components that are not programmed as RequireJS modules. When you are referring such a component, the RequireJS engine will load all the dependencies specified in the shim before executing your own code. In the shim section you can use the module short name set in the paths config.<p/>
 			
