@@ -274,7 +274,87 @@ require([
         var entryPoint = new indexPage();
     });
 });</pre>
+			<h5 id="partialviews">MVC partial views</h5>
+			<p>Writing JS code inside partial views is bad practice, you'll end up by having a view that's composed of several slices of HTML and JS code making debugging, compression and caching very difficult.</p>
+			<p>The JS code for the partial view can reside in a dedicated JS file (an AMD module), that can be referenced in the JS module of the view that contains the partial one.  </p>
+			<pre class="prettyprint">
+App/
+   └── Views/
+   │   ├── Account/
+   │   │   └── Index.cshtml
+   │   └── Shared/
+   │       ├── _Login.cshtml
+   │       └── _Register.cshtml
+   │	
+   └── Scripts/Controllers/Root/
+         ├── Account/
+         │   └── index.js
+         └── Shared/
+             ├── login-module.js
+             └── register-module.js</pre>
 			
+			<p><strong>login-module.js</strong> (the register-model.js has the same code structure)<p/>
+			<pre class="prettyprint lang-js">
+define('login-module', [
+    'jquery'
+],(function ($) {
+
+    var loginModule = function() {
+        //constructor logic
+    };
+
+    loginModule.prototype.init = function () {
+        //login init logic
+    };
+	
+    loginModule.prototype.validate = function () {
+        //validation logic
+    };
+	
+    return loginModule;
+}));</pre>
+
+			<p>Add the two modules to the configuration file in the paths section, this section is used for mapping the file location of a component to a short name, so that you don’t have to write the whole path each time you refer it.</p>
+			<p><strong>RequireJS.json</strong><p/>
+			<pre class="prettyprint lang-js">
+{
+    "paths": {
+        "login-module" : "Controllers/Root/Shared/login-module",
+        "register-module" : "Controllers/Root/Shared/login-register",
+        ...
+    },
+    "shim": {
+        ...
+    },
+    "autoBundles": {
+        ...
+    }
+}</pre>
+			<p>Reference and use the two modules in the Index js file:</p>
+			<p><strong>Index.js</strong><p/>
+			<pre class="prettyprint lang-js">
+require([
+        'login-module',
+        'register-module'
+], function (loginModule, registerModule) {
+
+    var indexModule = function () {
+        //login and register scripts are loaded as this point
+        //create the login and register objects and call theirs methods
+		
+        var login = new loginModule();
+        login.init();
+		
+        var register = new registerModule();
+        register.init();
+    };
+
+    //create object on DOM ready
+    $(function () {
+        var entryPoint = new indexModule();
+    });
+});</pre>
+
 			<h5 id="samples">Source code</h5>
 			<p>A working example with the above code is hosted on GihHub at <a href="https://github.com/stefanprodan/RequireJsNet.Samples" target="_blank" rel="nofollow">RequireJsNet.Samples</a>. If you have suggestion or any kind of feedback regarding RequireJS.NET project please submit an issue <a href="https://github.com/vtfuture/RequireJSDotNet/issues" target="_blank" rel="nofollow">here</a>.</p>
 
