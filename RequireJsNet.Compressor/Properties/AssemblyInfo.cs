@@ -13,11 +13,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RequireJsNet.Compressor")]
-[assembly: AssemblyDescription("RequireJS MSBuild build task")]
+[assembly: AssemblyDescription("RequireJS.NET bundling and minification MSBuild task")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RequireJsNet.Compressor")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCompany("VeriTech Solutions SRL")]
+[assembly: AssemblyProduct("RequireJS.NET Compressor")]
+[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RequireJsNet.ResxToJs")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RequireJsNet.ResxToJs")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("VeriTech Solutions SRL")]
+[assembly: AssemblyProduct("RequireJS.NET ResxToJs")]
+[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

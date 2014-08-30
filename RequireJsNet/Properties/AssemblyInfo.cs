@@ -15,9 +15,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RequireJsNet")]
 [assembly: AssemblyDescription("RequireJS for ASP.NET MVC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("stefanprodan.eu")]
+[assembly: AssemblyCompany("VeriTech Solutions SRL")]
 [assembly: AssemblyProduct("RequireJS.NET")]
-[assembly: AssemblyCopyright("Copyright © Stefan Prodan 2014")]
+[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

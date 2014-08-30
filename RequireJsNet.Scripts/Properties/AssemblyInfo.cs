@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RequireJsNet.Scripts")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Contains the minfy version of require.js the text and i18n plug-ins")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RequireJsNet.Scripts")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("VeriTech Solutions SRL")]
+[assembly: AssemblyProduct("RequireJS.NET Scripts")]
+[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
