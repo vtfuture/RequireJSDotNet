@@ -5,17 +5,17 @@
 	
     <meta charset="utf-8">
 
-	<title>RequireJS.NET - Setup</title>
+	<title>RequireJS.NET - Getting started</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Setup RequireJS for ASP.NET MVC using NuGet">
-    <meta name="keywords" content="requirejs, javascript, asp.net, compression, js bundling, i18n">
+    <meta name="description" content="RequireJS.NET setup and configuration guide for ASP.NET MVC">
+    <meta name="keywords" content="requirejs, javascript, asp.net, compression, bundling, setup, configuration">
 	<meta name="author" content="VeriTech">
 	
 	<meta name="twitter:card" content="summary">
 	<meta name="twitter:site" content="@vtfuture">
 	<meta name="twitter:creator" content="@vtfuture">
 	<meta name="twitter:title" content="RequireJS.NET">
-	<meta name="twitter:description" content="Setup RequireJS for ASP.NET MVC using NuGet">
+	<meta name="twitter:description" content="RequireJS.NET setup and configuration guide for ASP.NET MVC">
 	<meta name="twitter:image:src" content="http://requirejsnet.veritech.io/img/require-logo.png">
 	
 	<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -83,8 +83,12 @@
 				<br /><br/>
 				If you need internationalization support install RequireJS.NET ResxToJs package: <br/><kbd>PM> Install-Package RequireJsNet.ResxToJs</kbd>
 			</p>
+			<p>If you are currently using RequireJS.NET <strong>v1.x</strong> be aware that upgrading to <strong>v2</strong> introduced breaking changes, please follow the <a href="https://github.com/vtfuture/RequireJSDotNet/wiki/Upgrading-to-2.0" target="_blank" rel="nofollow">upgrade guide</a>.</p>
 			
 			<h5 id="structure">JS Code Structure</h5>
+			<p>
+			If you're writing JavaScript code inside Razor views it's time to stop. With RequireJS.NET you can have a JavaScript file counterpart for each view, a JS module (like a C# class) that can by compressed and bundled with its dependencies (like IL Merge does).
+			</p>
 			<p>
 				For each <code>ActionResult</code> that returns a view, you'll need to create a js file named the same as the action itself. The requirejs entrypoint for each page will be loaded from 
 				<code>~/Scripts/Controllers/{area}/{controller}/{action}</code>. If the action you're rendering is not in an area, replace <code>{area}</code> with <code>Root</code>.
