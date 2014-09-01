@@ -26,7 +26,7 @@
     },
     "bundles": {
         "jqueryBundle": {
-            "virtual": "true",
+            "virtual": true,
             "items": [ "jquery" ]
         },
         "jqvalUnobtrusive": ["jquery-validate-unobtrusive", "jquery-validate"],
