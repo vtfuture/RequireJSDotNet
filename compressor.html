@@ -87,10 +87,10 @@
 				Using the autoCompressor, you only have to point it to your application's entry point(s) (easily done using a folder, generally <code>~/Scripts/Controllers/</code>). It will detect most types of require and define calls by parsing your javascript and generating a tree to determine what the right scripts are for that bundle. In some cases, static analysis might not be enough to determine what module you're trying to load (for example, doing something like <code>require(['jquery-' + lang]))</code>, so you can control what scripts go in your bundle using the exclude/include properties of the <code>autoBundle</code>.
 			</p>
 			<p>
-				The auto compressor will also generate proper require modules out of your shimmed script, whereas with the classic compressor you had to do that manually.
+				The auto compressor will also generate required modules from your shimmed script, whereas with the classic compressor you had to do that manually.
 			</p>
 			<p>
-				In order to know what files to load at runtime, the autoCompressor will automatically generate another configuration file that will be able to tell us at runtime what bundle should be loaded when. To find them, assuming your configuration file is named <code>RequireJS.json</code>, after a build using the autoCompressor you shouds find a file named <code>RequireJS.override.json</code>. You can also look at this file to debug possible dependency tree generation issues.
+				In order to know what files to load at runtime, the autoCompressor will automatically generate another configuration file that will be able to tell us at runtime what bundle should be loaded when. To find them, assuming your configuration file is named <code>RequireJS.json</code>, after a build using the autoCompressor you should find a file named <code>RequireJS.override.json</code>. You can also look at this file to debug possible dependency tree generation issues.
 			</p>
 			<p>
 				You have to keep in mind that if you've set the <code>LoadOverrides</code> property to true when rendering the require config, if an overload file is present, it will be loaded. If you're trying out the autoCompressor locally, you might want to set that property to false when in debug configuration, for example.
@@ -186,7 +186,7 @@
 			</p>
 			<p>Add the following line at the end of your .csproj to import the Compressor targets:</p>
 			<pre class="prettyprint lang-xml">&lt;Import Project=&quot;.build\Compressor.targets&quot; /&gt;</pre>
-			<p>When you build or deploy the MVC project, three files will get generated: the two bundles and <code>RequireJS.override.json</code>. Because these files will be generated on each build, there is no need to keep them on the source repository, in order to exclude them from git you can add the following lines to <code>.gitignore</code> file.</p>
+			<p>When you build or deploy the MVC project, three files will be generated: the two bundles and <code>RequireJS.override.json</code>. Because these files will be generated on each build, there is no need to keep them on the source repository, in order to exclude them from git you can add the following lines to <code>.gitignore</code> file.</p>
 			<pre class="prettyprint">
 # Exclude RequireJS.NET Compressor build files
 *.override.config

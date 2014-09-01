@@ -87,7 +87,7 @@
 			
 			<h5 id="structure">JS Code Structure</h5>
 			<p>
-			If you're writing JavaScript code inside Razor views it's time to stop. With RequireJS.NET you can have a JavaScript file counterpart for each view, a JS module (like a C# class) that can by compressed and bundled with its dependencies (like IL Merge does).
+			If you're writing JavaScript code inside Razor views it's time to stop. With RequireJS.NET you can have a JavaScript file counterpart for each view, a JS module (like a C# class) that can be compressed and bundled with its dependencies (like IL Merge does).
 			</p>
 			<p>
 				For each <code>ActionResult</code> that returns a view, you'll need to create a js file named the same as the action itself. The requirejs entrypoint for each page will be loaded from 
@@ -212,7 +212,7 @@ require([
 			
 			<h5 id="render">Render Requirejs config in layout</h5>
 			<p>
-				Rendering is done using the <code>RenderRequireJsSetup</code> html helper. Generally you want to place this in every layout files your using, before you close the <code>body</code> tag.
+				Rendering is done using the <code>RenderRequireJsSetup</code> html helper. Generally you want to place this in all layout files you're using, before you close the <code>body</code> tag.
 			</p>
 			<pre class="prettyprint lang-cs">
 @using RequireJsNet<br/><br/>&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>  &lt;head&gt;<br/>    &lt;!-- head content --&gt;<br/>  &lt;/head&gt;<br/>  &lt;body&gt;<br/>    &lt;!-- body content --&gt;<br/><br/>    @Html.RenderRequireJsSetup(new RequireRendererConfiguration<br/>    {<br/>    // the url from where require.js will be loaded<br/>    RequireJsUrl = Url.Content(&quot;~/Scripts/Components/RequireJS/require.js&quot;),<br/>    // baseUrl to be passed to require.js, will be used when composing urls for scripts<br/>    BaseUrl = Url.Content(&quot;~/Scripts/&quot;),<br/>    // a list of all the configuration files you want to load<br/>    ConfigurationFiles = new[] { &quot;~/RequireJS.json&quot; },<br/>    // root folder for your js controllers, will be used for composing paths to entrypoint<br/>    EntryPointRoot = &quot;~/Scripts/&quot;,<br/>    // whether we should load overrides or not, used for autoBundles, disabled on debug mode<br/>    LoadOverrides = !HttpContext.Current.IsDebuggingEnabled,<br/>    // compute the value you want locale to have, used for i18n<br/>    LocaleSelector = html =&gt; System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],<br/>    // instance of IRequireJsLogger<br/>    Logger = null,<br/>    // extensability point for the config object<br/>    ProcessConfig = config =&gt; { },<br/>    // extensability point for the options object<br/>    ProcessOptions = options =&gt; { },<br/>    // value for urlArgs to be passed to require.js, used for versioning<br/>    UrlArgs = RenderHelper.RenderAppVersion()<br/>    })<br/><br/>  &lt;/body&gt;<br/>&lt;/html&gt;</pre>
@@ -232,7 +232,7 @@ public static class RenderHelper
 				There are two collections available that you can use for passing various settings between your application and the front-end.
 				You can modify these collections using <code>RequireJsOptions.Add</code>. There are two scopes available, global (the values will be found in <code>requireConfig.websiteOptions</code>) 
 				and page (the values will be found in <code>requireConfig.pageOptions</code>).
-				It is often times useful to always have some values that don't change passed to the front-end. To accomplish this, you can call the <code>RequireJsOptions.Add</code> method from a custom filter. Please note that the collections are stored in the current request's Items hashset, so attempting to set any options outside of a thread that has a request attached will result in an exception.
+				It is often useful to have some values that don't change passed to the front-end. To accomplish this, you can call the <code>RequireJsOptions.Add</code> method from a custom filter. Please note that the collections are stored in the current request's Items hashset, so attempting to set any options outside of a thread that has a request attached will result in an exception.
 			</p>
 			
 			<p>Set global options using an action filter:</p>
