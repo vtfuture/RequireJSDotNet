@@ -87,7 +87,7 @@
 				Using the autoCompressor, you only have to point it to your application's entry point(s) (easily done using a folder, generally <code>~/Scripts/Controllers/</code>). It will detect most types of require and define calls by parsing your javascript and generating a tree to determine what the right scripts are for that bundle. In some cases, static analysis might not be enough to determine what module you're trying to load (for example, doing something like <code>require(['jquery-' + lang]))</code>, so you can control what scripts go in your bundle using the exclude/include properties of the <code>autoBundle</code>.
 			</p>
 			<p>
-				The auto compressor will also generate required modules from your shimmed script, whereas with the classic compressor you had to do that manually.
+				The auto compressor will also generate proper require modules out of your shimmed script, whereas with the classic compressor you had to do that manually.
 			</p>
 			<p>
 				In order to know what files to load at runtime, the autoCompressor will automatically generate another configuration file that will be able to tell us at runtime what bundle should be loaded when. To find them, assuming your configuration file is named <code>RequireJS.json</code>, after a build using the autoCompressor you should find a file named <code>RequireJS.override.json</code>. You can also look at this file to debug possible dependency tree generation issues.
