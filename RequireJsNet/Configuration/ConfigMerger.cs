@@ -41,12 +41,28 @@ namespace RequireJsNet.Configuration
         {
             foreach (var coll in collections)
             {
-                MergePaths(coll);
-                MergeShims(coll);
-                MergeMaps(coll);
-                this.MergeAutoBundles(coll);
+                if (coll.Paths != null && coll.Paths.PathList != null)
+                {
+                    MergePaths(coll);    
+                }
 
-                if (options.LoadOverrides)
+                if (coll.Shim != null && coll.Shim.ShimEntries != null)
+                {
+                    MergeShims(coll);    
+                }
+
+                if (coll.Shim != null && coll.Shim.ShimEntries != null)
+                {
+                    MergeMaps(coll);    
+                }
+
+                if (coll.AutoBundles != null && coll.AutoBundles.Bundles != null)
+                {
+                    this.MergeAutoBundles(coll);    
+                }
+                
+
+                if (options.LoadOverrides && coll.Overrides != null)
                 {
                     this.MergeOverrides(coll);
                 }
