@@ -155,6 +155,11 @@ namespace RequireJsNet.Configuration
                                     }).ToList();
                         }
 
+                        if (r.Includes != null && r.Includes.Any())
+                        {
+                            obj.Includes = r.Includes;
+                        }
+
                         return obj;
                     });
         }
