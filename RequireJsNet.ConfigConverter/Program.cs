@@ -23,7 +23,7 @@ namespace RequireJsNet.ConfigConverter
             var reader = ReaderFactory.CreateReader(path, new ConfigLoaderOptions { ProcessAutoBundles = true, ProcessBundles = true });
             var config = reader.ReadConfig();
 
-            var outPath = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(path) + ".out" + Path.GetExtension(path);
+            var outPath = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(path) + ".out" + ".json";
 
             var writer = WriterFactory.CreateWriter(
                 outPath,
