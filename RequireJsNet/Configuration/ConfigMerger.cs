@@ -51,7 +51,7 @@ namespace RequireJsNet.Configuration
                     MergeShims(coll);    
                 }
 
-                if (coll.Shim != null && coll.Shim.ShimEntries != null)
+                if (coll.Map != null && coll.Map.MapElements != null)
                 {
                     MergeMaps(coll);    
                 }
