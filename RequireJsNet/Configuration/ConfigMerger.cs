@@ -152,6 +152,11 @@ namespace RequireJsNet.Configuration
                 var existing = finalAutoBundles.Where(r => r.Id == autoBundle.Id).FirstOrDefault();
                 if (existing != null)
                 {
+                    if (!string.IsNullOrEmpty(autoBundle.OutputPath))
+                    {
+                        existing.OutputPath = autoBundle.OutputPath;    
+                    }
+                    
                     foreach (var include in autoBundle.Includes)
                     {
                         existing.Includes.Add(include);
