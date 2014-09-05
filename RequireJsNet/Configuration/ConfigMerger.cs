@@ -241,7 +241,7 @@ namespace RequireJsNet.Configuration
                 // shouldn't really happen, but we'll use this as a safeguard against an endless loop for the moment
                 if (currentIt > maxIterations)
                 {
-                    throw new Exception("Maximum number of iterations exceeded. Check your config for cyclick dependencies");
+                    throw new Exception("Maximum number of iterations exceeded. Check your config for cyclic dependencies");
                 }
 
                 // get all the bundles that have parents with resolved dependencies and haven't been resolved themselves
@@ -356,6 +356,15 @@ namespace RequireJsNet.Configuration
                     }
                     else
                     {
+                        if (!string.IsNullOrEmpty(bundle.OutputPath))
+                        {
+                            existingBundle.OutputPath = bundle.OutputPath;
+                        }
+
+                        // if, in any of the configs, a bundle is defined as not being virtual 
+                        // then we don't want it still being virtual since output was requested by the user
+                        bundle.IsVirtual = existingBundle.IsVirtual && bundle.IsVirtual;
+
                         // add without checking for duplicates, we'll filter them out later
                         existingBundle.BundleItems.AddRange(bundle.BundleItems);
                     }
