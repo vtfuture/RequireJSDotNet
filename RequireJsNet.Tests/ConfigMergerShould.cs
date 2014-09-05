@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
 using RequireJsNet.Configuration;
 using RequireJsNet.Models;
+using RequireJsNet.Tests.DataCreation;
 using RequireJsNet.Tests.Extensions;
 
 using Xunit;
@@ -15,18 +17,18 @@ namespace RequireJsNet.Tests
     public class ConfigMergerShould
     {
         [Fact]
-        public void UnitePathsWhenDifferentKeys()
+        public void UnitePathsWhenKeysAreDifferent()
         {
             var jqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.06.2" };
             var amplifyPath = new RequirePath { Key = "amplify", Value = "amplify-10.3.5" };
 
-            var firstCollection = CreateCollectionWithPaths(jqueryPath);
-            var secondCollection = CreateCollectionWithPaths(amplifyPath);
+            var firstCollection = ConfigurationCreators.CreateCollectionWithPaths(jqueryPath);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithPaths(amplifyPath);
 
-            var merger = CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
             var merged = merger.GetMerged();
 
-            var expected = CreateCollectionWithPaths(jqueryPath, amplifyPath);
+            var expected = ConfigurationCreators.CreateCollectionWithPaths(jqueryPath, amplifyPath);
 
             CustomAssert.JsonEquals(expected, merged);
         }
@@ -37,13 +39,13 @@ namespace RequireJsNet.Tests
             var jqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.06.2" };
             var altJqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.05.3" };
 
-            var firstCollection = CreateCollectionWithPaths(jqueryPath);
-            var secondCollection = CreateCollectionWithPaths(altJqueryPath);
+            var firstCollection = ConfigurationCreators.CreateCollectionWithPaths(jqueryPath);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithPaths(altJqueryPath);
 
-            var merger = CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
             var merged = merger.GetMerged();
 
-            var expected = CreateCollectionWithPaths(altJqueryPath);
+            var expected = ConfigurationCreators.CreateCollectionWithPaths(altJqueryPath);
 
             CustomAssert.JsonEquals(expected, merged);
         }
@@ -71,19 +73,19 @@ namespace RequireJsNet.Tests
                                                          }
                                   };
 
-            var firstCollection = CreateCollectionWithShim(jqueryShim);
-            var secondCollection = CreateCollectionWithShim(amplifyShim);
+            var firstCollection = ConfigurationCreators.CreateCollectionWithShims(jqueryShim);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithShims(amplifyShim);
 
-            var merger = CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
             var merged = merger.GetMerged();
 
-            var expected = CreateCollectionWithShim(jqueryShim, amplifyShim);
+            var expected = ConfigurationCreators.CreateCollectionWithShims(jqueryShim, amplifyShim);
 
             CustomAssert.JsonEquals(expected, merged);
         }
 
         [Fact]
-        public void MergeShismWithSameKey()
+        public void MergeShimsWithSameKey()
         {
             var jqueryShim = new ShimEntry
             {
@@ -105,10 +107,10 @@ namespace RequireJsNet.Tests
                                                          }
             };
 
-            var firstCollection = CreateCollectionWithShim(jqueryShim);
-            var secondCollection = CreateCollectionWithShim(altJqueryShim);
+            var firstCollection = ConfigurationCreators.CreateCollectionWithShims(jqueryShim);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithShims(altJqueryShim);
 
-            var merger = CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
             var merged = merger.GetMerged();
 
             var expectedShim = new ShimEntry
@@ -122,13 +124,13 @@ namespace RequireJsNet.Tests
                                                        }
                                    };
 
-            var expected = CreateCollectionWithShim(expectedShim);
+            var expected = ConfigurationCreators.CreateCollectionWithShims(expectedShim);
 
             CustomAssert.JsonEquals(expected, merged);
         }
 
         [Fact]
-        public void OverrideExportsForShimsWithSameKey()
+        public void OverrideExportsValueForShimsWithSameKey()
         {
             var jqueryShim = new ShimEntry
             {
@@ -144,56 +146,251 @@ namespace RequireJsNet.Tests
                 Exports = "jlo"
             };
 
-            var firstCollection = CreateCollectionWithShim(jqueryShim);
-            var secondCollection = CreateCollectionWithShim(altJqueryShim);
+            var firstCollection = ConfigurationCreators.CreateCollectionWithShims(jqueryShim);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithShims(altJqueryShim);
 
-            var merger = CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
             var merged = merger.GetMerged();
 
             Assert.Equal("jlo", merged.Shim.ShimEntries.FirstOrDefault().Exports);
         }
 
-        private ConfigurationCollection CreateEmptyCollection()
+        [Fact]
+        public void CreateSingleMapListForDifferentScripts()
         {
-            var collection = new ConfigurationCollection();
-            collection.Paths = new RequirePaths();
-            collection.Paths.PathList = new List<RequirePath>();
+            var scriptAMap = new RequireMapElement 
+                                 { 
+                                     For = "scriptA", 
+                                     Replacements = new List<RequireReplacement>
+                                                        {
+                                                            new RequireReplacement { OldKey = "jquery", NewKey = "jquery.min"}
+                                                        }
+                                 };
 
-            collection.AutoBundles = new AutoBundles();
-            collection.AutoBundles.Bundles = new List<AutoBundle>();
+            var scriptBMap = new RequireMapElement
+                                 {
+                                     For = "scriptB",
+                                     Replacements = new List<RequireReplacement>
+                                                        {
+                                                            new RequireReplacement { OldKey = "jquery", NewKey = "jquery.custom"}
+                                                        }
+                                 };
 
-            collection.Bundles = new RequireBundles();
-            collection.Bundles.BundleEntries = new List<RequireBundle>();
 
-            collection.Map = new RequireMap();
-            collection.Map.MapElements = new List<RequireMapElement>();
+            var firstCollection = ConfigurationCreators.CreateCollectionWithMaps(scriptAMap);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithMaps(scriptBMap);
 
-            collection.Overrides = new List<CollectionOverride>();
-            collection.Shim = new RequireShim();
-            collection.Shim.ShimEntries = new List<ShimEntry>();
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
 
-            return collection;
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.Map.MapElements.Add(scriptAMap);
+            expectedCollection.Map.MapElements.Add(scriptBMap);
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
         }
 
-        private ConfigurationCollection CreateCollectionWithPaths(params RequirePath[] paths)
+        [Fact]
+        public void UniteMapElementsForSingleScript()
         {
-            var collection = CreateEmptyCollection();
-            collection.Paths = new RequirePaths();
-            collection.Paths.PathList = paths.ToList();
-            return collection;
+            var firstMap = new RequireMapElement
+                                 {
+                                     For = "scriptA",
+                                     Replacements = new List<RequireReplacement>
+                                                        {
+                                                            new RequireReplacement { OldKey = "jquery", NewKey = "jquery.min" }
+                                                        }
+                                 };
+
+            var secondMap = new RequireMapElement
+                                {
+                                    For = "scriptA",
+                                    Replacements = new List<RequireReplacement>
+                                                       {
+                                                           new RequireReplacement { OldKey = "amplify", NewKey = "amplify.min" }
+                                                       }
+                                };
+
+            var firstCollection = ConfigurationCreators.CreateCollectionWithMaps(firstMap);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithMaps(secondMap);
+
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
+
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.Map.MapElements.Add(new RequireMapElement
+                                                       {
+                                                           For = "scriptA",
+                                                           Replacements = new List<RequireReplacement>
+                                                                              {
+                                                                                  new RequireReplacement { OldKey = "jquery", NewKey = "jquery.min" },
+                                                                                  new RequireReplacement { OldKey = "amplify", NewKey = "amplify.min" }
+                                                                              }
+                                                       });
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
         }
 
-        private ConfigurationCollection CreateCollectionWithShim(params ShimEntry[] shim)
+        [Fact]
+        public void OverrideMapReplacementOfSameDependencyForSingleScript()
         {
-            var collection = CreateEmptyCollection();
-            collection.Shim = new RequireShim();
-            collection.Shim.ShimEntries = shim.ToList();
-            return collection;
+            var firstMap = new RequireMapElement
+                               {
+                                   For = "scriptA",
+                                   Replacements = new List<RequireReplacement>()
+                                                      {
+                                                        new RequireReplacement { OldKey = "jquery", NewKey = "jquery.min" }
+                                                      }
+                               };
+
+            var secondMap = new RequireMapElement
+                                {
+                                    For = "scriptA",
+                                    Replacements = new List<RequireReplacement>
+                                                       {
+                                                        new RequireReplacement { OldKey = "jquery", NewKey = "jquery.custom" }   
+                                                       }
+                                };
+
+            var firstCollection = ConfigurationCreators.CreateCollectionWithMaps(firstMap);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithMaps(secondMap);
+
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
+
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.Map.MapElements.Add(new RequireMapElement
+                                                       {
+                                                           For = "scriptA",
+                                                           Replacements = new List<RequireReplacement>
+                                                                              {
+                                                                                  new RequireReplacement { OldKey = "jquery", NewKey = "jquery.custom"}
+                                                                              }
+                                                       });
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
         }
 
-        private ConfigMerger CreateDefaultConfigMerger(params ConfigurationCollection[] collections)
+        [Fact]
+        public void CreateSingleAutoBundleListForDifferentBundleIds()
         {
-            return new ConfigMerger(collections.ToList(), new ConfigLoaderOptions());   
+            var firstBundle = new AutoBundle
+                                 {
+                                     Id = "bundleA",
+                                     OutputPath = @"\Scripts\bundleA.js",
+                                     Includes = new List<AutoBundleItem> { new AutoBundleItem { File = "jquery" } },
+                                     Excludes = new List<AutoBundleItem> { new AutoBundleItem { File = "jquery" } }
+                                 };
+            var secondBundle = new AutoBundle
+                                   {
+                                       Id = "bundleB",
+                                       OutputPath = @"\Scripts\bundleB.js",
+                                       Includes = new List<AutoBundleItem> { new AutoBundleItem { File = "jquery" } },
+                                       Excludes = new List<AutoBundleItem> { new AutoBundleItem { File = "jquery" } }
+                                   };
+
+            var firstCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(firstBundle);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(secondBundle);
+
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
+
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.AutoBundles.Bundles = new List<AutoBundle>
+                                                         {
+                                                             firstBundle,
+                                                             secondBundle
+                                                         };
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
+        }
+
+        [Fact]
+        public void CreateSingleAutoBundleItemForSameBundleId()
+        {
+            var firstBundle = new AutoBundle
+                                  {
+                                      Id = "bundleA",
+                                      OutputPath = @"\Scripts\bundleA.js",
+                                      Includes = new List<AutoBundleItem> { new AutoBundleItem { File = "jquery" } },
+                                      Excludes = new List<AutoBundleItem> { new AutoBundleItem { File = "bootstrap" } }
+                                  };
+
+            var secondBundle = new AutoBundle
+                                   {
+                                       Id = "bundleA",
+                                       OutputPath = @"\Scripts\bundleA.js",
+                                       Includes = new List<AutoBundleItem> { new AutoBundleItem { File = "amplify" } },
+                                       Excludes = new List<AutoBundleItem> { new AutoBundleItem { File = "bforms" } }
+                                   };
+
+            var firstCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(firstBundle);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(secondBundle);
+
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
+
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.AutoBundles.Bundles = new List<AutoBundle>
+                                                        {
+                                                                new AutoBundle
+                                                                {
+                                                                    Id = "bundleA",
+                                                                    OutputPath = @"\Scripts\bundleA.js",
+                                                                    Includes = new List<AutoBundleItem>
+                                                                                    {
+                                                                                        new AutoBundleItem { File = "jquery" },
+                                                                                        new AutoBundleItem { File = "amplify" }
+                                                                                    },
+                                                                    Excludes = new List<AutoBundleItem>
+                                                                                    {
+                                                                                        new AutoBundleItem { File = "bootstrap" },
+                                                                                        new AutoBundleItem { File = "bforms" }
+                                                                                    }
+                                                                } 
+                                                        };
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
+        }
+
+        [Fact]
+        public void OverrideOutputPathForAutoBundleWithSameId()
+        {
+            var firstBundle = new AutoBundle
+            {
+                Id = "bundleA",
+                OutputPath = @"\Scripts\bundleA.js",
+                Includes = new List<AutoBundleItem>(),
+                Excludes = new List<AutoBundleItem>()
+            };
+
+            var secondBundle = new AutoBundle
+            {
+                Id = "bundleA",
+                OutputPath = @"\Scripts\bundleB.js",
+                Includes = new List<AutoBundleItem>(),
+                Excludes = new List<AutoBundleItem>()
+            };
+
+            var firstCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(firstBundle);
+            var secondCollection = ConfigurationCreators.CreateCollectionWithAutoBundles(secondBundle);
+
+            var merger = ConfigurationCreators.CreateDefaultConfigMerger(firstCollection, secondCollection);
+            var merged = merger.GetMerged();
+
+            var expectedCollection = ConfigurationCreators.CreateEmptyCollection();
+            expectedCollection.AutoBundles.Bundles = new List<AutoBundle>
+                                                        {
+                                                                new AutoBundle
+                                                                {
+                                                                    Id = "bundleA",
+                                                                    OutputPath = @"\Scripts\bundleB.js",
+                                                                    Includes = new List<AutoBundleItem>(),
+                                                                    Excludes = new List<AutoBundleItem>()
+                                                                }
+                                                        };
+
+            CustomAssert.JsonEquals(expectedCollection, merged);
         }
     }
 }

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigMergerShould.cs" />
+    <Compile Include="DataCreation\ConfigurationCreators.cs" />
     <Compile Include="Extensions\CustomAssert.cs" />
     <Compile Include="ReaderFactoryShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
