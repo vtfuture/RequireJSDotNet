@@ -392,5 +392,166 @@ namespace RequireJsNet.Tests
 
             CustomAssert.JsonEquals(expectedCollection, merged);
         }
+
+        [Fact]
+        public void CreateSingleBundleListForDifferentIds()
+        {
+            var bundleA = new RequireBundle
+                              {
+                                  Name = "bundleA",
+                              };
+            var bundleB = new RequireBundle()
+                              {
+                                  Name = "bundleB",
+                              };
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleA);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleB);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateCollectionWithBundles(bundleA, bundleB);
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
+
+
+        [Fact]
+        public void CreateSingleBundleItemForSameId()
+        {
+            var bundleA = new RequireBundle()
+                              {
+                                  Name = "bundleA" 
+                              };
+            var secondBundleA = new RequireBundle
+                              {
+                                  Name = "bundleA"
+                              };
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleA);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithBundles(secondBundleA);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Bundles.BundleEntries = new List<RequireBundle>
+                                                 {
+                                                     new RequireBundle
+                                                         {
+                                                             Name = "bundleA",
+                                                             ParsedIncludes = true
+                                                         }
+                                                 };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
+
+        [Fact]
+        public void OverrideOutputPathForSameId()
+        {
+            var bundleA = new RequireBundle()
+            {
+                Name = "bundleA",
+                OutputPath = "bundleA"
+            };
+            var secondBundleA = new RequireBundle
+            {
+                Name = "bundleA",
+                OutputPath = "bundleAgain"
+            };
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleA);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithBundles(secondBundleA);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Bundles.BundleEntries = new List<RequireBundle>
+                                                 {
+                                                     new RequireBundle
+                                                         {
+                                                             Name = "bundleA",
+                                                             ParsedIncludes = true,
+                                                             OutputPath = "bundleAgain"
+                                                         }
+                                                 };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
+
+        [Fact]
+        public void SetVirtualToFalseForResultingBundleIfAnyHasFalse()
+        {
+            var bundleA = new RequireBundle()
+            {
+                Name = "bundleA",
+                IsVirtual = true
+            };
+            var secondBundleA = new RequireBundle
+            {
+                Name = "bundleA",
+                IsVirtual = false
+            };
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleA);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithBundles(secondBundleA);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Bundles.BundleEntries = new List<RequireBundle>
+                                                 {
+                                                     new RequireBundle
+                                                         {
+                                                             Name = "bundleA",
+                                                             ParsedIncludes = true,
+                                                             IsVirtual = false
+                                                         }
+                                                 };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
+
+        [Fact]
+        public void UnifyBundleItemsForSameId()
+        {
+            var bundleA = new RequireBundle
+                              {
+                                  Name = "bundleA",
+                                  BundleItems = new List<BundleItem> { new BundleItem { ModuleName = "jquery" } }
+                              };
+            var bundleB = new RequireBundle()
+                              {
+                                  Name = "bundleA",
+                                  BundleItems = new List<BundleItem> { new BundleItem { ModuleName = "amplify" } }
+                              };
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleA);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithBundles(bundleB);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Bundles.BundleEntries = new List<RequireBundle>
+                                                 {
+                                                     new RequireBundle
+                                                         {
+                                                             Name = "bundleA",
+                                                             ParsedIncludes = true,
+                                                             BundleItems = new List<BundleItem>
+                                                                               {
+                                                                                   new BundleItem { ModuleName = "jquery", RelativePath = "jquery"},
+                                                                                   new BundleItem { ModuleName = "amplify", RelativePath = "amplify" }
+                                                                               }
+                                                         }
+                                                 };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
     }
 }

@@ -64,9 +64,28 @@ namespace RequireJsNet.Tests.DataCreation
             return collection;
         }
 
+        public static ConfigurationCollection CreateCollectionWithBundles(params RequireBundle[] bundles)
+        {
+            var collection = CreateEmptyCollection();
+            collection.Bundles.BundleEntries = bundles.ToList();
+            return collection;
+        }
+
         public static ConfigMerger CreateDefaultConfigMerger(params ConfigurationCollection[] collections)
         {
             return new ConfigMerger(collections.ToList(), new ConfigLoaderOptions());
+        }
+
+        public static ConfigMerger CreateBundleProcessingConfigMerger(params ConfigurationCollection[] collections)
+        {
+            return new ConfigMerger(
+                                collections.ToList(), 
+                                new ConfigLoaderOptions
+                                    {
+                                        LoadOverrides = false,
+                                        ProcessAutoBundles = false,
+                                        ProcessBundles = true
+                                    });   
         }
     }
 }
