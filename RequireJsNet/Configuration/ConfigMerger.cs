@@ -363,7 +363,7 @@ namespace RequireJsNet.Configuration
 
                         // if, in any of the configs, a bundle is defined as not being virtual 
                         // then we don't want it still being virtual since output was requested by the user
-                        bundle.IsVirtual = existingBundle.IsVirtual && bundle.IsVirtual;
+                        existingBundle.IsVirtual = existingBundle.IsVirtual && bundle.IsVirtual;
 
                         // add without checking for duplicates, we'll filter them out later
                         existingBundle.BundleItems.AddRange(bundle.BundleItems);
