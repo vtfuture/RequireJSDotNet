@@ -1,0 +1,8 @@
+﻿{
+    "shim": {
+        "jquery-validate": {
+            "deps": ["jquery"],
+            "exports": "jqVal"
+        }
+    }
+}

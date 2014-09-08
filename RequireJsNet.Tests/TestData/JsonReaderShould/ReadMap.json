@@ -1,0 +1,7 @@
+﻿{
+    "map": {
+        "controllers/root/home/complexLoad": {
+            "req1": "req2"
+        }
+    }
+}

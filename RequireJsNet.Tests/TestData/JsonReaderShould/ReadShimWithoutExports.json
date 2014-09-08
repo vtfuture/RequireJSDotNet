@@ -1,0 +1,7 @@
+﻿{
+    "shim": {
+        "jquery-validate-unobtrusive": {
+            "deps": ["jquery", "jquery-validate"]
+        }
+    }
+}

@@ -51,11 +51,26 @@
     <Compile Include="ConfigMergerShould.cs" />
     <Compile Include="DataCreation\ConfigurationCreators.cs" />
     <Compile Include="Extensions\CustomAssert.cs" />
+    <Compile Include="Extensions\FileHelpers.cs" />
+    <Compile Include="JsonReaderShould.cs" />
     <Compile Include="ReaderFactoryShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestImplementations\TestFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TestData\JsonReaderShould\NotThrowExceptionOnEmptyJson.json" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadCompactedPath.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadAutoBundles.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadBundleWithCompactedItems.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadBundleWithExpandedItems.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadBundleWithIncludes.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadBundleWithOutputPath.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadBundleWithSpecifiedVirtual.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadExpandedPath.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadMap.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadShimWithExports.json" />
+    <EmbeddedResource Include="TestData\JsonReaderShould\ReadShimWithoutExports.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RequireJsNet\RequireJsNet.csproj">

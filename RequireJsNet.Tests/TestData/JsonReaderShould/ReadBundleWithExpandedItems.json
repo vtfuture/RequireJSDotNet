@@ -1,0 +1,16 @@
+﻿{
+    "bundles": {
+        "full": {
+            "items": [
+                {
+                    "path": "bootstrap",
+                    "compression": "none"
+                },
+                {
+                    "path": "amplify",
+                    "compression": "standard"
+                }
+            ]
+        }
+    }
+}
