@@ -19,10 +19,19 @@ namespace RequireJsNet.Configuration
 
         private readonly ConfigLoaderOptions options;
 
+        private readonly IFileReader fileReader;
+
         public JsonReader(string path, ConfigLoaderOptions options)
         {
             this.path = path;
             this.options = options;
+        }
+
+        public JsonReader(string path, ConfigLoaderOptions options, IFileReader reader)
+        {
+            this.path = path;
+            this.options = options;
+            this.fileReader = reader;
         }
 
         public string Path
@@ -35,7 +44,15 @@ namespace RequireJsNet.Configuration
 
         public ConfigurationCollection ReadConfig()
         {
-            var text = File.ReadAllText(Path);
+            string text;
+            if (fileReader == null)
+            {
+                text = File.ReadAllText(Path);    
+            }
+            else
+            {
+                text = fileReader.ReadFile(path);
+            }
 
             var collection = new ConfigurationCollection();
             var deserialized = (JObject)JsonConvert.DeserializeObject(text);

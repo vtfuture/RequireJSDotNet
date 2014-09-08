@@ -80,6 +80,7 @@
     <Compile Include="Configuration\ConfigMerger.cs" />
     <Compile Include="Configuration\ConfigOverrider.cs" />
     <Compile Include="Configuration\IConfigWriter.cs" />
+    <Compile Include="Configuration\IFileReader.cs" />
     <Compile Include="Configuration\JsonReader.cs" />
     <Compile Include="Configuration\JsonWriter.cs" />
     <Compile Include="Configuration\WriterFactory.cs" />
