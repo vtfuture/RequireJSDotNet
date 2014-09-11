@@ -148,6 +148,7 @@
     <Content Include="RequireJS.complex.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Controllers\Root\Home\complexLoad.js" />
+    <Content Include="Scripts\domReady.js" />
     <Content Include="Scripts\req1.js" />
     <Content Include="Scripts\Controllers\Root\Home\basic.js" />
     <Content Include="Scripts\Controllers\Root\Home\complex.js" />

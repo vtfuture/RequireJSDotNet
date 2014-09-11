@@ -119,6 +119,11 @@ namespace RequireJsNet.Compressor.AutoDependency
                     {
                         trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
                     }
+
+                    if (defineCall.DependencyArrayNode == null)
+                    {
+                        trans.Add(AddEmptyDepsArrayTransformation.Create(defineCall));
+                    }
                 }
             }
 
