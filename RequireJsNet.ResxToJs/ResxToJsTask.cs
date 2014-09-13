@@ -52,7 +52,7 @@ namespace RequireJsNet.ResxToJs
 
         private void GetResources(List<ResourceInfo> resouceInfo)
         {
-            var rootResInfo = resouceInfo.Where(r => r.CultureShort.ToLower() == "root").FirstOrDefault();
+            var rootResInfo = resouceInfo.FirstOrDefault(r => r.CultureShort.ToLower() == "root");
             if (rootResInfo == null)
             {
                 throw new Exception("Could not find root resources");
@@ -126,7 +126,7 @@ namespace RequireJsNet.ResxToJs
                     locale = match.Groups[1].Value;
                 }
 
-                if (jsCultures.Where(r => r.ToLower() == locale.ToLower()).Any())
+                if (jsCultures.Any(r => r.ToLower() == locale.ToLower()))
                 {
                     availableCultures.Add(new ResourceInfo
                     {
