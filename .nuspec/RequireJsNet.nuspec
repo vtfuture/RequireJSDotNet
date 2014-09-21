@@ -22,8 +22,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net45\" />
-    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net45\" />
+    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net40\" />
+    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net40\" />
     <file src="..\**\*.cs" target="src" />
   </files>
 </package>
