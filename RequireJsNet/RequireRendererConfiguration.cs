@@ -19,6 +19,8 @@ namespace RequireJsNet
 
         private string entryPointRoot = "~/Scripts/";
 
+        private string fallbackEntryPoint = null;
+
         private bool loadOverrides = true;
 
         private IList<string> configPaths = new[] { "~/RequireJS.json" };
@@ -107,6 +109,22 @@ namespace RequireJsNet
             set
             {
                 entryPointRoot = value;
+            }
+        }
+
+        /// <summary>
+        /// Default entry point if view-specific entry point is not found
+        /// </summary>
+        public string FallbackEntryPoint
+        {
+            get
+            {
+                return fallbackEntryPoint;
+            }
+
+            set
+            {
+                fallbackEntryPoint = value;
             }
         }
 

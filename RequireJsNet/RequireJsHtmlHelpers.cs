@@ -23,6 +23,7 @@ namespace RequireJsNet
     {
         private const string DefaultEntryPointRoot = "~/Scripts/";
         private const string DefaultArea = "Common";
+        private const string DefaultFallbackEntryPoint = "app-global";
 
         /// <summary>
         /// Setup RequireJS to be used in layouts
@@ -45,7 +46,8 @@ namespace RequireJsNet
                 throw new ArgumentNullException("config");
             }
 
-            var entryPointPath = html.RequireJsEntryPoint(config.EntryPointRoot);
+            var fallbackEntryPoint = config.FallbackEntryPoint ?? DefaultFallbackEntryPoint;
+            var entryPointPath = html.RequireJsEntryPoint(config.EntryPointRoot, fallbackEntryPoint);
 
             if (entryPointPath == null)
             {
@@ -131,10 +133,13 @@ namespace RequireJsNet
         /// <param name="root">
         /// Relative root path ex. ~/Scripts/
         /// </param>
+        /// <param name="fallback">
+        /// Module to load if view-specific entry point is missing
+        /// </param>
         /// <returns>
         /// The <see cref="MvcHtmlString"/>.
         /// </returns>
-        public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root)
+        public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root, string fallback)
         {
             var routingInfo = html.GetRoutingInfo();
             var rootUrl = string.Empty;
@@ -181,6 +186,16 @@ namespace RequireJsNet
 
             // search for controller/controller-action.js in common area
             entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
+            filePath = server.MapPath(root + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                var computedEntry = GetEntryPoint(server, filePath, root);
+                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
+            }
+
+            // search for fallback entry point
+            entryPoint = fallback.ToModuleName();
             filePath = server.MapPath(root + entryPoint + ".js");
 
             if (File.Exists(filePath))
