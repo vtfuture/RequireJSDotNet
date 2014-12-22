@@ -118,6 +118,7 @@ namespace RequireJsNet.Configuration
                             var shimObj = (JObject)prop.Value;
                             result.Exports = shimObj["exports"] != null ? shimObj["exports"].ToString() : null;
                             var depArr = (JArray)shimObj["deps"];
+                            result.Dependencies = new List<RequireDependency>();
                             if (depArr != null)
                             {
                                 result.Dependencies = depArr.Select(dep => new RequireDependency
