@@ -335,7 +335,6 @@ namespace RequireJsNet.Compressor.Parsing
                 {
                     throw new Exception("Could not read argument for require() call " + relativeFileName);
                 }
-                
             }
             else if (argCount == 2)
             {
@@ -350,7 +349,7 @@ namespace RequireJsNet.Compressor.Parsing
         private void ProcessDefineCall(ref RequireCall parentCall, CallExpression callExpression, NodeWithChildren parentNode)
         {
             var argCount = callExpression.Arguments.Count();
-            if (argCount < 2 || argCount > 3)
+            if (argCount < 1 || argCount > 3)
             {
                 throw new Exception("Invalid number of arguments for define() call " + relativeFileName);
             }
@@ -373,15 +372,15 @@ namespace RequireJsNet.Compressor.Parsing
 
             parentCall = defineCall;
 
-            // if we have 3 arguments it means that all the other arguments are moved by 1
-            var depsIndex = argCount == 3 ? 1 : 0;
-            var moduleIndex = argCount == 3 ? 2 : 1;
+            Expression moduleDefinition = null;
+            Expression depsArray = null;
 
-            var depsArray = callExpression.Arguments.ElementAt(depsIndex);
-            var moduleDefinition = callExpression.Arguments.ElementAt(moduleIndex);
-
+            // define('name', [deps], function () {})
             if (argCount == 3)
             {
+                depsArray = callExpression.Arguments.ElementAt(1);
+                moduleDefinition = callExpression.Arguments.ElementAt(2);
+
                 var identifierLiteral = callExpression.Arguments.ElementAt(0).As<Literal>();
                 if (identifierLiteral == null)
                 {
@@ -392,7 +391,24 @@ namespace RequireJsNet.Compressor.Parsing
                 defineCall.Id = identifierLiteral.Value.ToString();
             }
 
-            defineCall.Dependencies.AddRange(this.ProcessDependencyArray(depsArray, parentCall));
+            // define([deps], function () {})
+            if (argCount == 2)
+            {
+                depsArray = callExpression.Arguments.ElementAt(0);
+                moduleDefinition = callExpression.Arguments.ElementAt(1);
+            }
+
+            // define(function () {})
+            if (argCount == 1)
+            {
+                moduleDefinition = callExpression.Arguments.ElementAt(0);
+            }
+
+            if (depsArray != null)
+            {
+                defineCall.Dependencies.AddRange(this.ProcessDependencyArray(depsArray, parentCall));    
+            }
+            
             ProcessModuleDefinition(moduleDefinition, parentCall, parentNode);
         }
 

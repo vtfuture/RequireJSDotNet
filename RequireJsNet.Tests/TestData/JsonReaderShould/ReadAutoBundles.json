@@ -1,0 +1,15 @@
+﻿{
+    "autoBundles": {
+        "full": {
+            "outputPath": "bundles\\auto\\",
+            "include": [
+                {
+                    "directory": "\\controllers\\Root\\"
+                },
+                {
+                    "file": "jquery-1.10.2"
+                }
+            ]
+        }
+    }
+}

@@ -216,3 +216,6 @@ pip-log.txt
 .mr.developer.cfg
 *.override.config
 *.override.json
+/RequireJsNet.Examples/bundles/auto/full.js
+/RequireJsNet.Examples/jqueryBundle.js
+/RequireJsNet.Examples/jqvalUnobtrusive.js

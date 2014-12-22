@@ -53,7 +53,7 @@ namespace RequireJsNet.Compressor.AutoDependency
             var deps =
                 flattenedResults.SelectMany(r => r.Dependencies)
                     .Where(r => !r.StartsWith("i18n"))
-                    .Except(new List<string> { "require", "module" });
+                    .Except(new List<string> { "require", "module", "exports" });
 
             Dependencies = deps.Select(r => GetModulePath(r)).ToList();
             var shim = this.GetShim(RelativeFileName);
@@ -118,6 +118,11 @@ namespace RequireJsNet.Compressor.AutoDependency
                     if (string.IsNullOrEmpty(defineCall.Id))
                     {
                         trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
+                    }
+
+                    if (defineCall.DependencyArrayNode == null)
+                    {
+                        trans.Add(AddEmptyDepsArrayTransformation.Create(defineCall));
                     }
                 }
             }

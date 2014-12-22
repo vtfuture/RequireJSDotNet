@@ -19,6 +19,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\RequireJsNet.ResxToJs\bin\Debug\RequireJsNet.ResxToJs.dll" target="lib\net45\" />
+    <file src="..\RequireJsNet.ResxToJs\bin\Debug\RequireJsNet.ResxToJs.dll" target="lib\net40\" />
   </files>
 </package>

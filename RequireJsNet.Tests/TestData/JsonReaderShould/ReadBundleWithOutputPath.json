@@ -1,0 +1,7 @@
+﻿{
+    "bundles": {
+        "jqueryBundle": {
+            "outputPath": "Bundles\\full.min.js"
+        }
+    }
+}

@@ -41,12 +41,28 @@ namespace RequireJsNet.Configuration
         {
             foreach (var coll in collections)
             {
-                MergePaths(coll);
-                MergeShims(coll);
-                MergeMaps(coll);
-                this.MergeAutoBundles(coll);
+                if (coll.Paths != null && coll.Paths.PathList != null)
+                {
+                    MergePaths(coll);    
+                }
 
-                if (options.LoadOverrides)
+                if (coll.Shim != null && coll.Shim.ShimEntries != null)
+                {
+                    MergeShims(coll);    
+                }
+
+                if (coll.Map != null && coll.Map.MapElements != null)
+                {
+                    MergeMaps(coll);    
+                }
+
+                if (coll.AutoBundles != null && coll.AutoBundles.Bundles != null)
+                {
+                    this.MergeAutoBundles(coll);    
+                }
+                
+
+                if (options.LoadOverrides && coll.Overrides != null)
                 {
                     this.MergeOverrides(coll);
                 }
@@ -136,6 +152,11 @@ namespace RequireJsNet.Configuration
                 var existing = finalAutoBundles.Where(r => r.Id == autoBundle.Id).FirstOrDefault();
                 if (existing != null)
                 {
+                    if (!string.IsNullOrEmpty(autoBundle.OutputPath))
+                    {
+                        existing.OutputPath = autoBundle.OutputPath;    
+                    }
+                    
                     foreach (var include in autoBundle.Includes)
                     {
                         existing.Includes.Add(include);
@@ -220,7 +241,7 @@ namespace RequireJsNet.Configuration
                 // shouldn't really happen, but we'll use this as a safeguard against an endless loop for the moment
                 if (currentIt > maxIterations)
                 {
-                    throw new Exception("Maximum number of iterations exceeded. Check your config for cyclick dependencies");
+                    throw new Exception("Maximum number of iterations exceeded. Check your config for cyclic dependencies");
                 }
 
                 // get all the bundles that have parents with resolved dependencies and haven't been resolved themselves
@@ -335,6 +356,15 @@ namespace RequireJsNet.Configuration
                     }
                     else
                     {
+                        if (!string.IsNullOrEmpty(bundle.OutputPath))
+                        {
+                            existingBundle.OutputPath = bundle.OutputPath;
+                        }
+
+                        // if, in any of the configs, a bundle is defined as not being virtual 
+                        // then we don't want it still being virtual since output was requested by the user
+                        existingBundle.IsVirtual = existingBundle.IsVirtual && bundle.IsVirtual;
+
                         // add without checking for duplicates, we'll filter them out later
                         existingBundle.BundleItems.AddRange(bundle.BundleItems);
                     }

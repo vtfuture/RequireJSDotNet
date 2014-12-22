@@ -25,9 +25,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net45\" />
-    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net45\" />
-    <file src="..\RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net45\" />
+    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net40\" />
+    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net40\" />
+    <file src="..\RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net40\" />
     <file src="..\**\*.cs" target="src" />
   </files>
 </package>

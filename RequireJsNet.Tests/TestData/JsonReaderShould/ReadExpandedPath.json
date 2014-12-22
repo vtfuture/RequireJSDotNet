@@ -1,0 +1,8 @@
+﻿{
+    "paths": {
+        "jquery-validate": {
+            "path":  "jquery.validate",
+            "defaultBundle": "jqValidate"
+        }
+    }
+}

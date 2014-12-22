@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Examples", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Scripts", "RequireJsNet.Scripts\RequireJsNet.Scripts.csproj", "{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Tests", "RequireJsNet.Tests\RequireJsNet.Tests.csproj", "{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.ConfigConverter", "RequireJsNet.ConfigConverter\RequireJsNet.ConfigConverter.csproj", "{BC2B4B24-A068-443B-9A04-B839AECFBFF6}"
 EndProject
 Global
@@ -74,6 +76,10 @@ Global
 		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF7C58B-A777-4C3E-BB1C-4545BEB561AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
