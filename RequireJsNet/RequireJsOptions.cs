@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using RequireJsNet.EntryPointResolver;
 
 namespace RequireJsNet
 {
@@ -23,6 +24,13 @@ namespace RequireJsNet
         private const string GlobalOptionsKey = "globalOptions";
 
         private const string PageOptionsKey = "pageOptions";
+
+        public static readonly RequireEntryPointResolverCollection ResolverCollection = new RequireEntryPointResolverCollection();
+
+        static RequireJsOptions()
+        {
+            ResolverCollection.Add(new DefaultEntryPointResolver());
+        }
 
         public static Dictionary<string, object> GetGlobalOptions(HttpContextBase context)
         {

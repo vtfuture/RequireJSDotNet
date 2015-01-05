@@ -86,6 +86,8 @@
     <Compile Include="Configuration\JsonWriter.cs" />
     <Compile Include="Configuration\WriterFactory.cs" />
     <Compile Include="Configuration\XmlWriter.cs" />
+    <Compile Include="EntryPointResolver\DefaultEntryPointResolver.cs" />
+    <Compile Include="EntryPointResolver\IEntryPointResolver.cs" />
     <Compile Include="ExceptionThrowingLogger.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Helpers\JavaScriptHelpers.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Models\RequireMapElement.cs" />
     <Compile Include="Models\RequireReplacement.cs" />
     <Compile Include="Models\RoutingInfo.cs" />
+    <Compile Include="EntryPointResolver\RequireEntryPointResolverCollection.cs" />
     <Compile Include="RequireRendererConfiguration.cs" />
     <Compile Include="Validation\ConfigValidator.cs" />
     <Compile Include="Configuration\IConfigReader.cs" />

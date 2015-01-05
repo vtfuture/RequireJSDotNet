@@ -21,9 +21,6 @@ namespace RequireJsNet
 
     public static class RequireJsHtmlHelpers
     {
-        private const string DefaultEntryPointRoot = "~/Scripts/";
-        private const string DefaultArea = "Common";
-
         /// <summary>
         /// Setup RequireJS to be used in layouts
         /// </summary>
@@ -136,60 +133,9 @@ namespace RequireJsNet
         /// </returns>
         public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root)
         {
-            var routingInfo = html.GetRoutingInfo();
-            var rootUrl = string.Empty;
-            var withBaseUrl = true;
-            var server = html.ViewContext.HttpContext.Server;
+            var result = RequireJsOptions.ResolverCollection.Resolve(html.ViewContext, root);
 
-            if (root != DefaultEntryPointRoot)
-            {
-                withBaseUrl = false;
-                rootUrl = UrlHelper.GenerateContentUrl(root, html.ViewContext.HttpContext);
-            }
-
-            // search for controller/action.js in current area
-            var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
-            var entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
-            var filePath = server.MapPath(root + entryPoint + ".js");
-
-            if (File.Exists(filePath))
-            {
-                var computedEntry = GetEntryPoint(server, filePath, root);
-                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
-            }
-
-            // search for controller/action.js in common area
-            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
-            filePath = server.MapPath(root + entryPoint + ".js");
-
-            if (File.Exists(filePath))
-            {
-                var computedEntry = GetEntryPoint(server, filePath, root);
-                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
-            }
-
-            // search for controller/controller-action.js in current area
-            entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action;
-            entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
-            filePath = server.MapPath(root + entryPoint + ".js");
-
-            if (File.Exists(filePath))
-            {
-                var computedEntry = GetEntryPoint(server, filePath, root);
-                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
-            }
-
-            // search for controller/controller-action.js in common area
-            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
-            filePath = server.MapPath(root + entryPoint + ".js");
-
-            if (File.Exists(filePath))
-            {
-                var computedEntry = GetEntryPoint(server, filePath, root);
-                return new MvcHtmlString(withBaseUrl ? computedEntry : rootUrl + computedEntry + ".js");
-            }
-
-            return null;
+            return result != null ? new MvcHtmlString(result) : null;
         }
 
         public static Dictionary<string, int> ToJsonDictionary<TEnum>()
@@ -199,12 +145,6 @@ namespace RequireJsNet
         }
 
 
-        private static string GetEntryPoint(HttpServerUtilityBase server, string filePath, string root)
-        {
-
-            var fileName = PathHelpers.GetExactFilePath(filePath);
-            var folder = server.MapPath(root);
-            return PathHelpers.GetRequireRelativePath(folder, fileName);
-        }
+        
     }
 }
