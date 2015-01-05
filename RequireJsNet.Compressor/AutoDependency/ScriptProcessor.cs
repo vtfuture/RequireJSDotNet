@@ -69,7 +69,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                 {
                     EnsureHasRange(x.ParentNode.Node, lines);
                     EnsureHasRange(x.DependencyArrayNode, lines);
-                    EnsureHasRange(x.ModuleDefinitionNode, lines);
+                    EnsureHasRange(x.ModuleDefinitionNode, lines);  
                     EnsureHasRange(x.ModuleIdentifierNode, lines);
                     EnsureHasRange(x.SingleDependencyNode, lines);
                     var arguments = x.ParentNode.Node.As<CallExpression>().Arguments;
@@ -102,6 +102,11 @@ namespace RequireJsNet.Compressor.AutoDependency
             }
             else
             {
+                foreach (var reqCall in result.RequireCalls.Where(r => r.DependencyArrayNode != null))    
+                {
+                    trans.Add(NormalizeDepsTransformation.Create(reqCall));
+                }
+
                 // if there are no define calls but there is at least one require module call, transform that into a define call
                 if (!result.RequireCalls.Where(r => r.Type == RequireCallType.Define).Any())
                 {

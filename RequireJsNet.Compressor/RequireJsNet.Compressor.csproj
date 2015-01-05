@@ -76,7 +76,7 @@
     <Compile Include="Tasks\CssCompressorTask.cs" />
     <Compile Include="Tasks\JavaScriptCompressorTask.cs" />
     <Compile Include="Tasks\RequireCompressorTask.cs" />
-    <Compile Include="AutoDependency\Transformations\DepsToLowerTransformation.cs" />
+    <Compile Include="AutoDependency\Transformations\NormalizeDepsTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\ToDefineTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\AddIdentifierTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\IRequireTransformation.cs" />

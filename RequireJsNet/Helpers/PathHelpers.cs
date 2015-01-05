@@ -71,6 +71,8 @@ namespace RequireJsNet.Helpers
 
         public static string ToModuleName(this string relativePath)
         {
+            var initial = relativePath;
+            relativePath = initial.Replace('/', Path.DirectorySeparatorChar);
             var directory = Path.GetDirectoryName(relativePath);
             var file = relativePath.EndsWith(".js") ? Path.GetFileNameWithoutExtension(relativePath)
                                                     : Path.GetFileName(relativePath);

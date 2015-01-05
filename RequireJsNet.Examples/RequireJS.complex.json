@@ -54,9 +54,6 @@
             "include": [
                 {
                     "directory": "\\controllers\\Root\\"
-                },
-                {
-                    "file": "jquery-1.10.2"
                 }
             ]
         }
