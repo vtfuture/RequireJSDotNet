@@ -17,6 +17,8 @@ namespace RequireJsNet.Compressor.Demo
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+                      
+            new RequireWebOptimization(HttpContext.Current.Server.MapPath("/"), bundles).CreateAndRegisterBundles();
         }
     }
 }
