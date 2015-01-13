@@ -1,11 +1,5 @@
-![Logo](https://github.com/vtfuture/RequireJSDotNet/blob/gh-pages/img/require-logo.png)
-===============
 
-#### RequireJS for .NET integrates RequireJS JavaScript file and module loader with ASP.NET MVC featuring:
+#### This is a fork of the [RequireJsDotNet](https://github.com/vtfuture/RequireJSDotNet/) project
 
-* dependencies declaration and module path configuration using JSON or XML
-* JavaScript file structure integrated with the MVC structure (js code-behind for each Razor view)
-* bundling and minification with RequireJS.NET Compressor and MsBuild
-* internationalization support for JavaScript resources with ResxToJs
-
-##### Documentation and examples website http://requirejsnet.veritech.io/
+I put Microsoft's ASP.NET Web optimization framework on top of the RequireJsNet.Compressor mechanism
+and removed the YUI Compressor to achieve a better integration with the ASP.NET MVC framework. 
