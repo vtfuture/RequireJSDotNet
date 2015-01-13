@@ -135,7 +135,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="RequireJS.config" />
-    <Content Include="MinifyBundlesTask.proj" />
     <Content Include="BuildTools\MinifyBundlesTaskSubfolder.proj" />
     <Content Include="RequireJS.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
