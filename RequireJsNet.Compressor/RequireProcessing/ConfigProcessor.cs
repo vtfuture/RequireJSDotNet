@@ -1,4 +1,4 @@
-﻿// RequireJS.NET
+// RequireJS.NET
 // Copyright VeriTech.io
 // http://veritech.io
 // Dual licensed under the MIT and GPL licenses:
@@ -94,6 +94,11 @@ namespace RequireJsNet.Compressor
 
         protected string GetEntryPointPath()
         {
+            // prevent double slash
+            if (ProjectPath[ProjectPath.Length - 1] == Path.DirectorySeparatorChar)
+            {
+                ProjectPath = ProjectPath.Remove(ProjectPath.Length - 1);
+            }
             return Path.GetFullPath(Path.Combine(ProjectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory));
         }
     }

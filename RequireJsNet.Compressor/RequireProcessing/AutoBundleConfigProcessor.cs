@@ -1,4 +1,4 @@
-﻿// RequireJS.NET
+// RequireJS.NET
 // Copyright VeriTech.io
 // http://veritech.io
 // Dual licensed under the MIT and GPL licenses:
@@ -98,7 +98,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();
                     var result = processor.ProcessedString;
-                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
+                    // Ignore files from CDN, that start with "//"
+                    var dependencies = processor.Dependencies.Where(r => !r.StartsWith("//")).Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
                     tempFileList.Add(new RequireFile
                                          {
                                              Name = file,
@@ -200,6 +201,11 @@ namespace RequireJsNet.Compressor.RequireProcessing
             if (relativeDirectory.StartsWith("\\"))
             {
                 relativeDirectory = relativeDirectory.Substring(1);
+            }
+            // prevent double slash
+            if (entry.EndsWith("\\"))
+            {
+                entry = entry.Remove(entry.Length - 1);
             }
 
             return Path.Combine(entry + Path.DirectorySeparatorChar, relativeDirectory);
