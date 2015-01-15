@@ -331,6 +331,10 @@ namespace RequireJsNet.Compressor.Parsing
                     var deps = this.ProcessDependencyArray(firstArg, requireCall);
                     requireCall.Dependencies.AddRange(deps);
                 }
+                else if (firstArg is Identifier)
+                {
+                    // ignore call, because it can not be resolved. But don't throw an exception.
+                }
                 else
                 {
                     throw new Exception("Could not read argument for require() call " + relativeFileName);
