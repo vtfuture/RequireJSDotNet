@@ -1,7 +1,7 @@
 ﻿{
     "paths": {
-        "jquery": "jquery-1.10.2",
-        "jqMin": "jquery-1.10.2.min",
+        "jquery": "jquery-2.1.3",
+        "jqMin": "jquery-2.1.3.min",
         "req1": "req1",
         "req2": "req2",
         "jquery-validate": {
