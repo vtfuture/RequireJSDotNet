@@ -62,7 +62,7 @@ define(['module'], function (module) {
                     progId = progIds[i];
                     try {
                         xhr = new ActiveXObject(progId);
-                    } catch (e) {}
+                    } catch (e) { }
 
                     if (xhr) {
                         progIds = [progId];  // so faster next time
