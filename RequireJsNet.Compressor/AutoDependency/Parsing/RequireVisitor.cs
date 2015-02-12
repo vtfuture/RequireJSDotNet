@@ -320,13 +320,13 @@ namespace RequireJsNet.Compressor.Parsing
 
             if (argCount == 1)
             {
-                var singleDep = firstArg.As<Literal>();
-                if (singleDep != null)
+                if (firstArg is Literal)
                 {
+                    var singleDep = firstArg.As<Literal>();
                     requireCall.SingleDependencyNode = singleDep;
                     requireCall.Dependencies.Add(singleDep.Value.ToString());
                 }
-                else if (firstArg is ArrayExpression)
+                if (firstArg is ArrayExpression)
                 {
                     var deps = this.ProcessDependencyArray(firstArg, requireCall);
                     requireCall.Dependencies.AddRange(deps);
