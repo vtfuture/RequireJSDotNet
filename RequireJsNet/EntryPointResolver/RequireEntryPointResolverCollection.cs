@@ -36,7 +36,7 @@ namespace RequireJsNet
             }
         }
 
-        internal string Resolve(ViewContext viewContext, string entryPointRoot)
+        internal string Resolve(ViewContext viewContext, string baseUrl, string entryPointRoot)
         {
             string result = null;
 
@@ -44,7 +44,7 @@ namespace RequireJsNet
             {
                 foreach (var resolver in resolvers)
                 {
-                    result = resolver.Resolve(viewContext, entryPointRoot);
+                    result = resolver.Resolve(viewContext, baseUrl, entryPointRoot);
                     if (result != null)
                     {
                         break;
