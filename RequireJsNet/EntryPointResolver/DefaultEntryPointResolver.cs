@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RequireJsNet.Helpers;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using RequireJsNet.Helpers;
 
 namespace RequireJsNet.EntryPointResolver
 {
@@ -14,7 +10,7 @@ namespace RequireJsNet.EntryPointResolver
         private const string DefaultEntryPointRoot = "~/Scripts/";
         private const string DefaultArea = "Common";
 
-        public string Resolve(ViewContext viewContext, string entryPointRoot)
+        public string Resolve(ViewContext viewContext, string baseUrl, string entryPointRoot)
         {
             var routingInfo = viewContext.GetRoutingInfo();
             var rootUrl = string.Empty;
@@ -23,8 +19,18 @@ namespace RequireJsNet.EntryPointResolver
 
             if (entryPointRoot != DefaultEntryPointRoot)
             {
-                withBaseUrl = false;
-                rootUrl = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
+                // entryPointRoot is different from default.
+                if ((entryPointRoot.StartsWith("~") || entryPointRoot.StartsWith("/")))
+                {
+                    // entryPointRoot is defined as root relative, do not use with baseUrl
+                    withBaseUrl = false;
+                    rootUrl = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
+                }
+                else
+                {
+                    // entryPointRoot is defined relative to baseUrl; prepend baseUrl
+                    entryPointRoot = baseUrl + entryPointRoot;
+                }                
             }
 
             // search for controller/action.js in current area
@@ -34,7 +40,7 @@ namespace RequireJsNet.EntryPointResolver
 
             if (File.Exists(filePath))
             {
-                var computedEntry = GetEntryPoint(server, filePath, entryPointRoot);
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
                 return withBaseUrl ? computedEntry : rootUrl + computedEntry;
             }
 
@@ -44,7 +50,7 @@ namespace RequireJsNet.EntryPointResolver
 
             if (File.Exists(filePath))
             {
-                var computedEntry = GetEntryPoint(server, filePath, entryPointRoot);
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
                 return withBaseUrl ? computedEntry : rootUrl + computedEntry;
             }
 
@@ -55,7 +61,7 @@ namespace RequireJsNet.EntryPointResolver
 
             if (File.Exists(filePath))
             {
-                var computedEntry = GetEntryPoint(server, filePath, entryPointRoot);
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
                 return withBaseUrl ? computedEntry : rootUrl + computedEntry;
             }
 
@@ -65,7 +71,7 @@ namespace RequireJsNet.EntryPointResolver
 
             if (File.Exists(filePath))
             {
-                var computedEntry = GetEntryPoint(server, filePath, entryPointRoot);
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
                 return withBaseUrl ? computedEntry : rootUrl + computedEntry;
             }
 

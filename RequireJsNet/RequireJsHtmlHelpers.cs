@@ -5,19 +5,16 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-
 using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
 using RequireJsNet.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace RequireJsNet
 {
-    using System.Web;
 
     public static class RequireJsHtmlHelpers
     {
@@ -42,7 +39,7 @@ namespace RequireJsNet
                 throw new ArgumentNullException("config");
             }
 
-            var entryPointPath = html.RequireJsEntryPoint(config.EntryPointRoot);
+            var entryPointPath = html.RequireJsEntryPoint(config.BaseUrl, config.EntryPointRoot);
 
             if (entryPointPath == null)
             {
@@ -131,9 +128,9 @@ namespace RequireJsNet
         /// <returns>
         /// The <see cref="MvcHtmlString"/>.
         /// </returns>
-        public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string root)
+        public static MvcHtmlString RequireJsEntryPoint(this HtmlHelper html, string baseUrl, string root)
         {
-            var result = RequireJsOptions.ResolverCollection.Resolve(html.ViewContext, root);
+            var result = RequireJsOptions.ResolverCollection.Resolve(html.ViewContext, baseUrl, root);
 
             return result != null ? new MvcHtmlString(result) : null;
         }
