@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using RequireJsNet.Compressor;
+using System.Web;
 using System.Web.Optimization;
 using RequireJsNet.Compressor;
 
