@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace RequireJsNet.Models
 {
-    internal class CollectionOverride
+    public class CollectionOverride
     {
         public RequirePaths Paths { get; set; }
 

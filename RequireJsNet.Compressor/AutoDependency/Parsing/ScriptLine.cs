@@ -7,12 +7,24 @@
 
 namespace RequireJsNet.Compressor.Parsing
 {
-    internal class ScriptLine
-    {
-        public string LineText { get; set; }
+	/// <summary>
+	/// Represents a single script line of a file
+	/// </summary>
+	internal class ScriptLine
+	{
+		/// <summary>
+		/// The text of the line
+		/// </summary>
+		public string LineText { get; set; }
 
-        public int StartingIndex { get; set; }
+		/// <summary>
+		/// At which index the line starts 
+		/// </summary>
+		public int StartingIndex { get; set; }
 
-        public int NewLineLength { get; set; }
-    }
+		/// <summary>
+		/// The length of the new line
+		/// </summary>
+		public int NewLineLength { get; set; }
+	}
 }

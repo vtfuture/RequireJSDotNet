@@ -43,8 +43,6 @@
                                        BaseUrl = Url.Content("~/Scripts/"),
                                        // a list of all the configuration files you want to load
                                        ConfigurationFiles = new[] { "~/RequireJS.complex.json"},
-                                       // root folder for your scripts, will be used for composing paths to entrypoint
-                                       EntryPointRoot = "~/Scripts/",
                                        // whether we should load overrides or not, used for autoBundles
                                        LoadOverrides = true,
                                        // compute the value you want locale to have, used for i18n
@@ -57,7 +55,7 @@
                                        ProcessOptions = options => { },
                                        // value for urlArgs to be passed to require.js
                                        UrlArgs = ""
-                                   })
+                                   }, "['jquery-validate-unobtrusive']")
     
 </body>
 </html>

@@ -7,7 +7,7 @@
 
 namespace RequireJsNet.Models
 {
-    internal class RoutingInfo
+    public class RoutingInfo
     {
         public string Area { get; set; }
 

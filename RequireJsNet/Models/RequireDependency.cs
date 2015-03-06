@@ -7,7 +7,7 @@
 
 namespace RequireJsNet.Models
 {
-    internal class RequireDependency
+    public class RequireDependency
     {
         public string Dependency { get; set; }
     }

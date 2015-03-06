@@ -5,16 +5,31 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
+using System.Web.Optimization;
 using RequireJsNet.Compressor.Parsing;
 
 namespace RequireJsNet.Compressor.Transformations
 {
-    internal interface IRequireTransformation
-    {
-        RequireCall RequireCall { get; set; }
+	/// <summary>
+	/// Interface for Transformations of require or define calls
+	/// </summary>
+	internal interface IRequireTransformation 
+	{
+		/// <summary>
+		/// The call that will be transformed
+		/// </summary>
+		RequireCall RequireCall { get; set; }
 
-        void Execute(ref string script);
+		/// <summary>
+		/// Executes the transformation
+		/// </summary>
+		/// <param name="script">the script that will be transformed and which contains the require call</param>
+		void Execute(ref string script);
 
-        int[] GetAffectedRange();
-    }
+		/// <summary>
+		/// Gets the affected range
+		/// </summary>
+		/// <returns>An array of integers, as indexes</returns>
+		int[] GetAffectedRange();
+	}
 }

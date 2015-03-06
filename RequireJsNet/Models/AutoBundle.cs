@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace RequireJsNet.Models
 {
-    internal class AutoBundle
+    public class AutoBundle
     {
         public string Id { get; set; }
 

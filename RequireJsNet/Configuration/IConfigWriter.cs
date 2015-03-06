@@ -9,7 +9,7 @@ namespace RequireJsNet.Configuration
 {
     using RequireJsNet.Models;
 
-    internal interface IConfigWriter
+    public interface IConfigWriter
     {
         string Path { get; }
 

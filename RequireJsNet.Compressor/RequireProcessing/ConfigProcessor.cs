@@ -1,4 +1,4 @@
-// RequireJS.NET
+﻿// RequireJS.NET
 // Copyright VeriTech.io
 // http://veritech.io
 // Dual licensed under the MIT and GPL licenses:
@@ -9,97 +9,69 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using System.Web;
+using System.Web.Optimization;
 using RequireJsNet.Models;
 
 namespace RequireJsNet.Compressor
 {
-    internal abstract class ConfigProcessor
-    {
-        protected const string ConfigFileName = "RequireJS.*";
+	/// <summary>
+	/// Base class for Config Processing
+	/// </summary>
+	internal abstract class ConfigProcessor
+	{
+		/// <summary>
+		/// The config file name pattern
+		/// </summary>
+		protected const string ConfigFileName = "RequireJS.*";
 
-        protected const string DefaultScriptDirectory = "Scripts";
+		/// <summary>
+		/// A Bundle Context for the bundles
+		/// </summary>
+		protected BundleContext Context;
 
-        protected string EntryPoint { get; set; }
+		/// <summary>
+		/// The RequireJs entry point as virtual path
+		/// </summary>
+		protected string EntryPoint { get; set; }
 
-        protected ConfigurationCollection Configuration { get; set; }
+		/// <summary>
+		/// The RequireJs configuration
+		/// </summary>
+		protected ConfigurationCollection Configuration { get; set; }
 
-        protected string ProjectPath { get; set; }
+		/// <summary>
+		/// The paths to the RequireJs configuration files
+		/// </summary>
+		protected List<string> FilePaths { get; set; }
 
-        protected string OutputPath { get; set; }
+		/// <summary>
+		/// The function used to generate bundles out of 
+		/// the configuration
+		/// </summary>
+		/// <returns>The generated Bundles</returns>
+		public abstract BundleCollection ParseConfigs();
+		
+		/// <summary>
+		/// Finds configuration files and adds them
+		/// </summary>
+		protected void FindConfigs()
+		{
+			if (FilePaths.Any())
+			{
+				return;
+			}
+			
+			var files = Directory.GetFiles(HttpContext.Current.Server.MapPath("/"), ConfigFileName);
+			foreach (var file in files.Where(r => !r.ToLower().Contains(".override.")))
+			{
+				FilePaths.Add(file);
+			}
 
-        protected string EntryOverride { get; set; }
-
-        protected List<string> FilePaths { get; set; }
-
-        public abstract List<Bundle> ParseConfigs();
-
-        protected string ResolvePhysicalPath(string relativePath)
-        {
-            string entry = this.EntryPoint;
-            if (!string.IsNullOrEmpty(EntryOverride))
-            {
-                entry = this.EntryOverride;
-            }
-
-            if (relativePath.StartsWith("\\"))
-            {
-                relativePath = relativePath.Substring(1);
-            }
-
-            var filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("Could not load script" + filePath, filePath);
-            }
-
-            return filePath;
-        }
-
-        protected string GetOutputPath(string outputPath, string bundleName)
-        {
-            if (string.IsNullOrEmpty(outputPath))
-            {
-                return Path.GetFullPath(Path.Combine(OutputPath, bundleName + ".js"));
-            }
-
-            var directory = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            var fileName = Path.GetFileName(outputPath);
-            if (string.IsNullOrEmpty(fileName))
-            {
-                fileName = bundleName + ".js";
-            }
-
-            return Path.GetFullPath(Path.Combine(OutputPath, directory, fileName));
-        }
-
-        protected void FindConfigs()
-        {
-            if (FilePaths.Any())
-            {
-                return;
-            }
-
-            var files = Directory.GetFiles(ProjectPath, ConfigFileName);
-            foreach (var file in files.Where(r => !r.ToLower().Contains(".override.")))
-            {
-                FilePaths.Add(file);
-            }
-
-            if (!FilePaths.Any())
-            {
-                throw new ArgumentException("No Require config files were provided and none were found in the project directory.");
-            }
-        }
-
-        protected string GetEntryPointPath()
-        {
-            // prevent double slash
-            if (ProjectPath[ProjectPath.Length - 1] == Path.DirectorySeparatorChar)
-            {
-                ProjectPath = ProjectPath.Remove(ProjectPath.Length - 1);
-            }
-            return Path.GetFullPath(Path.Combine(ProjectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory));
-        }
-    }
+			if (!FilePaths.Any())
+			{
+				throw new ArgumentException("No Require config files were provided and none were found in the project directory.");
+			}
+		}
+	}
 }

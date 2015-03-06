@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace RequireJsNet.Models
 {
-    internal class ShimEntry
+    public class ShimEntry
     {
         public string For { get; set; }
 

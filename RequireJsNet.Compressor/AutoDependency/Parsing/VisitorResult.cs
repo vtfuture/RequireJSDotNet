@@ -10,34 +10,47 @@ using System.Linq;
 
 namespace RequireJsNet.Compressor.Parsing
 {
-    internal class VisitorResult
-    {
-        public VisitorResult()
-        {
-            RequireCalls = new List<RequireCall>();    
-        }
+	/// <summary>
+	/// Represents the Result of a RequireVisitor visit
+	/// </summary>
+	internal class VisitorResult
+	{
+		/// <summary>
+		/// Constructs a new Result
+		/// </summary>
+		public VisitorResult()
+		{
+			RequireCalls = new List<RequireCall>();    
+		}
 
-        public List<RequireCall> RequireCalls { get; set; }
+		/// <summary>
+		/// A list of found require calls
+		/// </summary>
+		public List<RequireCall> RequireCalls { get; set; }
 
-        public List<RequireCall> GetFlattened()
-        {
-            if (RequireCalls == null)
-            {
-                return null;
-            }
+		/// <summary>
+		/// flattens the result to a list of calls
+		/// </summary>
+		/// <returns>The call list</returns>
+		public List<RequireCall> GetFlattened()
+		{
+			if (RequireCalls == null)
+			{
+				return null;
+			}
 
-            var result = new List<RequireCall>();
+			var result = new List<RequireCall>();
 
-            var currentList = RequireCalls;
-            currentList.ForEach(x => { result.Add(x); });   
+			var currentList = RequireCalls;
+			currentList.ForEach(x => { result.Add(x); });   
 
-            while (currentList != null && currentList.Any())
-            {
-                currentList = currentList.SelectMany(r => r.Children).ToList();
-                currentList.ForEach(x => { result.Add(x); });    
-            }
+			while (currentList != null && currentList.Any())
+			{
+				currentList = currentList.SelectMany(r => r.Children).ToList();
+				currentList.ForEach(x => { result.Add(x); });    
+			}
 
-            return result;
-        }
-    }
+			return result;
+		}
+	}
 }

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace RequireJsNet.Models
 {
-    internal class ConfigurationCollection
+    public class ConfigurationCollection
     {
         public string FilePath { get; set; }
 

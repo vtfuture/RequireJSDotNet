@@ -7,9 +7,9 @@
 
 namespace RequireJsNet.Configuration
 {
-    internal enum ConfigType
-    {
-        Xml,
-        Json
-    }
+	public enum ConfigType
+	{
+		Xml,
+		Json
+	}
 }

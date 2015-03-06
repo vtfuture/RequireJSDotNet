@@ -37,7 +37,9 @@
     @Html.RenderRequireJsSetup(new RequireRendererConfiguration
                                    {
                                        RequireJsUrl = Url.Content("~/Scripts/require.js"),
-                                       BaseUrl = Url.Content("~/Scripts/")
+                                       BaseUrl = Url.Content("~/Scripts/"),
+                                        // whether we should load overrides or not, used for autoBundles
+                                       LoadOverrides = true,
                                    })
     
 </body>

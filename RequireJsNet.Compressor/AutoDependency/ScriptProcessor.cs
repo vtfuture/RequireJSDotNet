@@ -1,250 +1,190 @@
-﻿// RequireJS.NET
-// Copyright VeriTech.io
-// http://veritech.io
-// Dual licensed under the MIT and GPL licenses:
-// http://www.opensource.org/licenses/mit-license.php
-// http://www.gnu.org/licenses/gpl.html
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.IO;
+using System.Web;
 using Jint.Parser;
-using Jint.Parser.Ast;
-
 using RequireJsNet.Compressor.AutoDependency.Transformations;
+using RequireJsNet.Compressor.Helper;
+using RequireJsNet.Compressor.Models;
 using RequireJsNet.Compressor.Parsing;
 using RequireJsNet.Compressor.Transformations;
-using RequireJsNet.Helpers;
 using RequireJsNet.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RequireJsNet.Compressor.AutoDependency
 {
-    internal class ScriptProcessor
-    {
-        private readonly ConfigurationCollection configuration;
+	/// <summary>
+	/// Class resolves AMD dependencies of virtual files
+	/// </summary>
+	internal class ScriptProcessor
+	{
+		private readonly ConfigurationCollection _configuration;
 
-        public ScriptProcessor(string relativeFileName, string scriptText, ConfigurationCollection configuration)
-        {
-            RelativeFileName = relativeFileName;
-            OriginalString = scriptText;
-            this.configuration = configuration;
-        }
+		private readonly PathResolver _resolver;
 
-        public string OriginalString { get; set; }
+		/// <summary>
+		/// Creates a new ScriptProcessor
+		/// </summary>
+		/// <param name="configuration">the require configuration</param>
+		/// <param name="resolver">a path resolver</param>
+		public ScriptProcessor(ConfigurationCollection configuration, PathResolver resolver)
+		{
+			_configuration = configuration;
+			_resolver = resolver;
+		}
 
-        public string ProcessedString { get; set; }
+		/// <summary>
+		/// Resolves the dependencies of an AMD file based on its virtual path and processes the files content
+		/// by applying transformations
+		/// </summary>
+		/// <param name="virtualFilePath">The path to a JavaScript file that follows the AMD format</param>
+		/// <returns>A ProcessedFile representing the processed AMD file.</returns>
+		public ProcessedFile Process(string virtualFilePath)
+		{
+			var dependencies = new List<string>();
 
-        public string RelativeFileName { get; set; }
+			var requireFile = new ProcessedFile{IncludedVirtualPath = virtualFilePath};
+			var requireFilePath = _resolver.VirtualPathToRequirePath(virtualFilePath);
 
-        public List<string> Dependencies { get; set; }
+			var shim = this.GetShim(requireFilePath);
 
-        public void Process()
-        {
-            var parser = new JavaScriptParser();
-            var program = parser.Parse(OriginalString);
-            var visitor = new RequireVisitor();
-            var result = visitor.Visit(program, RelativeFileName);
+			// get content
+			var content = new StreamReader(new FileVirtualPathProvider(
+										HttpContext.Current.Server.MapPath("/"))
+									.GetFile(virtualFilePath).Open())
+								.ReadToEnd();
+			// duplicate 
+			var text = content;
 
-            var lines = GetScriptLines(OriginalString);
+			// if file is a shim, parsing may be skipped
+			if (shim == null)
+			{
+				// Parse content
+				var parser = new JavaScriptParser();
+				var program = parser.Parse(content);
+				var visitor = new RequireVisitor();
+				var result = visitor.Visit(program, virtualFilePath);
 
-            var flattenedResults = result.GetFlattened();
+				var flattenedResults = result.GetFlattened();
 
-            var deps =
-                flattenedResults.SelectMany(r => r.Dependencies)
-                    .Where(r => !r.StartsWith("i18n"))
-                    .Except(new List<string> { "require", "module", "exports" });
+				// ignore require modules
+				var deps =
+					flattenedResults.SelectMany(r => r.Dependencies)
+						.Where(r => !r.StartsWith("i18n"))
+						.Except(new List<string> { "require", "module", "exports" });
 
-            Dependencies = deps.Select(r => GetModulePath(r)).ToList();
-            var shim = this.GetShim(RelativeFileName);
-            if (shim != null)
-            {
-                Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
-            }
+				dependencies.AddRange(deps);
 
-            Dependencies = Dependencies.Distinct().ToList();
+				var transformations = this.GetTransformations(requireFilePath, result);
+				
+				transformations.ExecuteAll(ref text);
+			}
+			else
+			{
+				// add shim dependencies
+				dependencies.AddRange(shim.Dependencies.Select(r => r.Dependency));
 
-            flattenedResults.ForEach(
-                x =>
-                {
-                    EnsureHasRange(x.ParentNode.Node, lines);
-                    EnsureHasRange(x.DependencyArrayNode, lines);
-                    EnsureHasRange(x.ModuleDefinitionNode, lines);  
-                    EnsureHasRange(x.ModuleIdentifierNode, lines);
-                    EnsureHasRange(x.SingleDependencyNode, lines);
-                    var arguments = x.ParentNode.Node.As<CallExpression>().Arguments;
-                    foreach (var arg in arguments)
-                    {
-                        EnsureHasRange(arg, lines);
-                    }
-                });
+				// shim transformation
+				var trans = ShimFileTransformation.Create(this.CheckForAlias(_resolver.VirtualPathToRequirePath(virtualFilePath)), dependencies, shim.Exports);
+				trans.Execute(ref text);
+			}
 
-            var transformations = this.GetTransformations(result, flattenedResults);
-            var text = OriginalString;
-            transformations.ExecuteAll(ref text);
-            ProcessedString = text;
-        }
+			requireFile.ProcessedContent = text;
+			// ignore duplicates and remove external files from cdn
+			requireFile.Dependencies = dependencies.Distinct()
+				.Select(r => new AutoBundleItem { File = this.CheckForOriginalModuleName(r) })
+				.Where(r => !r.File.StartsWith("//"))
+				.ToList();
 
-        private TransformationCollection GetTransformations(VisitorResult result, List<RequireCall> flattened)
-        {
-            var trans = new TransformationCollection();
+			return requireFile;
+		}
 
-            if (!result.RequireCalls.Any())
-            {
-                var shim = GetShim(RelativeFileName);
-                var deps = new List<string>();
-                if (shim != null)
-                {
-                    deps = shim.Dependencies.Select(r => r.Dependency).ToList();
-                }
+		/// <summary>
+		/// Returns the shim entry for a require module
+		/// if this module is a shim 
+		/// </summary>
+		/// <param name="requireModuleName">The module name</param>
+		/// <returns>the corresponding shim entry or null, if the module is not a shim</returns>
+		private ShimEntry GetShim(string requireModuleName)
+		{
+			return _configuration.Shim.ShimEntries.FirstOrDefault(r => r.For.ToLower() == requireModuleName.ToLower()
+																	|| r.For.ToLower() == this.CheckForAlias(requireModuleName).ToLower());
+		}
 
-                trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName.ToModuleName()), deps));
-            }
-            else
-            {
-                foreach (var reqCall in result.RequireCalls.Where(r => r.DependencyArrayNode != null))    
-                {
-                    trans.Add(NormalizeDepsTransformation.Create(reqCall));
-                }
+		/// <summary>
+		/// Checks whether a module name is an alias and if so
+		/// returns the actual path based on the path section of the configuration  
+		/// </summary>
+		/// <param name="name">the module name</param>
+		/// <returns>the original module name or -if existent- the resolved path</returns>
+		private string CheckForOriginalModuleName(string name)
+		{
+			var result = name;
+			var pathEl = _configuration.Paths.PathList.FirstOrDefault(r => r.Key.ToLower() == name.ToLower());
+			if (pathEl != null)
+			{
+				result = pathEl.Value;
+			}
 
-                // if there are no define calls but there is at least one require module call, transform that into a define call
-                if (!result.RequireCalls.Where(r => r.Type == RequireCallType.Define).Any())
-                {
-                    if (result.RequireCalls.Where(r => r.IsModule).Any())
-                    {
-                        var call = result.RequireCalls.Where(r => r.IsModule).FirstOrDefault();
-                        trans.Add(ToDefineTransformation.Create(call));
-                        trans.Add(AddIdentifierTransformation.Create(call,this.CheckForConfigPath(RelativeFileName.ToModuleName())));
-                    }
-                }
-                else
-                {
-                    var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
-                    if (string.IsNullOrEmpty(defineCall.Id))
-                    {
-                        trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
-                    }
+			return result;
+		}
 
-                    if (defineCall.DependencyArrayNode == null)
-                    {
-                        trans.Add(AddEmptyDepsArrayTransformation.Create(defineCall));
-                    }
-                }
-            }
+		/// <summary>
+		/// Checks whether a module name has an alias and if so
+		/// returns the alias based on the path section of the configuration  
+		/// </summary>
+		/// <param name="name">the module name</param>
+		/// <returns>the original module name or -if existent- the alias</returns>
+		private string CheckForAlias(string name)
+		{
+			var result = name;
+			var pathEl = _configuration.Paths.PathList.FirstOrDefault(r => r.Value.ToLower() == name.ToLower());
+			if (pathEl != null)
+			{
+				result = pathEl.Key;
+			}
 
-            return trans;
-        }
+			return result;
+		}
 
-        private ShimEntry GetShim(string relativeFileName)
-        {
-            return configuration.Shim.ShimEntries.Where(r => r.For.ToLower() == relativeFileName.ToModuleName().ToLower()
-                                                                    || r.For.ToLower() == this.CheckForConfigPath(relativeFileName.ToModuleName()).ToLower())
-                                                        .FirstOrDefault();
-        }
+		/// <summary>
+		/// Returns a collection of transformations to be executed
+		/// </summary>
+		/// <param name="requirePath">The require path of the file to be transformed</param>
+		/// <param name="result">The visitor result for the file</param>
+		/// <returns>A transformation collection</returns>
+		private TransformationCollection GetTransformations(string requirePath, VisitorResult result)
+		{
+			var trans = new TransformationCollection();
 
-        private string CheckForConfigPath(string name)
-        {
-            var result = name;
-            var pathEl = configuration.Paths.PathList.Where(r => r.Value.ToLower() == name.ToLower()).FirstOrDefault();
-            if (pathEl != null)
-            {
-                result = pathEl.Key;
-            }
+			if (result.RequireCalls.Any())
+			{
 
-            return result;
-        }
+				// if there are no define calls but there is at least one require module call, transform that into a define call
+				if (!result.RequireCalls.Any(r => r.Type == RequireCallType.Define))
+				{
+					if (result.RequireCalls.Any(r => r.IsModule))
+					{
+						var call = result.RequireCalls.FirstOrDefault(r => r.IsModule);
+						trans.Add(ToDefineTransformation.Create(call));
+						trans.Add(AddIdentifierTransformation.Create(call, this.CheckForAlias(requirePath)));
+					}
+				}
+				else
+				{
+					var defineCall = result.RequireCalls.FirstOrDefault(r => r.Type == RequireCallType.Define);
+					if (string.IsNullOrEmpty(defineCall.Id))
+					{
+						trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForAlias(requirePath)));
+					}
 
-        private string GetModulePath(string name)
-        {
-            var result = name;
-            var pathEl = configuration.Paths.PathList.Where(r => r.Key.ToLower() == name.ToLower()).FirstOrDefault();
-            if (pathEl != null)
-            {
-                result = pathEl.Value;
-            }
+					if (defineCall.DependencyArrayNode == null)
+					{
+						trans.Add(AddEmptyDepsArrayTransformation.Create(defineCall));
+					}
+				}
+			}
 
-            return result;
-        }
-
-        private void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)
-        {
-            if (node == null || node.Range != null)
-            {
-                return;
-            }
-
-            var location = node.Location;
-            var startLine = lineList[location.Start.Line - 1];
-            var endLine = lineList[location.End.Line - 1];
-            var startingIndex = startLine.StartingIndex + location.Start.Column;
-            var endIndex = endLine.StartingIndex + location.End.Column;
-            node.Range = new[] { startingIndex, endIndex };
-        }
-
-        private List<ScriptLine> GetScriptLines(string scriptText)
-        {
-            var currentLineBuilder = new StringBuilder();
-            var result = new List<ScriptLine>();
-            var currentLine = new ScriptLine();
-
-            if (scriptText.Length > 0)
-            {
-                result.Add(currentLine);
-            }
-
-            for (var i = 0; i < scriptText.Length; i++)
-            {
-                var currChar = scriptText[i];
-                var separatorLength = 1;
-
-                // this is either a legacy maCOs newline, or it will be followed by \n for the windows one
-                // we could also be at the last character of the file when that isn't a newline
-                if ((currChar == '\r' || currChar == '\n') || i == scriptText.Length - 1)
-                {
-                    if (currChar != '\r' && currChar != '\n')
-                    {
-                        currentLineBuilder.Append(scriptText[i]); 
-                    }
-
-                    if (currChar == '\r' && i < scriptText.Length - 1 && scriptText[i + 1] == '\n')
-                    {
-                        // skip the next character since it's part of an \r\n sequence
-                        i++;
-                        separatorLength = 2;
-                    }
-
-                    var prevIndex = 0;
-                    var prevCount = 0;
-                    var prevSeparator = 0;
-
-                    // if we're not still processing the first line, look at the prev line's starting index
-                    if (result.Count > 1)
-                    {
-                        var rpev = result[result.Count - 2];
-                        prevIndex = rpev.StartingIndex;
-                        prevCount = rpev.LineText.Length;
-                        prevSeparator = rpev.NewLineLength;
-                    }
-
-                    currentLine.LineText = currentLineBuilder.ToString();
-                    currentLine.StartingIndex = prevIndex + prevCount + prevSeparator;
-                    currentLine.NewLineLength = separatorLength;
-                    currentLine = new ScriptLine();
-                    result.Add(currentLine);
-                    currentLineBuilder.Clear();
-                }
-                else
-                {
-                    currentLineBuilder.Append(scriptText[i]);
-                }
-            }
-
-            if (currentLine.LineText == null && currentLine.StartingIndex == 0)
-            {
-                result.Remove(currentLine);
-            }
-
-            return result;
-        }
-    }
+			return trans;
+		}
+	}
 }

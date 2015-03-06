@@ -1,7 +1,0 @@
-﻿{
-    "bundles": {
-        "full": {
-            "includes": ["jqueryBundle", "jqvalUnobtrusive", "jqValidate"]
-        }
-    }
-}

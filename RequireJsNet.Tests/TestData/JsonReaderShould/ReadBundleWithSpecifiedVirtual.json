@@ -1,7 +1,0 @@
-﻿{
-    "bundles": {
-        "jqueryBundle": {
-            "virtual": true
-        }
-    }
-}

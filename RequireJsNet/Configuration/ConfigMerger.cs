@@ -13,7 +13,7 @@ using RequireJsNet.Models;
 
 namespace RequireJsNet.Configuration
 {
-    internal class ConfigMerger
+    public class ConfigMerger
     {
         private readonly List<ConfigurationCollection> collections;
         private readonly ConfigurationCollection finalCollection = new ConfigurationCollection();

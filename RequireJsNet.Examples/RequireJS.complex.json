@@ -27,33 +27,15 @@
             "req1": "req2"
         }
     },
-    "bundles": {
-        "jqueryBundle": {
-            "virtual": true,
-            "items": [ "jquery" ]
-        },
-        "jqvalUnobtrusive": ["jquery-validate-unobtrusive", "jquery-validate"],
-        "full": {
-            "outputPath": "Bundles\\full.min.js",
-            "items": [
-                {
-                    "path": "bootstrap",
-                    "compression": "none"
-                },
-                {
-                    "path": "amplify",
-                    "compression": "standard"
-                }
-            ],
-            "includes": ["jqueryBundle", "jqvalUnobtrusive", "jqValidate"]
-        }
-    },
     "autoBundles": {
         "full": {
-            "outputPath": "bundles\\auto\\",
+            "outputPath": "~/bundles/auto",
             "include": [
                 {
-                    "directory": "\\controllers\\Root\\"
+                    "directory": "Controllers/Root"
+                },
+                {                     
+                     "file": "Controllers/Root/Home/index"
                 }
             ]
         }

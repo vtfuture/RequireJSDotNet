@@ -13,38 +13,77 @@ using RequireJsNet.Compressor.Models;
 
 namespace RequireJsNet.Compressor.Parsing
 {
-    internal enum RequireCallType
-    {
-        Define,
-        Require
-    }
+	/// <summary>
+	/// Enum for require call types
+	/// </summary>
+	internal enum RequireCallType
+	{
+		Define,
+		Require
+	}
 
-    internal class RequireCall
-    {
-        public RequireCall()
-        {
-            Children = new List<RequireCall>();
-            Dependencies = new List<string>();
-        }
+	/// <summary>
+	/// Represents a require call
+	/// </summary>
+	internal class RequireCall
+	{
+		/// <summary>
+		/// constructs a new require call
+		/// </summary>
+		public RequireCall()
+		{
+			Children = new List<RequireCall>();
+			Dependencies = new List<string>();
+		}
 
-        public string Id { get; set; }
+		/// <summary>
+		/// The id of the call
+		/// </summary>
+		public string Id { get; set; }
 
-        public NodeWithChildren ParentNode { get; set; }
+		/// <summary>
+		/// The parent node of the call
+		/// </summary>
+		public NodeWithChildren ParentNode { get; set; }
 
-        public bool IsModule { get; set; }
+		/// <summary>
+		/// Whether the call is a module or not
+		/// </summary>
+		public bool IsModule { get; set; }
 
-        public RequireCallType Type { get; set; }
+		/// <summary>
+		/// Whether it is a require or define call
+		/// </summary>
+		public RequireCallType Type { get; set; }
 
-        public List<string> Dependencies { get; set; }
+		/// <summary>
+		/// A List of dependencies
+		/// </summary>
+		public List<string> Dependencies { get; set; }
 
-        public List<RequireCall> Children { get; set; }
+		/// <summary>
+		/// SUbsequent require calls
+		/// </summary>
+		public List<RequireCall> Children { get; set; }
 
-        public Literal SingleDependencyNode { get; set; }
+		/// <summary>
+		/// a node with one single dependency
+		/// </summary>
+		public Literal SingleDependencyNode { get; set; }
 
-        public Literal ModuleIdentifierNode { get; set; }
+		/// <summary>
+		/// A node that is the module identifier
+		/// </summary>
+		public Literal ModuleIdentifierNode { get; set; }
 
-        public ArrayExpression DependencyArrayNode { get; set; }
+		/// <summary>
+		/// A node that is an array of dependencies
+		/// </summary>
+		public ArrayExpression DependencyArrayNode { get; set; }
 
-        public FunctionExpression ModuleDefinitionNode { get; set; }
-    }
+		/// <summary>
+		/// A node that is the module definition
+		/// </summary>
+		public FunctionExpression ModuleDefinitionNode { get; set; }
+	}
 }

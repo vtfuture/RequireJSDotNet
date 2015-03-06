@@ -7,7 +7,7 @@
 
 namespace RequireJsNet.Models
 {
-    internal class RequireReplacement
+    public class RequireReplacement
     {
         public string OldKey { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RequireJsNet.Configuration
 {
-    interface IFileReader
+    public interface IFileReader
     {
         string ReadFile(string path);
     }

@@ -9,7 +9,7 @@ using System;
 
 namespace RequireJsNet.Configuration
 {
-    internal static class ReaderFactory
+    public static class ReaderFactory
     {
         public static IConfigReader CreateReader(string path, ConfigLoaderOptions options)
         {
