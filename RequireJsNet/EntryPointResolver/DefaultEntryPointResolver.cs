@@ -10,7 +10,7 @@ namespace RequireJsNet.EntryPointResolver
         private const string DefaultEntryPointRoot = "~/Scripts/";
         private const string DefaultArea = "Common";
 
-        public string Resolve(ViewContext viewContext, string baseUrl, string entryPointRoot)
+        public virtual string Resolve(ViewContext viewContext, string baseUrl, string entryPointRoot)
         {
             var routingInfo = viewContext.GetRoutingInfo();
             var rootUrl = string.Empty;
