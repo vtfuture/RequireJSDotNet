@@ -10,6 +10,7 @@
     <tags>RequireJS.NET, Compressor, optimization, bundling, minification</tags>
     <language>en-US</language>
     <projectUrl>https://github.com/rangp/RequireJSDotNet</projectUrl>
+	<licenseUrl>https://github.com/rangp/RequireJSDotNet/blob/master/MIT-License.txt</licenseUrl>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.51" />
     </frameworkAssemblies>
@@ -23,7 +24,6 @@
   <files>
     <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net451\" />
     <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net451\\" />
-    <file src="..\RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net451\\" />
     <file src="..\**\*.cs" target="src" />
   </files>
 </package>
