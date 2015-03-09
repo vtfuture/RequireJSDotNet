@@ -18,9 +18,12 @@ namespace RequireJsNet.Examples
 			// visit http://go.microsoft.com/fwlink/?LinkId=301862
 			BundleTable.EnableOptimizations = true;
 
-			var opt = new RequireWebOptimization("~/Scripts/");
-				
+			RequireJsOptions.ResolverCollection.Prepend(new AreaEntryPointResolver());
 
+			var opt = new RequireWebOptimization(AreaEntryPointResolver.EntryPointRoot);
+
+			opt.ResolverCollection.Prepend(new CacheBreakingBundlePathResolver()); 
+			
 			foreach (var bundle in opt.CreateBundles())
 			{
 				bundles.Add(bundle);

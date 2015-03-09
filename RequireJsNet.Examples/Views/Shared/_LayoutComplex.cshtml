@@ -40,13 +40,11 @@
                                        // the url from where require.js will be loaded
                                        RequireJsUrl = Url.Content("~/Scripts/require.js"),
                                        // baseUrl to be passed to require.js, will be used when composing urls for scripts
-                                       BaseUrl = Url.Content("~/Scripts/"),
+                                       BaseUrl = Url.Content(AreaEntryPointResolver.EntryPointRoot),
                                        // a list of all the configuration files you want to load
                                        ConfigurationFiles = new[] { "~/RequireJS.complex.json"},
                                        // whether we should load overrides or not, used for autoBundles
-                                       LoadOverrides = true,
-                                       // compute the value you want locale to have, used for i18n
-                                       LocaleSelector = html => System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],
+                                       LoadOverrides = BundleTable.EnableOptimizations,
                                        // instance of IRequireJsLogger
                                        Logger = null,
                                        // extensability point for the config object
@@ -55,7 +53,7 @@
                                        ProcessOptions = options => { },
                                        // value for urlArgs to be passed to require.js
                                        UrlArgs = ""
-                                   }, "['jquery-validate-unobtrusive']")
+                                   }, new string[] {"jquery-validate-unobtrusive"})
     
 </body>
 </html>

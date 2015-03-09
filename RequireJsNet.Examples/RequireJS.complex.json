@@ -17,25 +17,19 @@
         },
         "jquery-validate-unobtrusive": {
             "deps": [ "jquery", "jquery-validate" ]
-        },
-        "underscore": { 
-            "exports":  []
         }
     },
     "map": {
-        "controllers/root/home/complexLoad": {
+        "Controllers/Root/Home/ComplexLoad": {
             "req1": "req2"
         }
     },
     "autoBundles": {
         "full": {
-            "outputPath": "~/bundles/auto",
+            "outputPath": "~/bundles/auto/",
             "include": [
                 {
-                    "directory": "Controllers/Root"
-                },
-                {                     
-                     "file": "Controllers/Root/Home/index"
+                    "Directory": "Views/Home"
                 }
             ]
         }

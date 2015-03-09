@@ -36,7 +36,7 @@ namespace RequireJsNet
 		public static MvcHtmlString RenderRequireJsSetup(
 			this HtmlHelper html,
 			RequireRendererConfiguration config,
-			string globalScriptCalls = null
+			string[] globalScriptCalls = null
 			)
 		{
 			if (config == null)
@@ -128,7 +128,13 @@ namespace RequireJsNet
 
 			if (globalScriptCalls != null)
 			{
-				result += globalScriptCalls + Environment.NewLine;
+				var globalScriptCallsBuilder = new JavaScriptBuilder();
+				globalScriptCallsBuilder.AddStatement(
+				JavaScriptHelpers.MethodCall(
+					"require",
+					(object)globalScriptCalls));
+
+				result += globalScriptCallsBuilder.Render();
 			}
 			if(requireEntryPointBuilder != null)
 			{
