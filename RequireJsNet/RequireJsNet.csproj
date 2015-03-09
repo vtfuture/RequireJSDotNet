@@ -116,7 +116,6 @@
     <Compile Include="Models\RequireReplacement.cs" />
     <Compile Include="Models\RoutingInfo.cs" />
     <Compile Include="EntryPointResolver\RequireEntryPointResolverCollection.cs" />
-    <Compile Include="RequireCallBuilderCollection.cs" />
     <Compile Include="RequireRendererConfiguration.cs" />
     <Compile Include="Validation\ConfigValidator.cs" />
     <Compile Include="Configuration\IConfigReader.cs" />
