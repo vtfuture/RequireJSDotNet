@@ -1,24 +1,20 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>2.0.0</version>
-    <authors>Stefan Prodan</authors>
-    <owners>VeriTech</owners>
-    <id>RequireJsNet</id>
-    <title>RequireJS.NET</title>
-    <copyright>VeriTech Solutions SRL 2014</copyright>
+    <version>1.0.0-alpha</version>
+    <authors>Peter Rang</authors>
+    <id>RequireJsNetWebOptimization</id>
+    <title>RequireJS.NET Web Optimization Fork</title>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>RequireJS.NET integrates RequireJS script loader with ASP.NET MVC</description>
     <tags>JavaScript, AMD, RequireJS, ASP.NET MVC</tags>
     <language>en-US</language>
-    <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
-    <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
-    <iconUrl>http://requirejsnet.veritech.io/img/require-32x32.png</iconUrl>
+    <projectUrl>https://github.com/rangp/RequireJSDotNet</projectUrl>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.51" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.0" />
+      <dependency id="Newtonsoft.Json" version="6.0.6" />
     </dependencies>
   </metadata>
   <files>
