@@ -74,7 +74,7 @@ namespace RequireJsNet.Compressor.Models
 			}
 			else if(this.contentMap.ContainsKey(filePath))
 			{
-				return this.contentMap[filePath]
+				return this.contentMap[filePath];
 			}
 			else
 			{

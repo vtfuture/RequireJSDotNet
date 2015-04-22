@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>Peter Rang</authors>
     <id>RequireJsNetWebOptimization.Compressor</id>
     <title>RequireJS.NET Web Optimization Fork Compressor</title>
