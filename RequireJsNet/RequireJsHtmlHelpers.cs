@@ -71,6 +71,7 @@ namespace RequireJsNet
                 BaseUrl = config.BaseUrl,
                 Locale = locale,
                 UrlArgs = config.UrlArgs,
+                WaitSeconds = config.WaitSeconds,
                 Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
                 Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
                         r => r.For,
