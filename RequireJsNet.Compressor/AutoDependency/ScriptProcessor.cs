@@ -5,6 +5,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,48 +42,56 @@ namespace RequireJsNet.Compressor.AutoDependency
 
         public void Process()
         {
-            var parser = new JavaScriptParser();
-            var program = parser.Parse(OriginalString);
-            var visitor = new RequireVisitor();
-            var result = visitor.Visit(program, RelativeFileName);
-
-            var lines = GetScriptLines(OriginalString);
-
-            var flattenedResults = result.GetFlattened();
-
-            var deps =
-                flattenedResults.SelectMany(r => r.Dependencies)
-                    .Where(r => !r.StartsWith("i18n"))
-                    .Except(new List<string> { "require", "module", "exports" });
-
-            Dependencies = deps.Select(r => GetModulePath(r)).ToList();
-            var shim = this.GetShim(RelativeFileName);
-            if (shim != null)
+            try
             {
-                Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
-            }
+                var parser = new JavaScriptParser();
+                var program = parser.Parse(OriginalString);
+                var visitor = new RequireVisitor();
+                var result = visitor.Visit(program, RelativeFileName);
 
-            Dependencies = Dependencies.Distinct().ToList();
+                var lines = GetScriptLines(OriginalString);
 
-            flattenedResults.ForEach(
-                x =>
+                var flattenedResults = result.GetFlattened();
+
+                var deps =
+                    flattenedResults.SelectMany(r => r.Dependencies)
+                        .Where(r => !r.Contains("!"))
+                        .Except(new List<string> { "require", "module", "exports" });
+
+                Dependencies = deps.Select(r => GetModulePath(r)).ToList();
+                var shim = this.GetShim(RelativeFileName);
+                if (shim != null)
                 {
-                    EnsureHasRange(x.ParentNode.Node, lines);
-                    EnsureHasRange(x.DependencyArrayNode, lines);
-                    EnsureHasRange(x.ModuleDefinitionNode, lines);  
-                    EnsureHasRange(x.ModuleIdentifierNode, lines);
-                    EnsureHasRange(x.SingleDependencyNode, lines);
-                    var arguments = x.ParentNode.Node.As<CallExpression>().Arguments;
-                    foreach (var arg in arguments)
-                    {
-                        EnsureHasRange(arg, lines);
-                    }
-                });
+                    Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
+                }
 
-            var transformations = this.GetTransformations(result, flattenedResults);
-            var text = OriginalString;
-            transformations.ExecuteAll(ref text);
-            ProcessedString = text;
+                Dependencies = Dependencies.Distinct().ToList();
+
+                flattenedResults.ForEach(
+                    x =>
+                    {
+                        EnsureHasRange(x.ParentNode.Node, lines);
+                        EnsureHasRange(x.DependencyArrayNode, lines);
+                        EnsureHasRange(x.ModuleDefinitionNode, lines);
+                        EnsureHasRange(x.ModuleIdentifierNode, lines);
+                        EnsureHasRange(x.SingleDependencyNode, lines);
+                        var arguments = x.ParentNode.Node.As<CallExpression>().Arguments;
+                        foreach (var arg in arguments)
+                        {
+                            EnsureHasRange(arg, lines);
+                        }
+                    });
+
+                var transformations = this.GetTransformations(result, flattenedResults);
+                var text = OriginalString;
+                transformations.ExecuteAll(ref text);
+                ProcessedString = text;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error while processing {0}: {1}", RelativeFileName, ex.Message), ex);
+            }
+            
         }
 
         private TransformationCollection GetTransformations(VisitorResult result, List<RequireCall> flattened)

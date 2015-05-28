@@ -68,7 +68,8 @@ namespace RequireJsNet.Compressor
             }
             catch (Exception ex)
             {
-                Log.LogErrorFromException(ex);
+                var isDebugLogging = LoggingType.ToLower() == "debug";
+                Log.LogErrorFromException(ex, isDebugLogging, isDebugLogging, null);
                 return false;
             }
 

@@ -70,7 +70,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
                 foreach (var include in bundle.Includes)
                 {
-                    if (!string.IsNullOrEmpty(include.File))
+                    // check if the file path is actually an URL
+                    if (!string.IsNullOrEmpty(include.File) && !include.File.Contains("?"))
                     {
                         files.Add(this.ResolvePhysicalPath(include.File));
                     }
@@ -98,7 +99,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();
                     var result = processor.ProcessedString;
-                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Distinct().ToList();
+                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Where(r => r != null).Distinct().ToList();
                     tempFileList.Add(new RequireFile
                                          {
                                              Name = file,

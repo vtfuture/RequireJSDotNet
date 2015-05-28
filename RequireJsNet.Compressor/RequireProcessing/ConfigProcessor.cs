@@ -42,15 +42,31 @@ namespace RequireJsNet.Compressor
                 entry = this.EntryOverride;
             }
 
+            if (relativePath.Contains("?"))
+            {
+                return null;
+            }
+
             if (relativePath.StartsWith("\\"))
             {
                 relativePath = relativePath.Substring(1);
             }
 
-            var filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
+            string filePath;
+
+            try
+            {
+                filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not load script " + relativePath + ": " + ex.Message, ex);
+            }
+
+            
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("Could not load script" + filePath, filePath);
+                throw new FileNotFoundException("Could not load script " + filePath, filePath);
             }
 
             return filePath;

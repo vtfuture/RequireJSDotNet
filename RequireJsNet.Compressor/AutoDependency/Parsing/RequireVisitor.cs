@@ -426,17 +426,18 @@ namespace RequireJsNet.Compressor.Parsing
 
             foreach (var expression in depsArray.Elements)
             {
-                var val = expression.As<Literal>();
-                if (val == null)
+                
+                if (expression is Literal)
                 {
-                    // TODO: decide if we want to ignore, throw exception or add basic support for string concatenation
-                    // An implementation where the user could define a value for a variable name in case of string concatenation
-                    // (or a set of values, and we would all of the possible values in the dependency array)
-                    //// throw new Exception("One of the elements in a require() dependency array was not a string literal");
-                    continue;
+                    var val = expression.As<Literal>();    
+                    yield return val.Value.ToString();
                 }
+
+                // TODO: decide if we want to ignore, throw exception or add basic support for string concatenation
+                // An implementation where the user could define a value for a variable name in case of string concatenation
+                // (or a set of values, and we would all of the possible values in the dependency array)
+                //// throw new Exception("One of the elements in a require() dependency array was not a string literal");
                
-                yield return val.Value.ToString();
             }
         }
 
