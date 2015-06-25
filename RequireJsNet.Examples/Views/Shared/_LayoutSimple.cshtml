@@ -1,4 +1,5 @@
 ﻿@using RequireJsNet
+@using RequireJsNet.Configuration
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,11 +35,12 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
-    @Html.RenderRequireJsSetup(new RequireRendererConfiguration
-                                   {
-                                       RequireJsUrl = Url.Content("~/Scripts/require.js"),
-                                       BaseUrl = Url.Content("~/Scripts/")
-                                   })
-    
+@Html.RenderRequireJsSetup(new RequireRendererConfiguration
+{
+    RequireJsUrl = Url.Content("~/Scripts/require.js"),
+    BaseUrl = Url.Content("~/Scripts/"),
+    ConfigCachingPolicy = ConfigCachingPolicy.None
+})
+
 </body>
 </html>

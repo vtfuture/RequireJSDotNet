@@ -58,7 +58,14 @@ namespace RequireJsNet
                 return resultingPath;
             }).ToList();
 
-            var loader = new ConfigLoader(processedConfigs, config.Logger, new ConfigLoaderOptions { LoadOverrides = config.LoadOverrides });
+            var loader = new ConfigLoader(
+                processedConfigs,
+                config.Logger,
+                new ConfigLoaderOptions
+                {
+                    LoadOverrides = config.LoadOverrides,
+                    CachingPolicy = config.ConfigCachingPolicy
+                });
             var resultingConfig = loader.Get();
 
             var overrider = new ConfigOverrider();

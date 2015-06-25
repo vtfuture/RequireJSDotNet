@@ -21,6 +21,8 @@ namespace RequireJsNet.Configuration
 
         private readonly IFileReader fileReader;
 
+        private ConfigurationCollection collection;
+
         public JsonReader(string path, ConfigLoaderOptions options)
         {
             this.path = path;
@@ -44,10 +46,20 @@ namespace RequireJsNet.Configuration
 
         public ConfigurationCollection ReadConfig()
         {
+            if (collection == null)
+            {
+                collection = ProcessConfig();
+            }
+
+            return collection;
+        }
+
+        private ConfigurationCollection ProcessConfig()
+        {
             string text;
             if (fileReader == null)
             {
-                text = File.ReadAllText(Path);    
+                text = File.ReadAllText(Path);
             }
             else
             {

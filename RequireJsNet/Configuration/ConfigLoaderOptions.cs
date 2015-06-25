@@ -14,5 +14,7 @@ namespace RequireJsNet.Configuration
         public bool ProcessAutoBundles { get; set; }
 
         public bool LoadOverrides { get; set; }
+
+        public ConfigCachingPolicy CachingPolicy { get; set; }
     }
 }

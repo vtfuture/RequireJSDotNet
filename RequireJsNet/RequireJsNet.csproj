@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigCachingPolicy.cs" />
     <Compile Include="Configuration\ConfigHelpers.cs" />
     <Compile Include="Configuration\ConfigLoader.cs" />
     <Compile Include="Configuration\ConfigLoaderOptions.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="EntryPointResolver\DefaultEntryPointResolver.cs" />
     <Compile Include="EntryPointResolver\IEntryPointResolver.cs" />
     <Compile Include="ExceptionThrowingLogger.cs" />
+    <Compile Include="Helpers\HashStore.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Helpers\JavaScriptHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
