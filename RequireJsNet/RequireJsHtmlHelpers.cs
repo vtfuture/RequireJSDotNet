@@ -58,18 +58,7 @@ namespace RequireJsNet
                 return resultingPath;
             }).ToList();
 
-            var loader = new ConfigLoader(
-                processedConfigs,
-                config.Logger,
-                new ConfigLoaderOptions
-                {
-                    LoadOverrides = config.LoadOverrides,
-                    CachingPolicy = config.ConfigCachingPolicy
-                });
-            var resultingConfig = loader.Get();
-
-            var overrider = new ConfigOverrider();
-            overrider.Override(resultingConfig, entryPointPath.ToString().ToModuleName());
+            var resultingConfig = GetCachedOverridenConfig(processedConfigs, config, entryPointPath.ToString());
 
             var locale = config.LocaleSelector(html);
 
@@ -122,6 +111,49 @@ namespace RequireJsNet
                 + requireRootBuilder.Render() 
                 + Environment.NewLine
                 + requireEntryPointBuilder.Render());
+        }
+
+        private static HashStore<ConfigurationCollection> configObjectHash = new HashStore<ConfigurationCollection>();
+
+        private static ConfigurationCollection GetCachedOverridenConfig(
+            List<string> processedConfigs,
+            RequireRendererConfiguration config,
+            string entryPointPath)
+        {
+            if (config.CacheConfigObject)
+            {
+                return configObjectHash.GetOrSet(
+                    ComputeConfigObjectHash(processedConfigs, entryPointPath),
+                    () => GetOverridenConfig(processedConfigs, config, entryPointPath));
+            }
+
+            return GetOverridenConfig(processedConfigs, config, entryPointPath);
+        }
+
+        private static string ComputeConfigObjectHash(List<string> processedConfigs, string entryPointPath)
+        {
+            return string.Join("|", processedConfigs) + "|" + entryPointPath;
+        }
+
+        private static ConfigurationCollection GetOverridenConfig(
+            List<string> processedConfigs,
+            RequireRendererConfiguration config,
+            string entryPointPath)
+        {
+            var loader = new ConfigLoader(
+                processedConfigs,
+                config.Logger,
+                new ConfigLoaderOptions
+                    {
+                        LoadOverrides = config.LoadOverrides,
+                        CachingPolicy = config.ConfigCachingPolicy
+                    });
+            var resultingConfig = loader.Get();
+
+            var overrider = new ConfigOverrider();
+            overrider.Override(resultingConfig, entryPointPath.ToModuleName());
+
+            return resultingConfig;
         }
 
         /// <summary>

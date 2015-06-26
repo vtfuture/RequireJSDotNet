@@ -147,6 +147,8 @@ namespace RequireJsNet
 
         public ConfigCachingPolicy ConfigCachingPolicy { get; set; }
 
+        public bool CacheConfigObject { get; set; }
+
         /// <summary>
         /// Gets or sets a function that returns the current locale in short format (ex. "en")
         /// </summary>
