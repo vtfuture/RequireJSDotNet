@@ -20,7 +20,7 @@
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0.0" />
       <dependency id="YUICompressor.NET" version="2.7.0.0" />
-      <dependency id="Jint" version="2.4.0.0" />
+      <dependency id="Jint" version="2.5.0" />
       <dependency id="RequireJsNet" />
     </dependencies>
   </metadata>
