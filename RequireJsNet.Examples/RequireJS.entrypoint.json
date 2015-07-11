@@ -1,0 +1,12 @@
+﻿{
+  "autoBundles": {
+        "full": {
+            "outputPath": "bundles\\auto\\",
+            "include": [
+                {
+                    "directory": "\\controllers\\Root\\"
+                }
+            ]
+        }
+    }
+}

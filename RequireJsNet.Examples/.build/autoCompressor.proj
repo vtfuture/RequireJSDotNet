@@ -6,4 +6,11 @@
 	<Target Name="Minify" AfterTargets="AfterBuild">
     <RequireCompressorTask LoggingType="Debug" RequireConfigs="@(Configs)" AutoCompressor="true" EncodingType="UTF8" ProjectPath="$(MSBuildProjectDirectory)" />
 	</Target>
+
+  <ItemGroup>
+    <EntryConfigs Include="$(MSBuildProjectDirectory)\RequireJS.entrypoint.json" />
+  </ItemGroup>
+  <Target Name="MinifyEntry" AfterTargets="AfterBuild">
+    <RequireCompressorTask LoggingType="Debug" RequireConfigs="@(EntryConfigs)" AutoCompressor="true" EncodingType="UTF8" ProjectPath="$(MSBuildProjectDirectory)" EntryPointOverride="$(MSBuildProjectDirectory)\App"/>
+  </Target>
 </Project>
