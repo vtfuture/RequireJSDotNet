@@ -1,6 +1,6 @@
 ﻿{
   "autoBundles": {
-        "full": {
+        "entrypoint": {
             "outputPath": "bundles\\auto\\",
             "include": [
                 {
