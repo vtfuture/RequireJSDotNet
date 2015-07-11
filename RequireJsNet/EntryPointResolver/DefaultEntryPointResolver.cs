@@ -16,8 +16,9 @@ namespace RequireJsNet.EntryPointResolver
             var rootUrl = string.Empty;
             var withBaseUrl = true;
             var server = viewContext.HttpContext.Server;
+            var resolvedEntryPointRoot = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
 
-            if (entryPointRoot != DefaultEntryPointRoot)
+            if (resolvedEntryPointRoot != baseUrl)
             {
                 // entryPointRoot is different from default.
                 if ((entryPointRoot.StartsWith("~") || entryPointRoot.StartsWith("/")))
