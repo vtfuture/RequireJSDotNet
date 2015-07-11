@@ -110,6 +110,11 @@ namespace RequireJsNet.Compressor
 
         protected string GetEntryPointPath()
         {
+            if (!string.IsNullOrWhiteSpace(this.EntryOverride))
+            {
+                return this.EntryOverride;
+            }
+
             return Path.GetFullPath(Path.Combine(ProjectPath + Path.DirectorySeparatorChar, DefaultScriptDirectory));
         }
     }

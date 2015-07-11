@@ -192,10 +192,6 @@ namespace RequireJsNet.Compressor.RequireProcessing
         private string GetAbsoluteDirectory(string relativeDirectory)
         {
             string entry = this.EntryPoint;
-            if (!string.IsNullOrEmpty(EntryOverride))
-            {
-                entry = this.EntryOverride;
-            }
 
             relativeDirectory = relativeDirectory.Replace("/", "\\");
             if (relativeDirectory.StartsWith("\\"))
