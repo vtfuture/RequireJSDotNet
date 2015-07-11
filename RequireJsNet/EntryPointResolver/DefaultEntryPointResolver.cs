@@ -1,4 +1,5 @@
 ﻿using RequireJsNet.Helpers;
+using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +17,12 @@ namespace RequireJsNet.EntryPointResolver
             var rootUrl = string.Empty;
             var withBaseUrl = true;
             var server = viewContext.HttpContext.Server;
+
+            if (String.IsNullOrWhiteSpace(entryPointRoot))
+            {
+                entryPointRoot = baseUrl;            
+            }
+
             var resolvedEntryPointRoot = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
 
             if (resolvedEntryPointRoot != baseUrl)
