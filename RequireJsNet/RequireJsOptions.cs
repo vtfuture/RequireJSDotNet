@@ -65,7 +65,7 @@ namespace RequireJsNet
         }
        
 
-        public static void Add(string key, object value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page)
+        public static void Add(string key, object value, RequireJsOptionsScope scope)
         {
             switch (scope)
             {

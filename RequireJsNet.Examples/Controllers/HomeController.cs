@@ -26,7 +26,7 @@ namespace RequireJsNet.Examples.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
+			System.Threading.Thread.Sleep(1000000);
             return View();
         }
 
