@@ -23,6 +23,8 @@ namespace RequireJsNet
     {
         private const string GlobalOptionsKey = "globalOptions";
 
+	    private static Dictionary<string, object> websiteOptions; 
+
         private const string PageOptionsKey = "pageOptions";
 
         public static readonly RequireEntryPointResolverCollection ResolverCollection = new RequireEntryPointResolverCollection();
@@ -32,23 +34,17 @@ namespace RequireJsNet
             ResolverCollection.Add(new DefaultEntryPointResolver());
         }
 
-        public static Dictionary<string, object> GetGlobalOptions(HttpContextBase context)
-        {
-            var page = context.Items[GlobalOptionsKey] as Dictionary<string, object>;
-            if (page == null)
-            {
-                context.Items[GlobalOptionsKey] = new Dictionary<string, object>();
-            }
-
-            return (Dictionary<string, object>)context.Items[GlobalOptionsKey];
-        }
-
         public static Dictionary<string, object> GetGlobalOptions()
         {
-            return GetGlobalOptions(new HttpContextWrapper(GetCurrentContext()));
+			if (websiteOptions == null)
+            {
+				websiteOptions = new Dictionary<string, object>();
+            }
+
+			return websiteOptions;
         }
 
-        public static Dictionary<string, object> GetPageOptions(HttpContextBase context)
+		public static Dictionary<string, object> GetPageOptions(HttpContextBase context)
         {
             var page = context.Items[PageOptionsKey] as Dictionary<string, object>;
             if (page == null)

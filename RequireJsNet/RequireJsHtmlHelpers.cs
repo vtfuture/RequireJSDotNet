@@ -96,7 +96,7 @@ namespace RequireJsNet
 			{
 				Locale = locale,
 				PageOptions = RequireJsOptions.GetPageOptions(html.ViewContext.HttpContext),
-				WebsiteOptions = RequireJsOptions.GetGlobalOptions(html.ViewContext.HttpContext)
+				WebsiteOptions = RequireJsOptions.GetGlobalOptions()
 			};
 
 			config.ProcessOptions(options);

@@ -10,7 +10,6 @@ namespace RequireJsNet.Examples.Controllers
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            RequireJsOptions.Add("globalUrlViaInheritance", Url.Action("Index", "Home"), RequireJsOptionsScope.Global);
         }
     }
 }

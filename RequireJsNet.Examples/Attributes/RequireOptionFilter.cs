@@ -10,8 +10,6 @@ namespace RequireJsNet.Examples.Attributes
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var url = new UrlHelper(filterContext.RequestContext);
-            RequireJsOptions.Add("globalUrlViaFilter", url.Action("Index", "Home"), RequireJsOptionsScope.Global);
         }
     }
 }
