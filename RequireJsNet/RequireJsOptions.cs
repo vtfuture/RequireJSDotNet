@@ -23,7 +23,9 @@ namespace RequireJsNet
     {
         private const string GlobalOptionsKey = "globalOptions";
 
-	    private static Dictionary<string, object> websiteOptions; 
+	    private static Dictionary<string, object> websiteOptions;
+
+	    private static bool websiteOptionsLocked = false;
 
         private const string PageOptionsKey = "pageOptions";
 
@@ -33,6 +35,11 @@ namespace RequireJsNet
         {
             ResolverCollection.Add(new DefaultEntryPointResolver());
         }
+
+	    public static void LockGlobalOptions()
+	    {
+		    websiteOptionsLocked = true;
+	    }
 
         public static Dictionary<string, object> GetGlobalOptions()
         {
@@ -61,7 +68,7 @@ namespace RequireJsNet
         }
        
 
-        public static void Add(string key, object value, RequireJsOptionsScope scope)
+        public static void Add(string key, object value, RequireJsOptionsScope scope = RequireJsOptionsScope.Page)
         {
             switch (scope)
             {
@@ -75,6 +82,11 @@ namespace RequireJsNet
                     pageOptions.Add(key, value);
                     break;
                 case RequireJsOptionsScope.Global:
+		            if (websiteOptionsLocked)
+		            {
+			            throw new InvalidOperationException("Global Options are locked and can not be modified");
+		            }
+
                     var globalOptions = GetGlobalOptions();
                     if (globalOptions.Keys.Contains(key))
                     {
@@ -100,6 +112,10 @@ namespace RequireJsNet
                     dictToModify = GetPageOptions();
                     break;
                 case RequireJsOptionsScope.Global:
+					if (websiteOptionsLocked)
+					{
+						throw new InvalidOperationException("Global Options are locked and can not be modified");
+					}
                     dictToModify = GetGlobalOptions();
                     break;
             }
