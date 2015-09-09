@@ -99,7 +99,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
                     processor.Process();
                     var result = processor.ProcessedString;
-                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r)).Where(r => r != null).Distinct().ToList();
+                    var fileDirectory = new FileInfo(file).DirectoryName;
+                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r, fileDirectory)).Where(r => r != null).Distinct().ToList();
                     tempFileList.Add(new RequireFile
                                          {
                                              Name = file,

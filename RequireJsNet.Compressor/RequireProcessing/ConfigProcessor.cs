@@ -34,7 +34,7 @@ namespace RequireJsNet.Compressor
 
         public abstract List<Bundle> ParseConfigs();
 
-        protected string ResolvePhysicalPath(string relativePath)
+        protected string ResolvePhysicalPath(string relativePath, string directory = "")
         {
             string entry = this.EntryPoint;
             if (!string.IsNullOrEmpty(EntryOverride))
@@ -50,6 +50,11 @@ namespace RequireJsNet.Compressor
             if (relativePath.StartsWith("\\"))
             {
                 relativePath = relativePath.Substring(1);
+            }
+
+            if (relativePath.StartsWith("./") && !string.IsNullOrEmpty(directory))
+            {
+                relativePath = directory + "/" + relativePath.Substring(2);
             }
 
             string filePath;
