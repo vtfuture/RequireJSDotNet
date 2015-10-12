@@ -23,6 +23,11 @@ namespace RequireJsNet.Examples.Controllers
             return View();
         }
 
+        public ActionResult FooBar()
+        {
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

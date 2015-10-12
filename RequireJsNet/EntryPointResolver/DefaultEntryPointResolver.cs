@@ -1,4 +1,5 @@
 ﻿using RequireJsNet.Helpers;
+using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -17,7 +18,14 @@ namespace RequireJsNet.EntryPointResolver
             var withBaseUrl = true;
             var server = viewContext.HttpContext.Server;
 
-            if (entryPointRoot != DefaultEntryPointRoot)
+            if (String.IsNullOrWhiteSpace(entryPointRoot))
+            {
+                entryPointRoot = baseUrl;            
+            }
+
+            var resolvedEntryPointRoot = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
+
+            if (resolvedEntryPointRoot != baseUrl)
             {
                 // entryPointRoot is different from default.
                 if ((entryPointRoot.StartsWith("~") || entryPointRoot.StartsWith("/")))
