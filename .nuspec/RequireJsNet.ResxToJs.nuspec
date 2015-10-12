@@ -15,7 +15,7 @@
     <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
     <iconUrl>http://requirejsnet.veritech.io/img/require-32x32.png</iconUrl>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.0" />
+      <dependency id="Newtonsoft.Json" version="7.0.0" />
     </dependencies>
   </metadata>
   <files>
