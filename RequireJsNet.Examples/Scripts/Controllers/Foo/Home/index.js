@@ -1,3 +1,3 @@
 ﻿require(['jquery', 'domReady'], function() {
-    alert("home/index");
+    alert("foo/home/index");
 });
