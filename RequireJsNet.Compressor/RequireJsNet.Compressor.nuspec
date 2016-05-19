@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>$id$</id>
+    <id>RequireJsNet.Compressor</id>
     <version>$version$</version>
     <authors>Cezar Cretu</authors>
     <owners>VeriTech</owners>
