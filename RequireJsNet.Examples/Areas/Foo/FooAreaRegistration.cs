@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace RequireJsNet.Examples.Areas.FooBar
+namespace RequireJsNet.Examples.Areas.Foo
 {
     public class FooAreaRegistration : AreaRegistration 
     {
