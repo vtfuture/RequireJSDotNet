@@ -14,7 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{42DBB5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{C5F4AF3C-C654-4210-9A23-F74693A574EC}"
 	ProjectSection(SolutionItems) = preProject
-		.nuspec\RequireJsNet.Compressor.nuspec = .nuspec\RequireJsNet.Compressor.nuspec
 		.nuspec\RequireJsNet.nuspec = .nuspec\RequireJsNet.nuspec
 		.nuspec\RequireJsNet.ResxToJs.nuspec = .nuspec\RequireJsNet.ResxToJs.nuspec
 		.nuspec\RequireJsNet.Scripts.nuspec = .nuspec\RequireJsNet.Scripts.nuspec

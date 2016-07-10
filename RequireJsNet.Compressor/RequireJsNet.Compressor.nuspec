@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>2.0.0</version>
+    <id>RequireJsNet.Compressor</id>
+    <version>$version$</version>
     <authors>Cezar Cretu</authors>
     <owners>VeriTech</owners>
-    <id>RequireJsNet.Compressor</id>
     <title>RequireJS.NET Compressor</title>
     <copyright>VeriTech Solutions SRL 2014</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -14,20 +14,15 @@
     <projectUrl>https://github.com/vtfuture/RequireJSDotNet</projectUrl>
     <licenseUrl>https://github.com/vtfuture/RequireJSDotNet/blob/master/MIT-LICENSE.txt</licenseUrl>
     <iconUrl>http://requirejsnet.veritech.io/img/require-32x32-comp.png</iconUrl>
+    <developmentDependency>true</developmentDependency>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="7.0.0" />
-      <dependency id="YUICompressor.NET" version="2.7.0.0" />
-      <dependency id="Jint" version="2.5.0" />
-      <dependency id="RequireJsNet" />
-    </dependencies>
   </metadata>
   <files>
-    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.dll" target="lib\net40\" />
-    <file src="..\RequireJsNet.Compressor\bin\Debug\RequireJsNet.Compressor.pdb" target="lib\net40\" />
-    <file src="..\RequireJsNet.Compressor\bin\Debug\YuiCompressor.NET.license.txt" target="lib\net40\" />
-    <file src="..\**\*.cs" target="src" />
+    <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="bin\$configuration$\*.pdb" target="tools" />
+    <file src="YuiCompressor.NET.license.txt" target="tools" />
+    <file src="RequireJsNet.Compressor.targets" target="build" />
   </files>
 </package>

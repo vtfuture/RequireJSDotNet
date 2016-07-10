@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <BuildTool>true</BuildTool>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -85,14 +86,16 @@
     <Compile Include="AutoDependency\Transformations\TransformationCollection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="YuiCompressor.NET.license.txt">
+    <None Include="YuiCompressor.NET.license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="json1.json" />
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include="RequireJsNet.Compressor.nuspec" />
+    <None Include="RequireJsNet.Compressor.targets" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RequireJsNet\RequireJsNet.csproj">

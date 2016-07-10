@@ -1,0 +1,47 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AvailableItemName Include="RequireJsNetConfig">
+      <Visible>false</Visible>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- User can define this properties in the proj file if necessary -->
+    <RequireJsNetLoggingType Condition="$(RequireJsNetLoggingType) == ''">Info</RequireJsNetLoggingType>
+    <RequireJsNetAutoCompressor Condition="$(RequireJsNetAutoCompressor) == ''">true</RequireJsNetAutoCompressor>
+    <RequireJsNetEncodingType Condition="$(RequireJsNetEncodingType) == ''">UTF8</RequireJsNetEncodingType>
+    <RequireJsNetProjectPath Condition="$(RequireJsNetProjectPath) == ''">$(MSBuildProjectDirectory)</RequireJsNetProjectPath>
+    <RequireJsNetEntryPointOverride Condition="$(RequireJsNetEntryPointOverride) == ''">$(MSBuildProjectDirectory)\Scripts\</RequireJsNetEntryPointOverride>
+    <!--<BuildDependsOn>
+      RequireJsNetMinify;
+      RequireJsNetMinifyForDeploy;
+      $(BuildDependsOn);
+    </BuildDependsOn>-->
+  </PropertyGroup>
+
+  <UsingTask TaskName="RequireCompressorTask" AssemblyFile="$(MSBuildThisFileDirectory)\..\tools\RequireJsNet.Compressor.dll" />
+
+  <ItemGroup>
+    <RequireJsNetConfig Include="$(MSBuildProjectDirectory)\RequireJS.json" />
+  </ItemGroup>
+
+  <Target Name="RequireJsNetMinify" AfterTargets="AfterBuild">
+    <RequireCompressorTask
+      LoggingType="$(RequireJsNetLoggingType)"
+      RequireConfigs="@(RequireJsNetConfig)"
+      AutoCompressor="$(RequireJsNetAutoCompressor)"
+      EncodingType="$(RequireJsNetEncodingType)"
+      ProjectPath="$(RequireJsNetProjectPath)"
+      EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
+  </Target>
+
+  <Target Name="RequireJsNetMinifyForDeploy" AfterTargets="CopyAllFilesToSingleFolderForMsdeploy">
+    <RequireCompressorTask
+      LoggingType="$(RequireJsNetLoggingType)"
+      RequireConfigs="@(RequireJsNetConfig)"
+      AutoCompressor="$(RequireJsNetAutoCompressor)"
+      EncodingType="$(RequireJsNetEncodingType)"
+      ProjectPath="$(RequireJsNetProjectPath)"
+      EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
+  </Target>
+</Project>
