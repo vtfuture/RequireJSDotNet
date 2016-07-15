@@ -23,7 +23,7 @@ namespace RequireJsNet.Examples.Controllers
             return View();
         }
 
-        public ActionResult FooBar()
+        public ActionResult EntryPoint()
         {
             return View();
         }
