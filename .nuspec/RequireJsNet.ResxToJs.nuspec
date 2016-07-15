@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <authors>Cezar Cretu</authors>
     <owners>VeriTech</owners>
     <id>RequireJsNet.ResxToJs</id>
     <title>RequireJS.NET ResxToJs</title>
-    <copyright>VeriTech Solutions SRL 2014</copyright>
+    <copyright>VeriTech Solutions SRL 2016</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>MSBuild task that outputs specified keys from a resx file in RequireJS i18n format</description>
     <tags>RequireJS.NET, MsBuild</tags>
