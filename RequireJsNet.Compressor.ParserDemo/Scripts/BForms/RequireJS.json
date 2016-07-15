@@ -1,0 +1,286 @@
+{
+  "paths": {
+    "jquery": {
+      "path": "bforms/components/jquery/jquery",
+      "defaultBundle": "components"
+    },
+    "jquery-migrate": {
+      "path": "bforms/components/jquery/jquery-migrate",
+      "defaultBundle": "components"
+    },
+    "bootstrap": {
+      "path": "bforms/components/bootstrap/js/bootstrap",
+      "defaultBundle": "components"
+    },
+    "jquery-ui-core": {
+      "path": "bforms/components/jquery-ui/jquery-ui.core",
+      "defaultBundle": "components"
+    },
+    "amplify": {
+      "path": "bforms/components/amplify/amplify",
+      "defaultBundle": "components"
+    },
+    "icanhaz": {
+      "path": "bforms/components/icanhaz/icanhaz",
+      "defaultBundle": "components"
+    },
+    "singleton-ich": {
+      "path": "bforms/components/icanhaz/singleton-ich",
+      "defaultBundle": "components"
+    },
+    "history-js": {
+      "path": "bforms/components/historyjs/jquery.history",
+      "defaultBundle": "components"
+    },
+    "selector-set": {
+      "path": "bforms/components/selectorset/selector-set",
+      "defaultBundle": "components"
+    },
+    "jquery.selector-set": {
+      "path": "bforms/components/selectorset/jquery.selector-set",
+      "defaultBundle": "components"
+    },
+    "gremlins": "bforms/components/gremlins/gremlins.min",
+    "placeholder-shim": {
+      "path": "bforms/components/placeholdershim/jquery.html5-placeholder-shim",
+      "defaultBundle": "components"
+    },
+    "bforms-validate": {
+      "path": "bforms/plugins/validation/bforms.validate",
+      "defaultBundle": "plugins"
+    },
+    "bforms-validate-unobtrusive": {
+      "path": "bforms/plugins/validation/bforms.validate.unobtrusive",
+      "defaultBundle": "plugins"
+    },
+    "bforms-datepicker": {
+      "path": "bforms/plugins/datepicker/js/bforms.datepicker",
+      "defaultBundle": "plugins"
+    },
+    "bforms-datepicker-tmpl": {
+      "path": "bforms/plugins/datepicker/js/bforms.datepicker.tmpl",
+      "defaultBundle": "plugins"
+    },
+    "bforms-datepicker-range": {
+      "path": "bforms/plugins/datepicker/js/bforms.datepicker.range",
+      "defaultBundle": "plugins"
+    },
+    "bforms-datepicker-i18n": {
+      "path": "bforms/plugins/datepicker/js/i18n/lang.bundle",
+      "defaultBundle": "plugins"
+    },
+    "moment": {
+      "path": "bforms/plugins/datepicker/js/lib/moment",
+      "defaultBundle": "plugins"
+    },
+    "moment-calendar": {
+      "path": "bforms/plugins/datepicker/js/lib/moment.isocalendar",
+      "defaultBundle": "plugins"
+    },
+    "bforms-fileupload": {
+      "path": "bforms/widgets/fileupload/bforms.fileUpload",
+      "defaultBundle": "widgets"
+    },
+    "jquery-fileupload": {
+      "path": "bforms/components/FileUpload/jquery.fileupload",
+      "defaultBundle": "components"
+    },
+    "jquery-iframe-transport": {
+      "path": "bforms/components/FileUpload/jquery.iframe-transport",
+      "defaultBundle": "components"
+    },
+    "jquery.fileupload-validate": {
+      "path": "bforms/components/FileUpload/jquery.fileupload-validate",
+      "defaultBundle": "components"
+    },
+    "jquery.fileupload-process": {
+      "path": "bforms/components/FileUpload/jquery.fileupload-process",
+      "defaultBundle": "components"
+    },
+    "load-image": {
+      "path": "bforms/components/load-image/load-image",
+      "defaultBundle": "components"
+    },
+    "load-image-meta": {
+      "path": "bforms/components/load-image/load-image-meta",
+      "defaultBundle": "components"
+    },
+    "nestedsortable": {
+      "path": "bforms/components/NestedSortable/jquery.mjs.nestedSortable",
+      "defaultBundle": "plugins"
+    },
+    "bforms-rangepicker": {
+      "path": "bforms/plugins/rangepicker/js/bforms.rangepicker",
+      "defaultBundle": "plugins"
+    },
+    "bforms-radiolist": {
+      "path": "bforms/plugins/radioButtonList/bforms.radiolist",
+      "defaultBundle": "plugins"
+    },
+    "bforms-checklist": {
+      "path": "bforms/plugins/checkBoxList/bforms.checklist",
+      "defaultBundle": "plugins"
+    },
+    "bforms-buttonGroupDropdown": {
+      "path": "bforms/plugins/buttonGroupDropdown/bforms.buttonGroupDropdown",
+      "defaultBundle": "plugins"
+    },
+    "bforms-mixedButtonGroup": {
+      "path": "bforms/plugins/mixedButtonGroup/bforms.mixedButtonGroup",
+      "defaultBundle": "plugins"
+    },
+    "bforms-upload": {
+      "path": "bforms/plugins/bsupload/bforms.upload",
+      "defaultBundle": "plugins"
+    },
+    "bforms-navscroll": {
+      "path": "bforms/plugins/navscroll/bforms.navscroll",
+      "defaultBundle": "plugins"
+    },
+    "select2": {
+      "path": "bforms/plugins/select2/js/select2",
+      "defaultBundle": "plugins"
+    },
+    "bforms-select2": {
+      "path": "bforms/plugins/select2/js/bforms.select2",
+      "defaultBundle": "plugins"
+    },
+    "typeahead": {
+      "path": "bforms/plugins/typeahead/typeahead",
+      "defaultBundle": "plugins"
+    },
+    "bforms-typeahead": {
+      "path": "bforms/plugins/typeahead/bforms.typeahead",
+      "defaultBundle": "plugins"
+    },
+    "bforms-alert": {
+      "path": "bforms/plugins/alerts/bforms.alert",
+      "defaultBundle": "plugins"
+    },
+    "bforms-initUI": {
+      "path": "bforms/plugins/UI/bforms.initui",
+      "defaultBundle": "plugins"
+    },
+    "bforms-resetInput": {
+      "path": "bforms/plugins/UI/bforms.resetInput",
+      "defaultBundle": "plugins"
+    },
+    "bforms-extensions": {
+      "path": "bforms/plugins/UI/bforms.extensions",
+      "defaultBundle": "plugins"
+    },
+    "bforms-inlineQuestion": {
+      "path": "bforms/widgets/inlinequestion/bforms.inlinequestion",
+      "defaultBundle": "widgets"
+    },
+    "bforms-sortable": {
+      "path": "bforms/widgets/sortable/bforms.sortable",
+      "defaultBundle": "widgets"
+    },
+    "bforms-formBuilder": {
+      "path": "bforms/widgets/formbuilder/bforms.formbuilder",
+      "defaultBundle": "widgets"
+    },
+    "bforms-formBuilder-templates": {
+      "path": "bforms/widgets/formbuilder/bforms.formbuilder.templates",
+      "defaultBundle": "widgets"
+    },
+    "bforms-formBuilder-formRenderer": {
+      "path": "bforms/widgets/formbuilder/bforms.formbuilder.formRenderer",
+      "defaultBundle": "widgets"
+    },
+    "bforms-formBuilder-models": {
+      "path": "bforms/widgets/formbuilder/bforms.formbuilder.models",
+      "defaultBundle": "widgets"
+    },
+    "bforms-controlPanel": {
+      "path": "bforms/widgets/ControlPanel/bforms.controlPanel",
+      "defaultBundle": "widgets"
+    },
+    "bforms-taglist": {
+      "path": "bforms/widgets/taglist/bforms.taglist",
+      "defaultBundle": "widgets"
+    },
+    "bforms-grid": {
+      "path": "bforms/widgets/grid/js/bforms.grid",
+      "defaultBundle": "widgets"
+    },
+    "bforms-toolbar": {
+      "path": "bforms/widgets/grid/js/bforms.toolbar",
+      "defaultBundle": "widgets"
+    },
+    "bforms-pager": {
+      "path": "bforms/widgets/grid/js/bforms.pager",
+      "defaultBundle": "widgets"
+    },
+    "bforms-editable": {
+      "path": "bforms/widgets/grid/js/bforms.editable",
+      "defaultBundle": "widgets"
+    },
+    "bforms-form": {
+      "path": "bforms/widgets/grid/js/bforms.form",
+      "defaultBundle": "widgets"
+    },
+    "bforms-toolbar-advancedSearch": {
+      "path": "bforms/widgets/grid/js/bforms.toolbar.advancedSearch",
+      "defaultBundle": "widgets"
+    },
+    "bforms-toolbar-add": {
+      "path": "bforms/widgets/grid/js/bforms.toolbar.add",
+      "defaultBundle": "widgets"
+    },
+    "bforms-toolbar-quickSearch": {
+      "path": "bforms/widgets/grid/js/bforms.toolbar.quickSearch",
+      "defaultBundle": "widgets"
+    },
+    "bforms-toolbar-order": {
+      "path": "bforms/widgets/grid/js/bforms.toolbar.order",
+      "defaultBundle": "widgets"
+    },
+    "bforms-groupEditor": {
+      "path": "bforms/widgets/groupeditor/bforms.groupEditor",
+      "defaultBundle": "widgets"
+    },
+    "bforms-themeSelect": {
+      "path": "bforms/widgets/utils/bforms.themeSelect",
+      "defaultBundle": "widgets"
+    },
+    "bforms-panel": {
+      "path": "bforms/widgets/Panel/bforms.panel",
+      "defaultBundle": "widgets"
+    },
+    "bforms-ajax": {
+      "path": "bforms/widgets/utils/bforms.ajax",
+      "defaultBundle": "widgets"
+    },
+    "bforms-namespace": {
+      "path": "bforms/widgets/utils/bforms.namespace",
+      "defaultBundle": "widgets"
+    },
+    "validate-ro": "bforms/plugins/validation/i18n/bforms.validate-ro",
+    "select2-ro": "bforms/plugins/select2/js/i18n/select2-ro",
+    "depend": "bforms/components/requirejs/depend",
+    "i18n": "bforms/components/requirejs/i18n",
+    "text": "bforms/components/requirejs/text"
+  },
+  "bundles": {
+    "componentsPack": {
+      "outputPath": "js\\components.js",
+      "includes": [
+        "components"
+      ]
+    },
+    "widgetsPack": {
+      "outputPath": "js\\widgets.js",
+      "includes": [
+        "widgets"
+      ]
+    },
+    "pluginsPack": {
+      "outputPath": "js\\plugins.js",
+      "includes": [
+        "plugins"
+      ]
+    }
+  }
+}

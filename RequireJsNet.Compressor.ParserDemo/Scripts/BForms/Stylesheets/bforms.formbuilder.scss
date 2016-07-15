@@ -1,0 +1,153 @@
+﻿$grey: #dddddd;
+
+.border {
+	border: 1px solid #cccccc !important;
+}
+
+.form-group.selected {
+	.input-group {
+		border: 1px solid wheat;
+	}
+}
+
+.form-title {
+	border-bottom: 1px solid #858585 !important;
+}
+
+.form_builder {
+
+	@extend .border;
+
+	.form_builder-tab {
+		border-left: 1px solid #cccccc;
+		border-right: 1px solid #cccccc;
+	}
+
+	.form_builder-tabControl {
+
+		margin-top: 10px;
+		//width: 230px;
+
+		.btn {
+			background-color: #eeeeee !important;
+			color: black !important;
+			border: solid 1px #cccccc;
+		    overflow: hidden !important;
+			text-overflow: ellipsis;
+			word-break: break-all;
+			&:hover {
+				background-color: white !important;
+			}
+			&.over {
+				background-color: wheat !important;
+			}
+			&.tabs-sortable-placeholder {
+				width: 10px;
+				height: 0px;
+			}
+		}
+
+		.btn.selected {
+
+			@extend .btn;
+
+			border-bottom: none;
+
+			&:not(.over){
+				background-color: white !important;
+			}
+			
+			&:hover {
+				cursor: default;
+				background-color: white !important;
+			}
+		}
+	}
+
+	.form_builder-controlsList {	
+		list-style-type: none;
+        margin-top: 10px;
+
+		.form_builder-controlItem {
+			margin-top: 10px;
+			cursor: move;
+			border: 1px solid #cccccc;
+			.badge{
+
+				@extend .border;
+
+				color: black;
+				background-color: white;
+				
+				&:hover{
+					background-color: #999999;
+				}
+			}
+		}
+	}
+
+	li {	
+		a {		
+			h1 {
+                border-bottom: none !important;
+                display: inline;			
+			}
+		}
+	}
+
+	.form_builder-formContainer {
+
+		.form_container{
+			margin-top: 8px;
+		}
+	}
+
+	.form_builder-settingsContainer {
+
+		h3 {
+			margin-bottom: 10px;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			font-weight: normal;
+			font-size: 14px;
+			padding: 5px 0;
+		}
+
+		overflow-y: scroll;
+	}
+
+	[data-addon-toggle]:not([data-addon-toggle="grab"]){
+		cursor: pointer;
+		&:hover{
+			background-color: wheat;
+		}
+	}
+
+	[data-addon-toggle] {
+		&.selected {
+			background-color: wheat;
+			cursor: default;
+		}
+	}
+
+	[data-addon-toggle="grab"] {
+		cursor: move;
+	}
+
+	.form_builder-properties {
+		h3 {
+			font-size: 17px;
+			&:hover {
+				border-bottom: 1px solid black;
+				cursor: pointer;
+			}
+		}
+
+		a {
+			margin-left: 4px;
+			&:hover{
+				color: black;
+			}
+		}
+	}
+}

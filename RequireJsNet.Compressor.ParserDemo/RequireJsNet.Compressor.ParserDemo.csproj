@@ -34,26 +34,55 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BForms">
-      <HintPath>..\packages\BForms.MVC.1.0.0.34\lib\net45\BForms.dll</HintPath>
+    <Reference Include="BForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BForms.MVC.1.0.1.14\lib\net45\BForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="Jint">
-      <HintPath>..\packages\Jint.2.5.0\lib\portable-net40+sl50+win+wpa81+wp80\Jint.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Jint, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jint.2.8\lib\portable-net40+sl50+win+WindowsPhoneApp81+wp80\Jint.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RequireJsNet">
-      <HintPath>..\packages\RequireJsNet.1.0.7.0\lib\net45\RequireJsNet.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RequireJsNet, Version=2.1.57.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RequireJsNet.2.1.57\lib\net40\RequireJsNet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,14 +99,17 @@
     <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.ttf" />
     <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\BForms\Plugins\Datepicker\css\bforms.datepicker.scss" />
     <None Include="Scripts\BForms\Plugins\Rangepicker\css\bforms.rangepicker.scss" />
-    <None Include="Scripts\BForms\RequireJS.config" />
-    <None Include="Scripts\BForms\RequireJS.Release.config" />
+    <None Include="Scripts\BForms\RequireJS.json" />
+    <None Include="Scripts\BForms\RequireJS.Release.json" />
     <None Include="Scripts\BForms\Stylesheets\bforms.core.scss" />
+    <None Include="Scripts\BForms\Stylesheets\bforms.formbuilder.scss" />
     <None Include="Scripts\BForms\Stylesheets\bforms.grid.scss" />
     <None Include="Scripts\BForms\Stylesheets\bforms.groupeditor.scss" />
     <None Include="Scripts\BForms\Stylesheets\bforms.pager.scss" />
@@ -86,6 +118,7 @@
     <Content Include="Scripts\BForms\Bundles\css\stylesheets.css" />
     <Content Include="Scripts\BForms\Bundles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\BForms\Bundles\images\bg-user.png" />
+    <Content Include="Scripts\BForms\Bundles\images\chosen-sprite.png" />
     <Content Include="Scripts\BForms\Bundles\images\edit-pencil.gif" />
     <Content Include="Scripts\BForms\Bundles\images\grippy.png" />
     <Content Include="Scripts\BForms\Bundles\images\icn-arr-down.png" />
@@ -114,6 +147,7 @@
     <Content Include="Scripts\BForms\Components\Bootstrap\css\bootstrap.css" />
     <Content Include="Scripts\BForms\Components\Bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\BForms\Components\Bootstrap\js\bootstrap.js" />
+    <Content Include="Scripts\BForms\Components\ErrorTell\errorTell.js" />
     <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload-process.js" />
     <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload-validate.js" />
     <Content Include="Scripts\BForms\Components\FileUpload\jquery.fileupload.js" />
@@ -126,6 +160,9 @@
     <Content Include="Scripts\BForms\Components\jQuery-ui\jquery-ui.core.js" />
     <Content Include="Scripts\BForms\Components\jQuery\jquery-migrate.js" />
     <Content Include="Scripts\BForms\Components\jQuery\jquery.js" />
+    <Content Include="Scripts\BForms\Components\Load-Image\load-image-meta.js" />
+    <Content Include="Scripts\BForms\Components\Load-Image\load-image.js" />
+    <Content Include="Scripts\BForms\Components\LoadTell\loadTell.js" />
     <Content Include="Scripts\BForms\Components\NestedSortable\jquery.mjs.nestedSortable.js" />
     <Content Include="Scripts\BForms\Components\PlaceholderShim\jquery.html5-placeholder-shim.js" />
     <Content Include="Scripts\BForms\Components\RequireJS\depend.js" />
@@ -136,6 +173,7 @@
     <Content Include="Scripts\BForms\Components\SelectorSet\jquery.selector-set.js" />
     <Content Include="Scripts\BForms\Components\SelectorSet\selector-set.js" />
     <Content Include="Scripts\BForms\Images\bg-user.png" />
+    <Content Include="Scripts\BForms\Images\chosen-sprite.png" />
     <Content Include="Scripts\BForms\Images\icn-down_arrow-small.png" />
     <Content Include="Scripts\BForms\Images\icn-grippy.png" />
     <Content Include="Scripts\BForms\Images\icn-order_down.png" />
@@ -143,6 +181,9 @@
     <Content Include="Scripts\BForms\Images\icn-right_arrow-small.png" />
     <Content Include="Scripts\BForms\Images\preloader-small.gif" />
     <Content Include="Scripts\BForms\Images\preloader.gif" />
+    <Content Include="Scripts\BForms\Plugins\Alerts\bforms.alert.js" />
+    <Content Include="Scripts\BForms\Plugins\BsUpload\bforms.upload.js" />
+    <Content Include="Scripts\BForms\Plugins\ButtonGroupDropdown\bforms.buttongroupdropdown.js" />
     <Content Include="Scripts\BForms\Plugins\CheckBoxList\bforms.checklist.js" />
     <Content Include="Scripts\BForms\Plugins\Datepicker\css\bforms.datepicker.css" />
     <Content Include="Scripts\BForms\Plugins\Datepicker\images\icn-arr-down.png" />
@@ -158,6 +199,7 @@
     <Content Include="Scripts\BForms\Plugins\Datepicker\js\i18n\lang.bundle.js" />
     <Content Include="Scripts\BForms\Plugins\Datepicker\js\lib\moment.isocalendar.js" />
     <Content Include="Scripts\BForms\Plugins\Datepicker\js\lib\moment.js" />
+    <Content Include="Scripts\BForms\Plugins\MixedButtonGroup\bforms.mixedButtonGroup.js" />
     <Content Include="Scripts\BForms\Plugins\NavScroll\bforms.navScroll.js" />
     <Content Include="Scripts\BForms\Plugins\RadioButtonList\bforms.radiolist.js" />
     <Content Include="Scripts\BForms\Plugins\Rangepicker\css\bforms.rangepicker.css" />
@@ -184,11 +226,16 @@
     <Content Include="Scripts\BForms\Plugins\Validation\bforms.validate.unobtrusive.js" />
     <Content Include="Scripts\BForms\Plugins\Validation\i18n\bforms.validate-ro.js" />
     <Content Include="Scripts\BForms\Stylesheets\bforms.core.css" />
+    <Content Include="Scripts\BForms\Stylesheets\bforms.formbuilder.css" />
     <Content Include="Scripts\BForms\Stylesheets\bforms.grid.css" />
     <Content Include="Scripts\BForms\Stylesheets\bforms.groupeditor.css" />
-    <Content Include="Scripts\BForms\Stylesheets\bforms.groupeditor.min.css" />
     <Content Include="Scripts\BForms\Stylesheets\bforms.pager.css" />
+    <Content Include="Scripts\BForms\Widgets\ControlPanel\bforms.controlPanel.js" />
     <Content Include="Scripts\BForms\Widgets\FileUpload\bforms.fileUpload.js" />
+    <Content Include="Scripts\BForms\Widgets\FormBuilder\bforms.formBuilder.formRenderer.js" />
+    <Content Include="Scripts\BForms\Widgets\FormBuilder\bforms.formBuilder.js" />
+    <Content Include="Scripts\BForms\Widgets\FormBuilder\bforms.formBuilder.models.js" />
+    <Content Include="Scripts\BForms\Widgets\FormBuilder\bforms.formBuilder.templates.js" />
     <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.editable.js" />
     <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.form.js" />
     <Content Include="Scripts\BForms\Widgets\Grid\js\bforms.grid.js" />

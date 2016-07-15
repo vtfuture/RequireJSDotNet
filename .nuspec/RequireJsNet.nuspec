@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>2.0.0</version>
+    <version>2.2.0</version>
     <authors>Stefan Prodan</authors>
     <owners>VeriTech</owners>
     <id>RequireJsNet</id>
     <title>RequireJS.NET</title>
-    <copyright>VeriTech Solutions SRL 2014</copyright>
+    <copyright>VeriTech Solutions SRL 2016</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>RequireJS.NET integrates RequireJS script loader with ASP.NET MVC</description>
     <tags>JavaScript, AMD, RequireJS, ASP.NET MVC</tags>
@@ -18,13 +18,13 @@
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="7.0.0" />
-      <dependency id="Microsoft.AspNet.Mvc" version="4.0.30506.0" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net40\" />
-    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net40\" />
+    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.dll" target="lib\net45\" />
+    <file src="..\RequireJsNet\bin\Debug\RequireJsNet.pdb" target="lib\net45\" />
     <file src="..\**\*.cs" target="src" />
   </files>
 </package>

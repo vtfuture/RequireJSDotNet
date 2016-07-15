@@ -1,0 +1,79 @@
+.border, .form_builder, .form_builder .form_builder-controlsList .form_builder-controlItem .badge {
+  border: 1px solid #cccccc !important; }
+
+.form-group.selected .input-group {
+  border: 1px solid wheat; }
+
+.form-title {
+  border-bottom: 1px solid #858585 !important; }
+
+.form_builder .form_builder-tab {
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc; }
+.form_builder .form_builder-tabControl {
+  margin-top: 10px; }
+  .form_builder .form_builder-tabControl .btn, .form_builder .form_builder-tabControl .btn.selected {
+    background-color: #eeeeee !important;
+    color: black !important;
+    border: solid 1px #cccccc;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    word-break: break-all; }
+    .form_builder .form_builder-tabControl .btn:hover {
+      background-color: white !important; }
+    .form_builder .form_builder-tabControl .btn.over {
+      background-color: wheat !important; }
+    .form_builder .form_builder-tabControl .btn.tabs-sortable-placeholder {
+      width: 10px;
+      height: 0px; }
+  .form_builder .form_builder-tabControl .selected.btn {
+    border-bottom: none; }
+    .form_builder .form_builder-tabControl .selected.btn:not(.over) {
+      background-color: white !important; }
+    .form_builder .form_builder-tabControl .selected.btn:hover {
+      cursor: default;
+      background-color: white !important; }
+.form_builder .form_builder-controlsList {
+  list-style-type: none;
+  margin-top: 10px; }
+  .form_builder .form_builder-controlsList .form_builder-controlItem {
+    margin-top: 10px;
+    cursor: move;
+    border: 1px solid #cccccc; }
+    .form_builder .form_builder-controlsList .form_builder-controlItem .badge {
+      color: black;
+      background-color: white; }
+      .form_builder .form_builder-controlsList .form_builder-controlItem .badge:hover {
+        background-color: #999999; }
+.form_builder li a h1 {
+  border-bottom: none !important;
+  display: inline; }
+.form_builder .form_builder-formContainer .form_container {
+  margin-top: 8px; }
+.form_builder .form_builder-settingsContainer {
+  overflow-y: scroll; }
+  .form_builder .form_builder-settingsContainer h3 {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    font-weight: normal;
+    font-size: 14px;
+    padding: 5px 0; }
+.form_builder [data-addon-toggle]:not([data-addon-toggle="grab"]) {
+  cursor: pointer; }
+  .form_builder [data-addon-toggle]:not([data-addon-toggle="grab"]):hover {
+    background-color: wheat; }
+.form_builder [data-addon-toggle].selected {
+  background-color: wheat;
+  cursor: default; }
+.form_builder [data-addon-toggle="grab"] {
+  cursor: move; }
+.form_builder .form_builder-properties h3 {
+  font-size: 17px; }
+  .form_builder .form_builder-properties h3:hover {
+    border-bottom: 1px solid black;
+    cursor: pointer; }
+.form_builder .form_builder-properties a {
+  margin-left: 4px; }
+  .form_builder .form_builder-properties a:hover {
+    color: black; }
