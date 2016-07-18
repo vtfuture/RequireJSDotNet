@@ -20,56 +20,68 @@ namespace RequireJsNet.EntryPointResolver
 
             if (String.IsNullOrWhiteSpace(entryPointRoot))
             {
-                entryPointRoot = baseUrl;            
+                entryPointRoot = baseUrl;
             }
 
-			var resolvedBaseUrl = UrlHelper.GenerateContentUrl(baseUrl, viewContext.HttpContext);
             var resolvedEntryPointRoot = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
 
-
-            if (resolvedEntryPointRoot != resolvedBaseUrl)
+            if (resolvedEntryPointRoot != baseUrl)
             {
                 // entryPointRoot is different from default.
                 if ((entryPointRoot.StartsWith("~") || entryPointRoot.StartsWith("/")))
                 {
                     // entryPointRoot is defined as root relative, do not use with baseUrl
                     withBaseUrl = false;
-                    rootUrl = resolvedEntryPointRoot;
+                    rootUrl = UrlHelper.GenerateContentUrl(entryPointRoot, viewContext.HttpContext);
                 }
                 else
                 {
                     // entryPointRoot is defined relative to baseUrl; prepend baseUrl
-                    resolvedEntryPointRoot = resolvedBaseUrl + entryPointRoot;
-                }                
-            }
-
-            var entryPointTemplates = new[]
-            {
-                "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action,
-                "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action
-            };
-
-            var areas = new[]
-            {
-                routingInfo.Area,
-                DefaultArea
-            };
-
-            foreach (var entryPointTmpl in entryPointTemplates)
-            {
-                foreach (var area in areas)
-                {
-		            var entryPoint = string.Format(entryPointTmpl, area).ToModuleName();
-		            var filePath = server.MapPath(entryPointRoot + entryPoint + ".js");
-
-		            if (File.Exists(filePath))
-		            {
-		                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
-		                return withBaseUrl ? computedEntry : rootUrl + computedEntry;
-                    }
+                    entryPointRoot = baseUrl + entryPointRoot;
                 }
             }
 
+            // search for controller/action.js in current area
+            var entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Action;
+            var entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
+            var filePath = server.MapPath(entryPointRoot + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
+                return withBaseUrl ? computedEntry : rootUrl + computedEntry;
+            }
+
+            // search for controller/action.js in common area
+            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
+            filePath = server.MapPath(entryPointRoot + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
+                return withBaseUrl ? computedEntry : rootUrl + computedEntry;
+            }
+
+            // search for controller/controller-action.js in current area
+            entryPointTmpl = "Controllers/{0}/" + routingInfo.Controller + "/" + routingInfo.Controller + "-" + routingInfo.Action;
+            entryPoint = string.Format(entryPointTmpl, routingInfo.Area).ToModuleName();
+            filePath = server.MapPath(entryPointRoot + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
+                return withBaseUrl ? computedEntry : rootUrl + computedEntry;
+            }
+
+            // search for controller/controller-action.js in common area
+            entryPoint = string.Format(entryPointTmpl, DefaultArea).ToModuleName();
+            filePath = server.MapPath(entryPointRoot + entryPoint + ".js");
+
+            if (File.Exists(filePath))
+            {
+                var computedEntry = GetEntryPoint(server, filePath, baseUrl);
+                return withBaseUrl ? computedEntry : rootUrl + computedEntry;
+            }
 
             return null;
         }
