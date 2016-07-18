@@ -8,9 +8,11 @@
   <PropertyGroup>
     <!-- User can define this properties in the proj file if necessary -->
     <RequireJsNetLoggingType Condition="$(RequireJsNetLoggingType) == ''">Info</RequireJsNetLoggingType>
+    <RequireJsNetRunCompressor Condition="$(RequireJsNetRunCompressor) == ''">true</RequireJsNetRunCompressor>
     <RequireJsNetAutoCompressor Condition="$(RequireJsNetAutoCompressor) == ''">true</RequireJsNetAutoCompressor>
     <RequireJsNetEncodingType Condition="$(RequireJsNetEncodingType) == ''">UTF8</RequireJsNetEncodingType>
     <RequireJsNetProjectPath Condition="$(RequireJsNetProjectPath) == ''">$(MSBuildProjectDirectory)</RequireJsNetProjectPath>
+    <RequireJsNetProjectPathForDeploy Condition="$(RequireJsNetProjectPathForDeploy) == ''">$(_PackageTempDir)</RequireJsNetProjectPathForDeploy>
     <RequireJsNetEntryPointOverride Condition="$(RequireJsNetEntryPointOverride) == ''">$(MSBuildProjectDirectory)\Scripts\</RequireJsNetEntryPointOverride>
     <!--<BuildDependsOn>
       RequireJsNetMinify;
@@ -25,7 +27,7 @@
     <RequireJsNetConfig Include="$(MSBuildProjectDirectory)\RequireJS.json" />
   </ItemGroup>
 
-  <Target Name="RequireJsNetMinify" AfterTargets="AfterBuild">
+  <Target Name="RequireJsNetMinify" AfterTargets="AfterBuild"  Condition=" '$(RequireJsNetRunCompressor)' == 'true' ">
     <RequireCompressorTask
       LoggingType="$(RequireJsNetLoggingType)"
       RequireConfigs="@(RequireJsNetConfig)"
@@ -41,7 +43,8 @@
       RequireConfigs="@(RequireJsNetConfig)"
       AutoCompressor="$(RequireJsNetAutoCompressor)"
       EncodingType="$(RequireJsNetEncodingType)"
-      ProjectPath="$(RequireJsNetProjectPath)"
+      ProjectPath="$(RequireJsNetProjectPathForDeploy)"
+      PackagePath="$(RequireJsNetProjectPathForDeploy)\Scripts\"
       EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
   </Target>
 </Project>
