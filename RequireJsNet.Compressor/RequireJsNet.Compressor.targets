@@ -8,7 +8,7 @@
   <PropertyGroup>
     <!-- User can define this properties in the proj file if necessary -->
     <RequireJsNetLoggingType Condition="$(RequireJsNetLoggingType) == ''">Info</RequireJsNetLoggingType>
-    <RequireJsNetRunCompressor Condition="$(RequireJsNetRunCompressor) == ''">true</RequireJsNetRunCompressor>
+    <RequireJsNetCompressorRun Condition="$(RequireJsNetCompressorRun) == ''">true</RequireJsNetCompressorRun>
     <RequireJsNetAutoCompressor Condition="$(RequireJsNetAutoCompressor) == ''">true</RequireJsNetAutoCompressor>
     <RequireJsNetEncodingType Condition="$(RequireJsNetEncodingType) == ''">UTF8</RequireJsNetEncodingType>
     <RequireJsNetProjectPath Condition="$(RequireJsNetProjectPath) == ''">$(MSBuildProjectDirectory)</RequireJsNetProjectPath>
@@ -27,7 +27,7 @@
     <RequireJsNetConfig Include="$(MSBuildProjectDirectory)\RequireJS.json" />
   </ItemGroup>
 
-  <Target Name="RequireJsNetMinify" AfterTargets="AfterBuild"  Condition=" '$(RequireJsNetRunCompressor)' == 'true' ">
+  <Target Name="RequireJsNetMinify" AfterTargets="AfterBuild"  Condition=" '$(RequireJsNetCompressorRun)' == 'true' ">
     <RequireCompressorTask
       LoggingType="$(RequireJsNetLoggingType)"
       RequireConfigs="@(RequireJsNetConfig)"
@@ -37,7 +37,7 @@
       EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
   </Target>
 
-  <Target Name="RequireJsNetMinifyForDeploy" AfterTargets="CopyAllFilesToSingleFolderForMsdeploy">
+  <Target Name="RequireJsNetMinifyForDeploy" AfterTargets="CopyAllFilesToSingleFolderForMsdeploy" Condition=" '$(RequireJsNetCompressorRun)' == 'true' ">
     <RequireCompressorTask
       LoggingType="$(RequireJsNetLoggingType)"
       RequireConfigs="@(RequireJsNetConfig)"
