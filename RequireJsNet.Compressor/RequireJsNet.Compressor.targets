@@ -12,7 +12,9 @@
     <RequireJsNetAutoCompressor Condition="$(RequireJsNetAutoCompressor) == ''">true</RequireJsNetAutoCompressor>
     <RequireJsNetEncodingType Condition="$(RequireJsNetEncodingType) == ''">UTF8</RequireJsNetEncodingType>
     <RequireJsNetProjectPath Condition="$(RequireJsNetProjectPath) == ''">$(MSBuildProjectDirectory)</RequireJsNetProjectPath>
+    <RequireJsNetScriptsPath Condition="$(RequireJsNetScriptsPath) == ''">$(MSBuildProjectDirectory)\Scripts\</RequireJsNetScriptsPath>
     <RequireJsNetProjectPathForDeploy Condition="$(RequireJsNetProjectPathForDeploy) == ''">$(_PackageTempDir)</RequireJsNetProjectPathForDeploy>
+    <RequireJsNetScriptsPathForDeploy Condition="$(RequireJsNetScriptsPathForDeploy) == ''">$(_PackageTempDir)\Scripts\</RequireJsNetScriptsPathForDeploy>
     <RequireJsNetEntryPointOverride Condition="$(RequireJsNetEntryPointOverride) == ''">$(MSBuildProjectDirectory)\Scripts\</RequireJsNetEntryPointOverride>
     <!--<BuildDependsOn>
       RequireJsNetMinify;
@@ -34,6 +36,7 @@
       AutoCompressor="$(RequireJsNetAutoCompressor)"
       EncodingType="$(RequireJsNetEncodingType)"
       ProjectPath="$(RequireJsNetProjectPath)"
+      PackagePath="$(RequireJsNetScriptsPath)"
       EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
   </Target>
 
@@ -44,7 +47,7 @@
       AutoCompressor="$(RequireJsNetAutoCompressor)"
       EncodingType="$(RequireJsNetEncodingType)"
       ProjectPath="$(RequireJsNetProjectPathForDeploy)"
-      PackagePath="$(RequireJsNetProjectPathForDeploy)\Scripts\"
+      PackagePath="$(RequireJsNetScriptsPathForDeploy)"
       EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
   </Target>
 </Project>
