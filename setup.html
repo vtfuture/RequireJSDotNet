@@ -221,7 +221,7 @@ require([
 				Rendering is done using the <code>RenderRequireJsSetup</code> html helper. Generally you want to place this in all layout files you're using, before you close the <code>body</code> tag.
 			</p>
 			<pre class="prettyprint lang-cs">
-@using RequireJsNet<br/><br/>&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>  &lt;head&gt;<br/>    &lt;!-- head content --&gt;<br/>  &lt;/head&gt;<br/>  &lt;body&gt;<br/>    &lt;!-- body content --&gt;<br/><br/>    @Html.RenderRequireJsSetup(new RequireRendererConfiguration<br/>    {<br/>    // the url from where require.js will be loaded<br/>    RequireJsUrl = Url.Content(&quot;~/Scripts/Components/RequireJS/require.js&quot;),<br/>    // baseUrl to be passed to require.js, will be used when composing urls for scripts<br/>    BaseUrl = Url.Content(&quot;~/Scripts/&quot;),<br/>    // a list of all the configuration files you want to load<br/>    ConfigurationFiles = new[] { &quot;~/RequireJS.json&quot; },<br/>    // root folder for your js controllers, will be used for composing paths to entrypoint<br/>    EntryPointRoot = &quot;~/Scripts/&quot;,<br/>    // whether we should load overrides or not, used for autoBundles, disabled on debug mode<br/>    LoadOverrides = !HttpContext.Current.IsDebuggingEnabled,<br/>    // compute the value you want locale to have, used for i18n<br/>    LocaleSelector = html =&gt; System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],<br/>    // instance of IRequireJsLogger<br/>    Logger = null,<br/>    // extensability point for the config object<br/>    ProcessConfig = config =&gt; { },<br/>    // extensability point for the options object<br/>    ProcessOptions = options =&gt; { },<br/>    // value for urlArgs to be passed to require.js, used for versioning<br/>    UrlArgs = RenderHelper.RenderAppVersion()<br/>    })<br/><br/>  &lt;/body&gt;<br/>&lt;/html&gt;</pre>
+@using RequireJsNet<br/><br/>&lt;!DOCTYPE html&gt;<br/>&lt;html&gt;<br/>  &lt;head&gt;<br/>    &lt;!-- head content --&gt;<br/>  &lt;/head&gt;<br/>  &lt;body&gt;<br/>    &lt;!-- body content --&gt;<br/><br/>    @Html.RenderRequireJsSetup(new RequireRendererConfiguration<br/>    {<br/>    // the url from where require.js will be loaded<br/>    RequireJsUrl = Url.Content(&quot;~/Scripts/Components/RequireJS/require.js&quot;),<br/>    // baseUrl to be passed to require.js, will be used when composing urls for scripts<br/>    BaseUrl = Url.Content(&quot;~/Scripts/&quot;),<br/>    // a list of all the configuration files you want to load<br/>    ConfigurationFiles = new[] { &quot;~/RequireJS.json&quot; },<br/>    // root folder for your js controllers, will be used for composing paths to entrypoint<br/>    EntryPointRoot = &quot;~/Scripts/&quot;,<br/>    // whether we should load overrides or not, used for autoBundles, disabled on debug mode<br/>    LoadOverrides = !HttpContext.Current.IsDebuggingEnabled,<br/>    // compute the value you want locale to have, used for i18n<br/>    LocaleSelector = html =&gt; System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Split('-')[0],<br/>    // store config in aspnet cache to avoid IO operations at each request<br/>    ConfigCachingPolicy = ConfigCachingPolicy.Permanent,<br/>    CacheConfigObject = true,<br/>    // instance of IRequireJsLogger<br/>    Logger = null,<br/>    // extensability point for the config object<br/>    ProcessConfig = config =&gt; { },<br/>    // extensability point for the options object<br/>    ProcessOptions = options =&gt; { },<br/>    // value for urlArgs to be passed to require.js, used for versioning<br/>    UrlArgs = RenderHelper.RenderAppVersion()<br/>    })<br/><br/>  &lt;/body&gt;<br/>&lt;/html&gt;</pre>
 
 			<p>You can use <code>RequireRendererConfiguration.UrlArgs</code> to append the assembly version value to each of the script urls for cache busting.</p>
 			<pre class="prettyprint lang-cs">
@@ -396,7 +396,7 @@ public class FallbackEntryPointResolver : IEntryPointResolver
 	
 	<div class="footer" id="contact">	
 		<div class="container">			
-			<p class="pull-left">2014 © VeriTech.io <br />All Rights Reserved</p>
+			<p class="pull-left">2016 © VeriTech.io <br />All Rights Reserved</p>
 			<a class="pull-right" href="http://veritech.io"><img src="img/veritech-logo-site@2x.png" alt="VeriTech" width="63" height="40"></a>
 		</div>		
 	</div>
@@ -405,7 +405,7 @@ public class FallbackEntryPointResolver : IEntryPointResolver
     <script src="js/bootstrap.min.js"></script>
 	<script src="js/smoothscroll.min.js"></script>
 	<script src="js/smooth-scroll.min.js"></script>
-	<script src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 	
 	<script type="text/javascript">
 		jQuery(function () {			  			  
