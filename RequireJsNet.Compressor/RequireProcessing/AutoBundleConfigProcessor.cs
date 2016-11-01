@@ -5,6 +5,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 // http://www.gnu.org/licenses/gpl.html
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,6 +58,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
             foreach (var bundle in Configuration.AutoBundles.Bundles)
             {
                 var files = new List<string>();
+                var excludedFiles = new HashSet<string>(new string[0], StringComparer.InvariantCultureIgnoreCase);
                 var bundleResult = new Bundle
                                        {
                                            Files = new List<FileSpec>(),
@@ -68,12 +70,33 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
                 var tempFileList = new List<RequireFile>();
 
+                foreach (var exclude in bundle.Excludes)
+                {
+                    // check if the file path is actually an URL
+                    if (!string.IsNullOrEmpty(exclude.File) && !exclude.File.Contains("?"))
+                    {
+                        excludedFiles.Add(this.ResolvePhysicalPath(exclude.File));
+                    }
+                    else if (!string.IsNullOrEmpty(exclude.Directory))
+                    {
+                        var absDirectory = this.GetAbsoluteDirectory(exclude.Directory);
+
+                        // not using filter for this since we're going to use the one the user provided in the future
+                        var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
+                        foreach (var file in dirFiles)
+                        {
+                            excludedFiles.Add(file);
+                        }
+                    }
+                }
+
                 foreach (var include in bundle.Includes)
                 {
                     // check if the file path is actually an URL
                     if (!string.IsNullOrEmpty(include.File) && !include.File.Contains("?"))
                     {
-                        files.Add(this.ResolvePhysicalPath(include.File));
+                        if (!excludedFiles.Contains(include.File))
+                            files.Add(this.ResolvePhysicalPath(include.File));
                     }
                     else if(!string.IsNullOrEmpty(include.Directory))
                     {
@@ -81,7 +104,11 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
                         // not using filter for this since we're going to use the one the user provided in the future
                         var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
-                        files.AddRange(dirFiles);
+                        foreach (var file in dirFiles)
+                        {
+                            if (!excludedFiles.Contains(file))
+                                files.Add(file);
+                        }
                     }
                 }
 
@@ -133,7 +160,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
             return bundles;
         }
-
+        
         private void WriteOverrideConfigs(List<Bundle> bundles)
         {
             var groupings = bundles.GroupBy(r => r.ContainingConfig).ToList();
