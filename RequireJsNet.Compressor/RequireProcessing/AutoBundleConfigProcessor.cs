@@ -137,7 +137,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                                          {
                                              Name = file,
                                              Content = result,
-                                             Dependencies = dependencies
+                                             Dependencies = dependencies,
+                                             CompressionType = bundle.CompressionType //TODO: Should be allowed to override for individual files in RequireJS.json too
                                          });
 
                     this.EnqueueFileList(tempFileList, fileQueue, dependencies);
@@ -155,7 +156,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
                     foreach (var requireFile in noDeps)
                     {
-                        bundleResult.Files.Add(new FileSpec(requireFile.Name, string.Empty) { FileContent = requireFile.Content });
+                        bundleResult.Files.Add(new FileSpec(requireFile.Name, requireFile.CompressionType) { FileContent = requireFile.Content });
                         tempFileList.Remove(requireFile);
                     }    
                 }
