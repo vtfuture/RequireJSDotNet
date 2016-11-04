@@ -293,6 +293,7 @@ namespace RequireJsNet.Configuration
                             if (valueObj != null)
                             {
                                 currentBundle.OutputPath = valueObj["outputPath"] != null ? valueObj["outputPath"].ToString() : null;
+                                currentBundle.CompressionType = valueObj["compressionType"] != null ? valueObj["compressionType"].ToString() : null;
                                 currentBundle.ContainingConfig = Path;
                                 currentBundle.Includes = new List<AutoBundleItem>();
                                 if (valueObj["include"] != null)

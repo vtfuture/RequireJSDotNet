@@ -213,6 +213,7 @@ namespace RequireJsNet.Configuration
                        {
                            Id = element.ReadStringAttribute("id"),
                            OutputPath = element.ReadStringAttribute("outputPath"),
+                           CompressionType = element.ReadStringAttribute("compressionType"),
                            Includes = element.Descendants("include").Select(AutoBundleItemReader).ToList(),
                            Excludes = element.Descendants("exclude").Select(AutoBundleItemReader).ToList(),
                            ContainingConfig = Path

@@ -156,7 +156,12 @@ namespace RequireJsNet.Configuration
                     {
                         existing.OutputPath = autoBundle.OutputPath;    
                     }
-                    
+
+                    if (!string.IsNullOrEmpty(autoBundle.CompressionType))
+                    {
+                        existing.CompressionType = autoBundle.CompressionType;
+                    }
+
                     foreach (var include in autoBundle.Includes)
                     {
                         existing.Includes.Add(include);

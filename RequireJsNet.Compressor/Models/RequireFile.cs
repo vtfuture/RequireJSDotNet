@@ -16,5 +16,7 @@ namespace RequireJsNet.Compressor.Models
         public string Content { get; set; }
 
         public List<string> Dependencies { get; set; }
+
+        public string CompressionType { get; set; }
     }
 }

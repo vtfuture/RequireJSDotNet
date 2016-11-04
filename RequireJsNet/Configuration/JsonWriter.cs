@@ -177,6 +177,11 @@ namespace RequireJsNet.Configuration
                             obj.OutputPath = r.OutputPath;
                         }
 
+                        if (!string.IsNullOrEmpty(r.CompressionType))
+                        {
+                            obj.CompressionType = r.CompressionType;
+                        }
+
                         if (r.Includes != null && r.Includes.Any())
                         {
                             obj.Include = AutoBundleContentSelector(r.Includes);
