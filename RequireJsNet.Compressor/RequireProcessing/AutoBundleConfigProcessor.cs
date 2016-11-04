@@ -121,6 +121,11 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 while (fileQueue.Any())
                 {
                     var file = fileQueue.Dequeue();
+
+                    var useShallowExcludes = false;
+                    if (!useShallowExcludes && excludedFiles.Contains(file))
+                        continue;
+
                     var fileText = File.ReadAllText(file, encoding);
                     var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
                     var processor = new ScriptProcessor(relativePath, fileText, Configuration);
@@ -142,7 +147,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 {
                     var addedFiles = bundleResult.Files.Select(r => r.FileName).ToList();
                     var noDeps = tempFileList.Where(r => !r.Dependencies.Any()
-                                                        || r.Dependencies.All(x => addedFiles.Contains(x))).ToList();
+                                                        || r.Dependencies.All(x => addedFiles.Contains(x) || excludedFiles.Contains(x))).ToList();
                     if (!noDeps.Any())
                     {
                         noDeps = tempFileList.ToList();
