@@ -104,6 +104,8 @@ namespace RequireJsNet.Configuration
                     else
                     {
                         var pathObj = (JObject)prop.Value;
+                        if (pathObj["path"] == null || pathObj["defaultBundle"] == null)
+                            throw new ArgumentException("Expected an object with 'path' and 'defaultBundle' but got " + pathObj.ToString());
                         result.Value = pathObj["path"].ToString();
                         result.DefaultBundle = pathObj["defaultBundle"].ToString();
                     }
@@ -298,42 +300,12 @@ namespace RequireJsNet.Configuration
                                 currentBundle.Includes = new List<AutoBundleItem>();
                                 if (valueObj["include"] != null)
                                 {
-                                    currentBundle.Includes = valueObj["include"].Select(
-                                        x =>
-                                            {
-                                                var includesObj = x as JObject;
-                                                var inclItem = new AutoBundleItem();
-                                                if (includesObj == null)
-                                                {
-                                                    return inclItem;
-                                                }
-
-                                                inclItem.BundleId = includesObj["bundleId"] != null ? includesObj["bundleId"].ToString() : null;
-                                                inclItem.File = includesObj["file"] != null ? includesObj["file"].ToString() : null;
-                                                inclItem.Directory = includesObj["directory"] != null ? includesObj["directory"].ToString() : null;
-                                                return inclItem;
-                                            })
-                                        .ToList();    
+                                    currentBundle.Includes = valueObj["include"].Select(x => autoBundleItemFrom(x)).ToList();    
                                 }
                                 currentBundle.Excludes = new List<AutoBundleItem>();
                                 if (valueObj["exclude"] != null)
                                 {
-                                    currentBundle.Excludes = valueObj["exclude"].Select(
-                                        x =>
-                                        {
-                                            var includesObj = x as JObject;
-                                            var inclItem = new AutoBundleItem();
-                                            if (includesObj == null)
-                                            {
-                                                return inclItem;
-                                            }
-
-                                            inclItem.BundleId = includesObj["bundleId"] != null ? includesObj["bundleId"].ToString() : null;
-                                            inclItem.File = includesObj["file"] != null ? includesObj["file"].ToString() : null;
-                                            inclItem.Directory = includesObj["directory"] != null ? includesObj["directory"].ToString() : null;
-                                            return inclItem;
-                                        })
-                                        .ToList();    
+                                    currentBundle.Excludes = valueObj["exclude"].Select(x => autoBundleItemFrom(x)).ToList();
                                 }
                             }
 
@@ -342,6 +314,25 @@ namespace RequireJsNet.Configuration
             }
 
             return autoBundles;
+        }
+
+        AutoBundleItem autoBundleItemFrom(JToken token)
+        {
+            var target = new AutoBundleItem();
+
+            var source = token as JObject;
+            if (source == null)
+                return target;
+
+            target.BundleId = source["bundleId"] != null ? source["bundleId"].ToString() : null;
+            target.File = source["file"] != null ? source["file"].ToString() : null;
+            target.Directory = source["directory"] != null ? source["directory"].ToString() : null;
+
+            var numberOfDefinedProperties = new[] { target.BundleId, target.File, target.Directory }.Where(x => x != null).Count();
+            if (numberOfDefinedProperties != 1)
+                throw new ArgumentException("Expected object with exactly one of 'bundleId', 'file' or 'directory' but got " + source.ToString());
+
+            return target;
         }
     }
 }
