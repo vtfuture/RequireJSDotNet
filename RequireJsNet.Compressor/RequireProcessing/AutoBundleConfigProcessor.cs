@@ -40,7 +40,6 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         public override List<Bundle> ParseConfigs()
         {
-            var bundles = new List<Bundle>();
             if (!Directory.Exists(ProjectPath))
             {
                 throw new DirectoryNotFoundException("Could not find project directory.");
@@ -54,119 +53,144 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 new ConfigLoaderOptions { ProcessBundles = true });
 
             Configuration = loader.Get();
-            
-            foreach (var bundle in Configuration.AutoBundles.Bundles)
-            {
-                var files = new List<string>();
-                var excludedFiles = new HashSet<string>(new string[0], StringComparer.InvariantCultureIgnoreCase);
-                var bundleResult = new Bundle
-                                       {
-                                           Files = new List<FileSpec>(),
-                                           Output = this.GetOutputPath(bundle.OutputPath, bundle.Id),
-                                           ContainingConfig = bundle.ContainingConfig,
-                                           BundleId = bundle.Id
-                                       };
-                bundles.Add(bundleResult);
 
-                var tempFileList = new List<RequireFile>();
-
-                foreach (var exclude in bundle.Excludes)
-                {
-                    // check if the file path is actually an URL
-                    if (!string.IsNullOrEmpty(exclude.File) && !exclude.File.Contains("?"))
-                    {
-                        excludedFiles.Add(this.ResolvePhysicalPath(exclude.File));
-                    }
-                    else if (!string.IsNullOrEmpty(exclude.Directory))
-                    {
-                        var absDirectory = this.GetAbsoluteDirectory(exclude.Directory);
-
-                        // not using filter for this since we're going to use the one the user provided in the future
-                        var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
-                        foreach (var file in dirFiles)
-                        {
-                            excludedFiles.Add(file);
-                        }
-                    }
-                }
-
-                foreach (var include in bundle.Includes)
-                {
-                    // check if the file path is actually an URL
-                    if (!string.IsNullOrEmpty(include.File) && !include.File.Contains("?"))
-                    {
-                        if (!excludedFiles.Contains(include.File))
-                            files.Add(this.ResolvePhysicalPath(include.File));
-                    }
-                    else if(!string.IsNullOrEmpty(include.Directory))
-                    {
-                        var absDirectory = this.GetAbsoluteDirectory(include.Directory);
-
-                        // not using filter for this since we're going to use the one the user provided in the future
-                        var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
-                        foreach (var file in dirFiles)
-                        {
-                            if (!excludedFiles.Contains(file))
-                                files.Add(file);
-                        }
-                    }
-                }
-
-                files = files.Distinct().ToList();
-
-                var fileQueue = new Queue<string>();
-                this.EnqueueFileList(tempFileList, fileQueue, files);
-                
-
-                while (fileQueue.Any())
-                {
-                    var file = fileQueue.Dequeue();
-
-                    var useShallowExcludes = false;
-                    if (!useShallowExcludes && excludedFiles.Contains(file))
-                        continue;
-
-                    var fileText = File.ReadAllText(file, encoding);
-                    var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
-                    var processor = new ScriptProcessor(relativePath, fileText, Configuration);
-                    processor.Process();
-                    var result = processor.ProcessedString;
-                    var fileDirectory = new FileInfo(file).DirectoryName;
-                    var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r, fileDirectory)).Where(r => r != null).Distinct().ToList();
-                    tempFileList.Add(new RequireFile
-                                         {
-                                             Name = file,
-                                             Content = result,
-                                             Dependencies = dependencies,
-                                             CompressionType = bundle.CompressionType //TODO: Should be allowed to override for individual files in RequireJS.json too
-                                         });
-
-                    this.EnqueueFileList(tempFileList, fileQueue, dependencies);
-                }
-
-                while (tempFileList.Any())
-                {
-                    var addedFiles = bundleResult.Files.Select(r => r.FileName).ToList();
-                    var noDeps = tempFileList.Where(r => !r.Dependencies.Any()
-                                                        || r.Dependencies.All(x => addedFiles.Contains(x) || excludedFiles.Contains(x))).ToList();
-                    if (!noDeps.Any())
-                    {
-                        noDeps = tempFileList.ToList();
-                    }
-
-                    foreach (var requireFile in noDeps)
-                    {
-                        bundleResult.Files.Add(new FileSpec(requireFile.Name, requireFile.CompressionType) { FileContent = requireFile.Content });
-                        tempFileList.Remove(requireFile);
-                    }    
-                }
-            }
+            var bundles = Configuration.AutoBundles.Bundles
+                .Select(autoBundle => createBundleOf(autoBundle))
+                .ToList();
 
             this.WriteOverrideConfigs(bundles);
 
             return bundles;
         }
-        
+
+        private Bundle createBundleOf(AutoBundle autoBundle)
+        {
+            var excludedFiles = new HashSet<string>(physicalPathsOf(autoBundle.Excludes), StringComparer.InvariantCultureIgnoreCase);
+
+            var files = physicalPathsOf(autoBundle.Includes, excludedFiles).Distinct().ToList();
+
+            var requiredFiles = enumerateDependenciesOf(files, excludedFiles);
+
+            var fileSpecList = requiredFilesByDependency(requiredFiles, excludedFiles, autoBundle.CompressionType);
+
+            return new Bundle
+            {
+                Files = fileSpecList,
+                Output = this.GetOutputPath(autoBundle.OutputPath, autoBundle.Id),
+                ContainingConfig = autoBundle.ContainingConfig,
+                BundleId = autoBundle.Id
+            };
+        }
+
+        private IEnumerable<string> physicalPathsOf(IEnumerable<AutoBundleItem> autoBundleItems)
+        {
+            foreach (var item in autoBundleItems)
+            {
+                // check if the file path is actually an URL
+                if (!string.IsNullOrEmpty(item.File) && !item.File.Contains("?"))
+                {
+                    yield return this.ResolvePhysicalPath(item.File);
+                }
+                else if (!string.IsNullOrEmpty(item.Directory))
+                {
+                    var absDirectory = this.GetAbsoluteDirectory(item.Directory);
+
+                    // not using filter for this since we're going to use the one the user provided in the future
+                    var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
+                    foreach (var file in dirFiles)
+                    {
+                        yield return file;
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<string> physicalPathsOf(IEnumerable<AutoBundleItem> autoBundleItems, HashSet<string> excludedFiles)
+        {
+            foreach (var item in autoBundleItems)
+            {
+                // check if the file path is actually an URL
+                if (!string.IsNullOrEmpty(item.File) && !item.File.Contains("?"))
+                {
+                    if (!excludedFiles.Contains(item.File))
+                        yield return this.ResolvePhysicalPath(item.File);
+                }
+                else if (!string.IsNullOrEmpty(item.Directory))
+                {
+                    var absDirectory = this.GetAbsoluteDirectory(item.Directory);
+
+                    // not using filter for this since we're going to use the one the user provided in the future
+                    var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
+                    foreach (var file in dirFiles)
+                    {
+#warning We try to match absolute paths here while we match relative paths above?!
+                        if (!excludedFiles.Contains(file))
+                            yield return file;
+                    }
+                }
+            }
+        }
+
+        private List<RequireFile> enumerateDependenciesOf(IEnumerable<string> files, HashSet<string> excludedFiles)
+        {
+            var processedFiles = new List<RequireFile>();
+            var pendingFiles = new Queue<string>();
+
+            this.enqueueNewFiles(files, pendingFiles, processedFiles);
+
+            while (pendingFiles.Any())
+            {
+                var file = pendingFiles.Dequeue();
+
+                var useShallowExcludes = false;
+                if (!useShallowExcludes && excludedFiles.Contains(file))
+                    continue;
+
+                var fileText = File.ReadAllText(file, encoding);
+                var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
+                var processor = new ScriptProcessor(relativePath, fileText, Configuration);
+                processor.Process();
+                var result = processor.ProcessedString;
+                var fileDirectory = new FileInfo(file).DirectoryName;
+                var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r, fileDirectory)).Where(r => r != null).Distinct().ToList();
+                processedFiles.Add(new RequireFile
+                {
+                    Name = file,
+                    Content = result,
+                    Dependencies = dependencies
+                });
+
+                this.enqueueNewFiles(dependencies, pendingFiles, processedFiles);
+            }
+
+            return processedFiles;
+        }
+
+        private static List<FileSpec> requiredFilesByDependency(IEnumerable<RequireFile> files, HashSet<string> excludedFiles, string compressionType)
+        {
+            var requiredFiles = new List<RequireFile>(files);
+
+            var fileSpecList = new List<FileSpec>();
+            while (requiredFiles.Any())
+            {
+                var addedFiles = fileSpecList.Select(r => r.FileName).ToList();
+                var noDeps = requiredFiles.Where(r => !r.Dependencies.Any()
+                                                    || r.Dependencies.All(x => addedFiles.Contains(x) || excludedFiles.Contains(x))).ToList();
+                if (!noDeps.Any())
+                {
+                    noDeps = requiredFiles.ToList();
+                }
+
+                foreach (var requireFile in noDeps)
+                {
+                    fileSpecList.Add(new FileSpec(requireFile.Name, compressionType) { FileContent = requireFile.Content });
+                    requiredFiles.Remove(requireFile);
+                }
+            }
+
+            return fileSpecList;
+        }
+
         private void WriteOverrideConfigs(List<Bundle> bundles)
         {
             var groupings = bundles.GroupBy(r => r.ContainingConfig).ToList();
@@ -211,14 +235,14 @@ namespace RequireJsNet.Compressor.RequireProcessing
             return conf;
         }
 
-        private void EnqueueFileList(List<RequireFile> fileList, Queue<string> queue, List<string> files)
+        private void enqueueNewFiles(IEnumerable<string> files, Queue<string> pendingQueue, List<RequireFile> processedFiles)
         {
             foreach (var file in files)
             {
-                if (!fileList.Where(r => r.Name.ToLower() == file.ToLower()).Any()
-                    && !queue.Where(r => r.ToLower() == file.ToLower()).Any())
+                if (!processedFiles.Where(r => r.Name.ToLower() == file.ToLower()).Any()
+                    && !pendingQueue.Where(r => r.ToLower() == file.ToLower()).Any())
                 {
-                    queue.Enqueue(file);
+                    pendingQueue.Enqueue(file);
                 }
             }
         }
