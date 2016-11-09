@@ -53,19 +53,19 @@ namespace RequireJsNet.Compressor.AutoDependency
 
                 var flattenedResults = result.GetFlattened();
 
-                var deps =
-                    flattenedResults.SelectMany(r => r.Dependencies)
-                        .Where(r => !r.Contains("!"))
-                        .Except(new List<string> { "require", "module", "exports" });
 
+                var deps = flattenedResults
+                    .SelectMany(r => r.Dependencies)
+                    .Where(r => !r.Contains("!"))
+                    .Except(new List<string> { "require", "module", "exports" });
                 Dependencies = deps.Select(r => GetModulePath(r)).ToList();
                 var shim = this.GetShim(RelativeFileName);
                 if (shim != null)
                 {
                     Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
                 }
-
                 Dependencies = Dependencies.Distinct().ToList();
+
 
                 flattenedResults.ForEach(
                     x =>

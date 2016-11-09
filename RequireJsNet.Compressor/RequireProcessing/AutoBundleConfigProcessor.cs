@@ -135,7 +135,6 @@ namespace RequireJsNet.Compressor.RequireProcessing
         {
             var processedFiles = new List<RequireFile>();
             var pendingFiles = new Queue<string>();
-
             this.enqueueNewFiles(files, pendingFiles, processedFiles);
 
             while (pendingFiles.Any())
@@ -146,24 +145,37 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 if (!useShallowExcludes && excludedFiles.Contains(file))
                     continue;
 
-                var fileText = File.ReadAllText(file, encoding);
-                var relativePath = PathHelpers.GetRelativePath(file, EntryPoint + Path.DirectorySeparatorChar);
-                var processor = new ScriptProcessor(relativePath, fileText, Configuration);
-                processor.Process();
-                var result = processor.ProcessedString;
-                var fileDirectory = new FileInfo(file).DirectoryName;
-                var dependencies = processor.Dependencies.Select(r => this.ResolvePhysicalPath(r, fileDirectory)).Where(r => r != null).Distinct().ToList();
-                processedFiles.Add(new RequireFile
-                {
-                    Name = file,
-                    Content = result,
-                    Dependencies = dependencies
-                });
+                var requireFile = enumerateDependenciesOf(file);
 
-                this.enqueueNewFiles(dependencies, pendingFiles, processedFiles);
+                processedFiles.Add(requireFile);
+                this.enqueueNewFiles(requireFile.Dependencies, pendingFiles, processedFiles);
             }
 
             return processedFiles;
+        }
+
+        private RequireFile enumerateDependenciesOf(string scriptFile)
+        {
+            var scriptText = File.ReadAllText(scriptFile, encoding);
+            var relativePath = PathHelpers.GetRelativePath(scriptFile, EntryPoint + Path.DirectorySeparatorChar);
+
+            var processor = new ScriptProcessor(relativePath, scriptText, Configuration);
+            processor.Process();
+
+            var scriptDirectory = new FileInfo(scriptFile).DirectoryName;
+
+            var dependencies = processor.Dependencies
+                .Select(r => this.ResolvePhysicalPath(r, scriptDirectory))
+                .Where(r => r != null)
+                .Distinct()
+                .ToList();
+
+            return new RequireFile
+            {
+                Name = scriptFile,
+                Content = processor.ProcessedString,
+                Dependencies = dependencies
+            };
         }
 
         private static List<FileSpec> requiredFilesByDependency(IEnumerable<RequireFile> files, HashSet<string> excludedFiles, string compressionType)
