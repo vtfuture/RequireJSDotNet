@@ -1,0 +1,5 @@
+﻿{
+  "paths": {
+    "jquery": "/somewhere/jquery-1.10.2/jquery"
+  }
+}

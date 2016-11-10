@@ -163,7 +163,7 @@ namespace RequireJsNet.Compressor.AutoDependency
             return result;
         }
 
-        private string GetModulePath(string name)
+        internal string GetModulePath(string name)
         {
             var paths = name.Split('/');
             var result = new StringBuilder();

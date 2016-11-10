@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("RequireJsNet.Compressor")]
+[assembly: InternalsVisibleTo("RequireJSNet.Compressor.Tests")]
 [assembly: InternalsVisibleTo("RequireJsNet.Tests")]
 [assembly: InternalsVisibleTo("RequireJsNet.ConfigConverter")]
 

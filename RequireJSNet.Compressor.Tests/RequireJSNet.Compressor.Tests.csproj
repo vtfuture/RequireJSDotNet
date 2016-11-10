@@ -64,14 +64,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressorShould.cs" />
+    <Compile Include="Helpers\FileHelpers.cs" />
+    <Compile Include="Helpers\TestFileReader.cs" />
+    <Compile Include="Tests\ScriptCompressor\GetModulePathShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\GetModulePathShould\.ctor.json" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RequireJsNet.Compressor\RequireJsNet.Compressor.csproj">
+      <Project>{27FBCFC2-9AD7-4042-BC47-0A61B8078264}</Project>
+      <Name>RequireJsNet.Compressor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RequireJsNet\RequireJsNet.csproj">
+      <Project>{EA33DE7B-1269-4000-8C33-F6B0632D1872}</Project>
+      <Name>RequireJsNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

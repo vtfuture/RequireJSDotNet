@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("c3e5de9a-8b88-45f8-8499-c16e0d0c83f8")]
 
 [assembly: InternalsVisibleTo("RequireJsNet.Compressor.ParserDemo")]
+[assembly: InternalsVisibleTo("RequireJSNet.Compressor.Tests")]
 
 // Version information for an assembly consists of the following four values:
 //
