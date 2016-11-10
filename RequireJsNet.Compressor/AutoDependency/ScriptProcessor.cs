@@ -165,20 +165,15 @@ namespace RequireJsNet.Compressor.AutoDependency
 
         internal string GetModulePath(string name)
         {
-            var paths = name.Split('/');
-            var result = new StringBuilder();
-            foreach (var path in paths)
-            {
-                var pathEl = configuration.Paths.PathList.FirstOrDefault(r => r.Key.ToLower() == path.ToLower());
-                result.Append(pathEl != null ? pathEl.Value : path);
+            var alias = configuration.Paths.PathList
+                .Where(path => name.StartsWith(path.Key, StringComparison.OrdinalIgnoreCase))
+                .Where(path => name.Length == path.Key.Length || name[path.Key.Length] == '/')
+                .FirstOrDefault();
 
-                if (!paths.Last().Equals(path))
-                {
-                    result.Append("/");
-                }
-            }
+            if (alias == null)
+                return name;
 
-            return result.ToString();
+            return alias.Value + name.Substring(alias.Key.Length);
         }
 
         private void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)
