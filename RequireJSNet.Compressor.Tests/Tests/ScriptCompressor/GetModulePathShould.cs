@@ -57,6 +57,14 @@ namespace RequireJSNet.Compressor.Tests
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void NotExpandMatchesInsidePaths()
+        {
+            var expected = "my/jquery/alternative";
+            var actual = processor.GetModulePath("my/jquery/alternative");
+            Assert.Equal(expected, actual);
+        }
+
         private ConfigurationCollection ReadJson(TestFileReader reader)
         {
             var jsonReader = new JsonReader(
