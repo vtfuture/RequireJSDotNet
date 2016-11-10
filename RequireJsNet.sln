@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet", "RequireJsNet\RequireJsNet.csproj", "{EA33DE7B-1269-4000-8C33-F6B0632D1872}"
 EndProject
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.Tests", "RequireJsNet.Tests\RequireJsNet.Tests.csproj", "{BE1C4E70-ABCE-4C20-931B-842F5BB7DBCA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsNet.ConfigConverter", "RequireJsNet.ConfigConverter\RequireJsNet.ConfigConverter.csproj", "{BC2B4B24-A068-443B-9A04-B839AECFBFF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJSNet.Compressor.Tests", "RequireJSNet.Compressor.Tests\RequireJSNet.Compressor.Tests.csproj", "{0870C988-74AF-4A00-92DB-96135470E2F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,10 @@ Global
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC2B4B24-A068-443B-9A04-B839AECFBFF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0870C988-74AF-4A00-92DB-96135470E2F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0870C988-74AF-4A00-92DB-96135470E2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0870C988-74AF-4A00-92DB-96135470E2F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0870C988-74AF-4A00-92DB-96135470E2F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
