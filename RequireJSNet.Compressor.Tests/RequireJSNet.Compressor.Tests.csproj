@@ -66,12 +66,18 @@
   <ItemGroup>
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Helpers\TestFileReader.cs" />
+    <Compile Include="Tests\AutoBundleConfigProcessor\ParseConfigsShould.cs" />
     <Compile Include="Tests\ScriptCompressor\GetModulePathShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="TestData\GetModulePathShould\.ctor.json" />
+    <EmbeddedResource Include="TestData\ParseConfigsShould\LoadAComplexDependencyTree.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\b.js" />
+    <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\a.js" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
