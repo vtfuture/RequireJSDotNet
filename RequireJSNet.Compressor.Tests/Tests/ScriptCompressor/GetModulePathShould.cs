@@ -7,21 +7,21 @@ using Xunit;
 
 namespace RequireJSNet.Compressor.Tests
 {
+    //TODO: We should rename this class to ExpandPathsShould
     public class GetModulePathShould
     {
-        ScriptProcessor processor;
+        readonly ConfigurationCollection configuration;
 
         public GetModulePathShould()
         {
-            var configuration = ReadJson(new TestFileReader());
-            processor = new ScriptProcessor("", "", configuration);
+            configuration = ReadJson(new TestFileReader());
         }
 
         [Fact]
         public void LeaveRelativePaths()
         {
             var expected = "relative/url";
-            var actual = processor.GetModulePath("relative/url");
+            var actual = ScriptProcessor.ExpandPaths("relative/url", configuration);
             Assert.Equal(expected, actual);
         }
 
@@ -29,7 +29,7 @@ namespace RequireJSNet.Compressor.Tests
         public void ExpandsExactMatches()
         {
             var expected = "/somewhere/jquery-1.10.2/jquery";
-            var actual = processor.GetModulePath("jquery");
+            var actual = ScriptProcessor.ExpandPaths("jquery", configuration);
             Assert.Equal(expected, actual);
         }
 
@@ -37,7 +37,7 @@ namespace RequireJSNet.Compressor.Tests
         public void DoCaseInsensitiveMatches()
         {
             var expected = "/somewhere/jquery-1.10.2/jquery";
-            var actual = processor.GetModulePath("JQuERy");
+            var actual = ScriptProcessor.ExpandPaths("JQuERy", configuration);
             Assert.Equal(expected, actual);
         }
 
@@ -45,7 +45,7 @@ namespace RequireJSNet.Compressor.Tests
         public void NotExpandPartialMatches()
         {
             var expected = "jqueryui";
-            var actual = processor.GetModulePath("jqueryui");
+            var actual = ScriptProcessor.ExpandPaths("jqueryui", configuration);
             Assert.Equal(expected, actual);
         }
 
@@ -53,7 +53,7 @@ namespace RequireJSNet.Compressor.Tests
         public void ExpandsStartOfPath()
         {
             var expected = "/somewhere/jquery-1.10.2/jquery/subfile";
-            var actual = processor.GetModulePath("jquery/subfile");
+            var actual = ScriptProcessor.ExpandPaths("jquery/subfile", configuration);
             Assert.Equal(expected, actual);
         }
 
@@ -61,7 +61,7 @@ namespace RequireJSNet.Compressor.Tests
         public void NotExpandMatchesInsidePaths()
         {
             var expected = "my/jquery/alternative";
-            var actual = processor.GetModulePath("my/jquery/alternative");
+            var actual = ScriptProcessor.ExpandPaths("my/jquery/alternative", configuration);
             Assert.Equal(expected, actual);
         }
 

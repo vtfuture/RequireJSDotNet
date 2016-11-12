@@ -112,6 +112,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 // check if the file path is actually an URL
                 if (!string.IsNullOrEmpty(item.File) && !item.File.Contains("?"))
                 {
+                    item.File = ScriptProcessor.ExpandPaths(item.File, Configuration);
+
                     if (!excludedFiles.Contains(item.File))
                         yield return this.ResolvePhysicalPath(item.File);
                 }

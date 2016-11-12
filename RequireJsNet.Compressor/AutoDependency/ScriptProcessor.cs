@@ -163,7 +163,13 @@ namespace RequireJsNet.Compressor.AutoDependency
             return result;
         }
 
+        [Obsolete("Use static ScriptProcessor.ExpandPaths() instead")]
         internal string GetModulePath(string name)
+        {
+            return ExpandPaths(name, configuration);
+        }
+
+        public static string ExpandPaths(string name, ConfigurationCollection configuration)
         {
             var alias = configuration.Paths.PathList
                 .Where(path => name.StartsWith(path.Key, StringComparison.OrdinalIgnoreCase))
