@@ -1,3 +1,3 @@
-﻿declare(function () {
+﻿define(function () {
     console.log('a.js');
 });

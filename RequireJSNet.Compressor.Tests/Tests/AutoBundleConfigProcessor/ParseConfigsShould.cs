@@ -78,15 +78,19 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
                     new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\a.js", null)
                     {
-                        FileContent ="define('bundleincludeddirectory/a', [], function () {\r\ndeclare(function () {\r\n    console.log('a.js');\r\n});\r\n});"
+                        FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
                     },
                     new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\b.js", null)
                     {
-                        FileContent ="define('bundleincludeddirectory/b', [], function () {\r\ndeclare(function () {\r\n    console.log('b.js');\r\n});\r\n});"
+                        FileContent ="define('bundleincludeddirectory/b', [],function () {\r\n    console.log('b.js');\r\n});"
+                    },
+                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\b.js", null)
+                    {
+                        FileContent ="define('b', [],function () {\r\n    console.log('file-b.js');\r\n});"
                     },
                     new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\a.js", null)
                     {
-                        FileContent ="define('a', [], function () {\r\ndeclare(function () {\r\n    console.log('file-a.js');\r\n});\r\n});"
+                        FileContent ="define('a', [\"require\", \"exports\", \"b\"], function (require, exports, b) {\r\n    console.log('file-a.js');\r\n});"
                     }
                 })
             };
