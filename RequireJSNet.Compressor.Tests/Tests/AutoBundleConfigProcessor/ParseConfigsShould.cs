@@ -63,7 +63,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         }
 
         [Fact]
-        public void BundleIncludedDirectory()
+        public void BundleComplexStructure()
         {
             var bundleId = "bundle1";
             var bundleOutputFolder = @"c:\bundles";
@@ -95,6 +95,34 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                     new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\a.js", null)
                     {
                         FileContent ="define('a', [\"require\", \"exports\", \"b\"], function (require, exports, b) {\r\n    console.log('file-a.js');\r\n});"
+                    }
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();
+
+            Assert.Equal(1, actualBundles.Count);
+            AssertEqual(expectedBundle, actualBundles[0]);
+        }
+
+        [Fact]
+        public void BundleIncludeWithPath()
+        {
+            var bundleId = "bundle2";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\BundleIncludeWithPath.json" });
+            var entrypointOverride = "";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\a.js", null)
+                    {
+                        FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
                     }
                 })
             };

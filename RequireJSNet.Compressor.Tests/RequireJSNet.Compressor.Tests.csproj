@@ -82,6 +82,9 @@
     <Content Include="TestData\ParseConfigsShould\Scripts\b.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\b.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\a.js" />
+    <EmbeddedResource Include="TestData\ParseConfigsShould\BundleIncludeWithPath.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
