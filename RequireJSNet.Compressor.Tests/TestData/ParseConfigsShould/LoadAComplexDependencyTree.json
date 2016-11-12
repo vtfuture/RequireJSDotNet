@@ -7,9 +7,9 @@
       "include": [
         { "directory": "BundleIncludedDirectory" },
         { "file": "a" }
-      //],
-      //"exclude": [
-      //  { "file": "c" }
+      ],
+      "exclude": [
+        { "file": "d" }
       ]
     }
   }
