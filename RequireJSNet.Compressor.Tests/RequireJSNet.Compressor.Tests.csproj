@@ -76,6 +76,7 @@
     <EmbeddedResource Include="TestData\ParseConfigsShould\LoadAComplexDependencyTree.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="TestData\ParseConfigsShould\Scripts\a.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\b.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\a.js" />
   </ItemGroup>

@@ -4,7 +4,10 @@
   },
   "autoBundles": {
     "bundle1": {
-      "include": [ { "directory": "/BundleIncludedDirectory" } ]
+      "include": [
+        { "directory": "BundleIncludedDirectory" },
+        { "file": "a" }
+      ]
     }
   }
 }

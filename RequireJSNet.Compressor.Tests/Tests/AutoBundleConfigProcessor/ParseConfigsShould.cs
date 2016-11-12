@@ -83,6 +83,10 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                     new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\b.js", null)
                     {
                         FileContent ="define('bundleincludeddirectory/b', [], function () {\r\ndeclare(function () {\r\n    console.log('b.js');\r\n});\r\n});"
+                    },
+                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\a.js", null)
+                    {
+                        FileContent ="define('a', [], function () {\r\ndeclare(function () {\r\n    console.log('file-a.js');\r\n});\r\n});"
                     }
                 })
             };
