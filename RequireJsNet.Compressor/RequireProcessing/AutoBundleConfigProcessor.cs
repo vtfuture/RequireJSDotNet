@@ -159,7 +159,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
         private RequireFile enumerateDependenciesOf(string scriptFile)
         {
             var scriptText = File.ReadAllText(scriptFile, encoding);
-            var relativePath = PathHelpers.GetRelativePath(scriptFile, EntryPoint + Path.DirectorySeparatorChar);
+            var relativePath = PathHelpers.GetRelativePath(scriptFile, EntryPoint);
 
             var processor = new ScriptProcessor(relativePath, scriptText, Configuration);
             processor.Process();
