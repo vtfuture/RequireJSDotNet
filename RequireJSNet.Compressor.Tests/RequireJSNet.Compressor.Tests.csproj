@@ -78,6 +78,7 @@
     </EmbeddedResource>
     <Content Include="TestData\ParseConfigsShould\OtherScripts\e.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\a.js" />
+    <Content Include="TestData\ParseConfigsShould\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\f.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\d.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\c.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\b.js" />
@@ -87,6 +88,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="TestData\ParseConfigsShould\UseCorrectModuleRelativePathWhenOutsideBasePath.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\ParseConfigsShould\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

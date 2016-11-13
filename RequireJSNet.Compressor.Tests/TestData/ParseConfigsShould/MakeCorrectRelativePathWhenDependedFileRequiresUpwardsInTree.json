@@ -1,0 +1,9 @@
+﻿{
+  "autoBundles": {
+    "bundle4": {
+      "include": [
+        { "file": "MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree/f" }
+      ]
+    }
+  }
+}

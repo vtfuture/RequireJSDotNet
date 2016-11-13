@@ -271,7 +271,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 relativeDirectory = relativeDirectory.Substring(1);
             }
 
-            return Path.Combine(entry + Path.DirectorySeparatorChar, relativeDirectory);
+            return Path.Combine(entry, relativeDirectory);
         }
     }
 }

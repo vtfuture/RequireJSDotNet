@@ -166,6 +166,38 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             AssertEqual(expectedBundle, actualBundles[0]);
         }
 
+        [Fact]
+        public void MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree()
+        {
+            var bundleId = "bundle5";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree.json" });
+            var entrypointOverride = "";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\d.js", null)
+                    {
+                        FileContent ="define('d', [],function () {\r\n    console.log('file-d.js');\r\n});"
+                    },
+                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\otherscripts\e.js", null)
+                    {
+                        FileContent ="define('MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree/f', ['d'],function () {\r\nconsole.log('starting-f.js');\r\n});"
+                    }
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();
+
+            Assert.Equal(1, actualBundles.Count);
+            AssertEqual(expectedBundle, actualBundles[0]);
+        }
+
         #region Assertion Helpers
 
         private static void AssertEqual(RequireJsNet.Compressor.Bundle expected, RequireJsNet.Compressor.Bundle actual)
