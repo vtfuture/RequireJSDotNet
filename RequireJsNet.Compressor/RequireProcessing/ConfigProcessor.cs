@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 
 using RequireJsNet.Models;
+using System.Text.RegularExpressions;
 
 namespace RequireJsNet.Compressor
 {
@@ -34,47 +35,61 @@ namespace RequireJsNet.Compressor
 
         public abstract List<Bundle> ParseConfigs();
 
-        protected string ResolvePhysicalPath(string relativePath, string directory = "")
+        internal protected string ResolvePhysicalPath(string relativePath, string directory = "")
         {
-            string entry = this.EntryPoint;
-            if (!string.IsNullOrEmpty(EntryOverride))
-            {
-                entry = this.EntryOverride;
-            }
+            var protocolRegex = @"^\w+://";
+            if (Regex.IsMatch(relativePath, protocolRegex))
+                return null;
 
             if (relativePath.Contains("?"))
-            {
                 return null;
-            }
 
-            if (relativePath.StartsWith("\\"))
-            {
-                relativePath = relativePath.Substring(1);
-            }
+            string entry = this.EntryPoint;
+            if (!string.IsNullOrEmpty(EntryOverride))
+                entry = this.EntryOverride;
 
-            if (relativePath.StartsWith("./") && !string.IsNullOrEmpty(directory))
-            {
-                relativePath = directory + "/" + relativePath.Substring(2);
-            }
+            var modulePath = resolveModulePath(relativePath, entry, directory);
 
             string filePath;
-
             try
             {
-                filePath = Path.GetFullPath(Path.Combine(ProjectPath, entry, relativePath + ".js"));
+                filePath = Path.GetFullPath(modulePath);
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not load script " + relativePath + ": " + ex.Message, ex);
+                throw new Exception("Could not load script " + modulePath + ": " + ex.Message, ex);
             }
 
-            
+
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException("Could not load script " + filePath, filePath);
             }
 
             return filePath;
+        }
+
+        private string resolveModulePath(string relativePath, string entry, string directory)
+        {
+            relativePath = relativePath.Replace("/", @"\");
+
+            if (relativePath.StartsWith(@"\"))
+            {
+                relativePath = relativePath.Substring(1);
+                return Path.Combine(directory??entry, relativePath);
+            }
+            else if (relativePath.Contains(".js"))
+            {
+                return Path.Combine(directory ?? entry, relativePath);
+            }
+            else if (relativePath.StartsWith("."))
+            {
+                return Path.Combine(directory ?? entry, relativePath + ".js");
+            }
+            else
+            {
+                return Path.Combine(ProjectPath, entry, relativePath + ".js");
+            }
         }
 
         protected string GetOutputPath(string outputPath, string bundleName)

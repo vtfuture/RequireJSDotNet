@@ -1,3 +1,3 @@
-﻿define(['../d'],function () {
+﻿define(['./g'],function () {
     console.log('starting-f.js');
 });

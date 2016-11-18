@@ -12,13 +12,13 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
 {
     public class ParseConfigsShould
     {
-        readonly string scriptsBasePath;
+        readonly string projectPath;
 
         public ParseConfigsShould()
         {
             var executingDirectory = Directory.GetCurrentDirectory();
             var directory = Path.Combine(executingDirectory, @"..\..\TestData\ParseConfigsShould");
-            scriptsBasePath = Path.GetFullPath(directory);
+            projectPath = Path.GetFullPath(directory);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         [Fact]
         public void ThrowIfFilesPathsAreEmpty()
         {
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, "", "", null, System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, "", "", null, System.Text.Encoding.UTF8);
             Assert.Throws<ArgumentNullException>(() =>
             {
                 compressor.ParseConfigs();
@@ -45,7 +45,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         [Fact]
         public void ThrowIfConfigIsNotProvided()
         {
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, "", "", new List<string>(), System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, "", "", new List<string>(), System.Text.Encoding.UTF8);
             Assert.Throws<ArgumentException>(() =>
             {
                 compressor.ParseConfigs();
@@ -56,7 +56,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         public void FindConfigs()
         {
             var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\LoadAComplexDependencyTree.json" });
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, "", "", filesPaths, System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, "", "", filesPaths, System.Text.Encoding.UTF8);
             compressor.ParseConfigs();
             //TODO: We should find multiple files
             //TODO: We should find the override file if it exists
@@ -76,30 +76,30 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 ContainingConfig = filesPaths[0],
                 Output = $"{bundleOutputFolder}\\{bundleId}.js",
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\a.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\a.js", null)
                     {
                         FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\b.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\b.js", null)
                     {
                         FileContent ="define('bundleincludeddirectory/b', [],function () {\r\n    console.log('b.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\c.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\c.js", null)
                     {
                         FileContent ="define('c', [],function () {\r\n    console.log('file-c.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\b.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\b.js", null)
                     {
                         FileContent ="define('b', [\"c\", \"d\"], function (c, d) {\r\n    console.log('file-b.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\a.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\a.js", null)
                     {
                         FileContent ="define('a', [\"require\", \"exports\", \"b\"], function (require, exports, b) {\r\n    console.log('file-a.js');\r\n});"
                     }
                 })
             };
 
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
             var actualBundles = compressor.ParseConfigs();
 
             Assert.Equal(1, actualBundles.Count);
@@ -120,14 +120,14 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 ContainingConfig = filesPaths[0],
                 Output = $"{bundleOutputFolder}\\{bundleId}.js",
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\BundleIncludedDirectory\a.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\a.js", null)
                     {
                         FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
                     }
                 })
             };
 
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
             var actualBundles = compressor.ParseConfigs();
 
             Assert.Equal(1, actualBundles.Count);
@@ -140,7 +140,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             var bundleId = "bundle4";
             var bundleOutputFolder = @"c:\bundles";
             var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\UseCorrectModuleRelativePathWhenOutsideBasePath.json" });
-            var entrypointOverride = scriptsBasePath + @"\Scripts\";
+            var entrypointOverride = projectPath + @"\Scripts\";
 
             var expectedBundle = new RequireJsNet.Compressor.Bundle()
             {
@@ -148,21 +148,19 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 ContainingConfig = filesPaths[0],
                 Output = $"{bundleOutputFolder}\\{bundleId}.js",
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\d.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\d.js", null)
                     {
                         FileContent ="define('d', [],function () {\r\n    console.log('file-d.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\otherscripts\e.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\otherscripts\e.js", null)
                     {
                         FileContent ="define('externalfile', ['d'], function () {\r\nconsole.log('file-e.js');\r\n});"
                     }
                 })
             };
 
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
-            var actualBundles = compressor.ParseConfigs();
-
-            Assert.Equal(1, actualBundles.Count);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();            Assert.Equal(1, actualBundles.Count);
             AssertEqual(expectedBundle, actualBundles[0]);
         }
 
@@ -180,18 +178,22 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 ContainingConfig = filesPaths[0],
                 Output = $"{bundleOutputFolder}\\{bundleId}.js",
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\Scripts\d.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\otherscripts\e.js", null)
                     {
-                        FileContent ="define('d', [],function () {\r\n    console.log('file-d.js');\r\n});"
+                        FileContent ="define('externalfile', [], function () {\r\nconsole.log('file-e.js');\r\n});"
                     },
-                    new RequireJsNet.Compressor.FileSpec(scriptsBasePath + @"\otherscripts\e.js", null)
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\g.js", null)
                     {
-                        FileContent ="define('MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree/f', ['d'],function () {\r\nconsole.log('starting-f.js');\r\n});"
+                        FileContent ="define('makecorrectrelativepathwhendependedfilerequiresupwardsintree/g', ['externalfile'],function () {\r\n    console.log('file-g.js');\r\n});"
+                    },
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\f.js", null)
+                    {
+                        FileContent ="define('makecorrectrelativepathwhendependedfilerequiresupwardsintree/f', ['./g'],function () {\r\n    console.log('starting-f.js');\r\n});"
                     }
                 })
             };
 
-            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(scriptsBasePath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
             var actualBundles = compressor.ParseConfigs();
 
             Assert.Equal(1, actualBundles.Count);

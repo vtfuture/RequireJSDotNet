@@ -53,12 +53,28 @@ namespace RequireJsNet.Compressor.AutoDependency
 
                 var flattenedResults = result.GetFlattened();
 
-
                 var deps = flattenedResults
                     .SelectMany(r => r.Dependencies)
                     .Where(r => !r.Contains("!"))
                     .Except(new List<string> { "require", "module", "exports" });
-                Dependencies = deps.Select(r => GetModulePath(r)).ToList();
+
+
+                //Make existing relative paths relative to the Scripts folder
+                var scriptPath = System.IO.Path.GetDirectoryName(RelativeFileName).Replace(@"\", "/") + "/";
+                deps = deps.Select(r =>
+                {
+                    if (r.StartsWith("."))
+                    {
+                        r = scriptPath + r;
+                    }
+                    return r;
+                });
+
+                //Expand named paths relative to the scripts folder
+                Dependencies = deps.Select(r => ExpandPaths(r, configuration)).ToList();
+
+
+
                 var shim = this.GetShim(RelativeFileName);
                 if (shim != null)
                 {

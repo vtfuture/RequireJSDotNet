@@ -107,6 +107,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         private IEnumerable<string> physicalPathsOf(IEnumerable<AutoBundleItem> autoBundleItems, HashSet<string> excludedFiles)
         {
+            var baseUrl = Path.Combine(ProjectPath, "Scripts");
             foreach (var item in autoBundleItems)
             {
                 // check if the file path is actually an URL
@@ -115,7 +116,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     item.File = ScriptProcessor.ExpandPaths(item.File, Configuration);
 
                     if (!excludedFiles.Contains(item.File))
-                        yield return this.ResolvePhysicalPath(item.File);
+                        yield return this.ResolvePhysicalPath(item.File, baseUrl);
                 }
                 else if (!string.IsNullOrEmpty(item.Directory))
                 {
@@ -164,10 +165,9 @@ namespace RequireJsNet.Compressor.RequireProcessing
             var processor = new ScriptProcessor(relativePath, scriptText, Configuration);
             processor.Process();
 
-            var scriptDirectory = new FileInfo(scriptFile).DirectoryName;
-
+            var baseUrl = Path.Combine(ProjectPath, "Scripts");
             var dependencies = processor.Dependencies
-                .Select(r => this.ResolvePhysicalPath(r, scriptDirectory))
+                .Select(r => this.ResolvePhysicalPath(r, baseUrl))
                 .Where(r => r != null)
                 .Distinct()
                 .ToList();
