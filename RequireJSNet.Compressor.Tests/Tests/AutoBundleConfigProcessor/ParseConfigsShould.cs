@@ -170,7 +170,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             var bundleId = "bundle5";
             var bundleOutputFolder = @"c:\bundles";
             var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree.json" });
-            var entrypointOverride = "";
+            var entrypointOverride = projectPath + @"\Scripts\";
 
             var expectedBundle = new RequireJsNet.Compressor.Bundle()
             {
@@ -199,6 +199,71 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             Assert.Equal(1, actualBundles.Count);
             AssertEqual(expectedBundle, actualBundles[0]);
         }
+
+        [Fact]
+        public void SupportEC6()
+        {
+            var bundleId = "bundle5";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\SupportEC6.json" });
+            var entrypointOverride = projectPath + @"\Scripts\";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\SupportEC6\h.js", null)
+                    {
+                        FileContent ="define('supportec6/h', ['require', 'exports'],function (require, exports) {\r\n    function default_1() { console.log('my fn'); };\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    exports.default = default_1;\r\n});"
+                    }
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();
+
+            Assert.Equal(1, actualBundles.Count);
+            AssertEqual(expectedBundle, actualBundles[0]);
+        }
+
+        //        [Fact]
+        //        public void LoadModuleThatExportsDefault()
+        //        {
+        //            var bundleId = "bundle6";
+        //            var bundleOutputFolder = @"c:\bundles";
+        //            var filesPaths = new List<string>(new[] { projectPath + @"\LoadModuleThatExportsDefault.json" });
+        //            var entrypointOverride = "";
+
+        //            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+        //            {
+        //                BundleId = bundleId,
+        //                ContainingConfig = filesPaths[0],
+        //                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+        //                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+        //                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\exportdefault.js", null)
+        //                    {
+        //                        FileContent  =
+        //@"define('exportdefault', [],function () {
+        //    ""use strict"";
+        //    function default_1(a, b) {
+        //        return a + b;
+        //        }
+        //        Object.defineProperty(exports, ""__esModule"", { value: true });
+        //    exports.default = default_1;
+        //});"
+        //                    }
+        //                })
+        //            };
+
+        //            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+        //            var actualBundles = compressor.ParseConfigs();
+
+        //            Assert.Equal(1, actualBundles.Count);
+        //            AssertEqual(expectedBundle, actualBundles[0]);
+        //        }
+
 
         #region Assertion Helpers
 

@@ -72,6 +72,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TestData\ParseConfigsShould\LoadsModuleThatExportsDefault.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\ParseConfigsShould\SupportEC6.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="TestData\ResolvePhysicalPathShould\Scripts\subfolder\def" />
     <None Include="packages.config" />
     <EmbeddedResource Include="TestData\GetModulePathShould\.ctor.json" />
@@ -79,7 +85,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="TestData\ParseConfigsShould\OtherScripts\e.js" />
+    <Content Include="TestData\ParseConfigsShould\Scripts\exportdefault.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\a.js" />
+    <Content Include="TestData\ParseConfigsShould\Scripts\SupportEC6\h.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\g.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\f.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\d.js" />
