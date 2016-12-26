@@ -135,6 +135,38 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         }
 
         [Fact]
+        public void BundleIncludedDirectoryWithPath()
+        {
+            var bundleId = "bundle5";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\BundleIncludedDirectoryWithPath.json" });
+            var entrypointOverride = "";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\a.js", null)
+                    {
+                        FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
+                    },
+                    new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\b.js", null)
+                    {
+                        FileContent ="define('bundleincludeddirectory/b', [],function () {\r\n    console.log('b.js');\r\n});"
+                    }
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();
+
+            Assert.Equal(1, actualBundles.Count);
+            AssertEqual(expectedBundle, actualBundles[0]);
+        }
+
+        [Fact]
         public void MakeCorrectRelativePathWhenEntryPointEndsWithDirSeparator()
         {
             var bundleId = "bundle4";

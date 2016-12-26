@@ -122,6 +122,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 }
                 else if (!string.IsNullOrEmpty(item.Directory))
                 {
+                    item.Directory = ScriptProcessor.ExpandPaths(item.Directory, Configuration);
+
                     var absDirectory = this.GetAbsoluteDirectory(item.Directory);
 
                     // not using filter for this since we're going to use the one the user provided in the future
