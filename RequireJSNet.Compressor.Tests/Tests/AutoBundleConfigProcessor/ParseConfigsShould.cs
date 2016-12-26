@@ -107,11 +107,11 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         }
 
         [Fact]
-        public void BundleIncludeWithPath()
+        public void BundleIncludeFileWithPath()
         {
             var bundleId = "bundle2";
             var bundleOutputFolder = @"c:\bundles";
-            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\BundleIncludeWithPath.json" });
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\BundleIncludedFileWithPath.json" });
             var entrypointOverride = "";
 
             var expectedBundle = new RequireJsNet.Compressor.Bundle()

@@ -96,7 +96,7 @@
     <Content Include="TestData\ParseConfigsShould\Scripts\b.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\b.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\BundleIncludedDirectory\a.js" />
-    <EmbeddedResource Include="TestData\ParseConfigsShould\BundleIncludeWithPath.json">
+    <EmbeddedResource Include="TestData\ParseConfigsShould\BundleIncludedFileWithPath.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="TestData\ParseConfigsShould\UseCorrectModuleRelativePathWhenOutsideBasePath.json">
