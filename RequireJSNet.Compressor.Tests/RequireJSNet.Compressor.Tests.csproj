@@ -78,12 +78,13 @@
     <EmbeddedResource Include="TestData\ParseConfigsShould\SupportEC6.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="TestData\ResolvePhysicalPathShould\Scripts\subfolder\def" />
+    <Content Include="TestData\ResolvePhysicalPathShould\def.js" />
     <None Include="packages.config" />
     <EmbeddedResource Include="TestData\ExpandPathsShould\.ctor.json" />
     <EmbeddedResource Include="TestData\ParseConfigsShould\LoadAComplexDependencyTree.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="TestData\ParseConfigsShould\OtherScripts\excludedfile.js" />
     <Content Include="TestData\ParseConfigsShould\OtherScripts\e.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\exportdefault.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\a.js" />

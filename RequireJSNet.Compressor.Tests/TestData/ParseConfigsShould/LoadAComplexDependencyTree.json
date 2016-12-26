@@ -1,6 +1,7 @@
 ﻿{
   "paths": {
-    "jquery": "/somewhere/jquery-1.10.2/jquery"
+    "jquery": "/somewhere/jquery-1.10.2/jquery",
+    "excludedfile": "/OtherScripts/excludedfile"
   },
   "autoBundles": {
     "bundle1": {
@@ -9,7 +10,8 @@
         { "file": "a" }
       ],
       "exclude": [
-        { "file": "d" }
+        { "file": "d" },
+        { "file": "excludedfile" }
       ]
     }
   }

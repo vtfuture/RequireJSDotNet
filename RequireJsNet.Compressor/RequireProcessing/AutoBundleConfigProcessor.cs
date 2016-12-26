@@ -84,12 +84,14 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         private IEnumerable<string> physicalPathsOf(IEnumerable<AutoBundleItem> autoBundleItems)
         {
+            var baseUrl = Path.Combine(ProjectPath, "Scripts");
             foreach (var item in autoBundleItems)
             {
                 // check if the file path is actually an URL
                 if (!string.IsNullOrEmpty(item.File) && !item.File.Contains("?"))
                 {
-                    yield return this.ResolvePhysicalPath(item.File);
+                    var path = ScriptProcessor.ExpandPaths(item.File, Configuration);
+                    yield return this.ResolvePhysicalPath(path, baseUrl);
                 }
                 else if (!string.IsNullOrEmpty(item.Directory))
                 {

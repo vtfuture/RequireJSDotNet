@@ -73,23 +73,13 @@ namespace RequireJsNet.Compressor
         {
             relativePath = relativePath.Replace("/", @"\");
 
+            if (!relativePath.Contains(".js"))
+                relativePath += ".js";
+
             if (relativePath.StartsWith(@"\"))
-            {
-                relativePath = relativePath.Substring(1);
-                return Path.Combine(directory??entry, relativePath);
-            }
-            else if (relativePath.Contains(".js"))
-            {
-                return Path.Combine(directory ?? entry, relativePath);
-            }
-            else if (relativePath.StartsWith("."))
-            {
-                return Path.Combine(directory ?? entry, relativePath + ".js");
-            }
-            else
-            {
-                return Path.Combine(ProjectPath, entry, relativePath + ".js");
-            }
+                return Path.Combine(this.ProjectPath, relativePath.Substring(1));
+
+            return Path.Combine(directory ?? entry, relativePath);
         }
 
         protected string GetOutputPath(string outputPath, string bundleName)

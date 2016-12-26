@@ -90,7 +90,7 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                     },
                     new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\b.js", null)
                     {
-                        FileContent ="define('b', [\"c\", \"d\"], function (c, d) {\r\n    console.log('file-b.js');\r\n});"
+                        FileContent ="define('b', [\"excludedfile\", \"c\", \"d\"], function ($, c, d) {\r\n    console.log('file-b.js');\r\n});"
                     },
                     new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\a.js", null)
                     {

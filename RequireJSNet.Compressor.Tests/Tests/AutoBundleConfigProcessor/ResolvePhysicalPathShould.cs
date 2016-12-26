@@ -36,11 +36,11 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         }
 
         [Fact]
-        public void ResolveAbsoluteUrlRelativeToCurrentScript()
+        public void ResolveAbsoluteUrlRelativeToProjectRoot()
         {
             var relativeModuleUrl = "/def";
             var directory = Path.Combine(projectRootPath, "Scripts", "subfolder");
-            var expected = Path.Combine(directory, "def");
+            var expected = Path.Combine(projectRootPath, "def.js");
 
             var actual = compressor.ResolvePhysicalPath(relativeModuleUrl, directory);
 
