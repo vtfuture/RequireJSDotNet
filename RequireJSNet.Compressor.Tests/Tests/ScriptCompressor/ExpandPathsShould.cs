@@ -7,12 +7,11 @@ using Xunit;
 
 namespace RequireJSNet.Compressor.Tests
 {
-    //TODO: We should rename this class to ExpandPathsShould
-    public class GetModulePathShould
+    public class ExpandPathsShould
     {
         readonly ConfigurationCollection configuration;
 
-        public GetModulePathShould()
+        public ExpandPathsShould()
         {
             configuration = ReadJson(new TestFileReader());
         }

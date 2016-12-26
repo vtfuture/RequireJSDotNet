@@ -68,7 +68,7 @@
     <Compile Include="Helpers\TestFileReader.cs" />
     <Compile Include="Tests\AutoBundleConfigProcessor\ResolvePhysicalPathShould.cs" />
     <Compile Include="Tests\AutoBundleConfigProcessor\ParseConfigsShould.cs" />
-    <Compile Include="Tests\ScriptCompressor\GetModulePathShould.cs" />
+    <Compile Include="Tests\ScriptCompressor\ExpandPathsShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +80,7 @@
     </EmbeddedResource>
     <None Include="TestData\ResolvePhysicalPathShould\Scripts\subfolder\def" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="TestData\GetModulePathShould\.ctor.json" />
+    <EmbeddedResource Include="TestData\ExpandPathsShould\.ctor.json" />
     <EmbeddedResource Include="TestData\ParseConfigsShould\LoadAComplexDependencyTree.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
