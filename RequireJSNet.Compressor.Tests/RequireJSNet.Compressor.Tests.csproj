@@ -72,7 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\ParseConfigsShould\LoadsModuleThatExportsDefault.json">
+    <EmbeddedResource Include="TestData\ParseConfigsShould\LoadModuleThatExportsDefault.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="TestData\ParseConfigsShould\SupportEC6.json">
