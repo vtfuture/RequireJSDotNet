@@ -1,0 +1,15 @@
+﻿{
+  "paths": {
+    "externalfile": "../otherscripts/e"
+  },
+  "shim": {
+    "externalfile": { "deps": [ "d" ] }
+  },
+  "autoBundles": {
+    "bundle4": {
+      "include": [
+        { "file": "externalfile" }
+      ]
+    }
+  }
+}

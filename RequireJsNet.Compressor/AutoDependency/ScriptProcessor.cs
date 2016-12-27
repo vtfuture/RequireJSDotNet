@@ -53,19 +53,34 @@ namespace RequireJsNet.Compressor.AutoDependency
 
                 var flattenedResults = result.GetFlattened();
 
-                var deps =
-                    flattenedResults.SelectMany(r => r.Dependencies)
-                        .Where(r => !r.Contains("!"))
-                        .Except(new List<string> { "require", "module", "exports" });
+                var deps = flattenedResults
+                    .SelectMany(r => r.Dependencies)
+                    .Where(r => !r.Contains("!"))
+                    .Except(new List<string> { "require", "module", "exports" });
 
-                Dependencies = deps.Select(r => GetModulePath(r)).ToList();
+
+                //Make existing relative paths relative to the Scripts folder
+                var scriptPath = System.IO.Path.GetDirectoryName(RelativeFileName).Replace(@"\", "/") + "/";
+                deps = deps.Select(r =>
+                {
+                    if (r.StartsWith("."))
+                    {
+                        r = scriptPath + r;
+                    }
+                    return r;
+                });
+
+                //Expand named paths relative to the scripts folder
+                Dependencies = deps.Select(r => ExpandPaths(r, configuration)).ToList();
+
                 var shim = this.GetShim(RelativeFileName);
                 if (shim != null)
                 {
-                    Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
+                    Dependencies.AddRange(shim.Dependencies.Select(r => ExpandPaths(r.Dependency, configuration)));
                 }
 
                 Dependencies = Dependencies.Distinct().ToList();
+
 
                 flattenedResults.ForEach(
                     x =>
@@ -131,7 +146,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
                     if (string.IsNullOrEmpty(defineCall.Id))
                     {
-                        trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
+                        trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
                     }
 
                     if (defineCall.DependencyArrayNode == null)
@@ -151,6 +166,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                                                         .FirstOrDefault();
         }
 
+        [Obsolete("This is really stupid! Find out WHY proper relative paths are shrunk!")]
         private string CheckForConfigPath(string name)
         {
             var result = name;
@@ -163,22 +179,17 @@ namespace RequireJsNet.Compressor.AutoDependency
             return result;
         }
 
-        private string GetModulePath(string name)
+        public static string ExpandPaths(string name, ConfigurationCollection configuration)
         {
-            var paths = name.Split('/');
-            var result = new StringBuilder();
-            foreach (var path in paths)
-            {
-                var pathEl = configuration.Paths.PathList.FirstOrDefault(r => r.Key.ToLower() == path.ToLower());
-                result.Append(pathEl != null ? pathEl.Value : path);
+            var alias = configuration.Paths.PathList
+                .Where(path => name.StartsWith(path.Key, StringComparison.OrdinalIgnoreCase))
+                .Where(path => name.Length == path.Key.Length || name[path.Key.Length] == '/')
+                .FirstOrDefault();
 
-                if (!paths.Last().Equals(path))
-                {
-                    result.Append("/");
-                }
-            }
+            if (alias == null)
+                return name;
 
-            return result.ToString();
+            return alias.Value + name.Substring(alias.Key.Length);
         }
 
         private void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)

@@ -1,0 +1,9 @@
+﻿{
+  "autoBundles": {
+    "bundle1": {
+      "include": [
+        { "file": "exportdefault" }
+      ]
+    }
+  }
+}

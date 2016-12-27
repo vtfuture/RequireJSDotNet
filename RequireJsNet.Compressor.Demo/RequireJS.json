@@ -37,11 +37,11 @@
             "items": [
                 {
                     "path": "jquery",
-                    "compression": "none"
+                    "compressionType": "none"
                 },
                 {
                     "path": "bootstrap",
-                    "compression": "standard"
+                    "compressionType": "standard"
                 }
             ]
         },
@@ -99,30 +99,31 @@
         }
     },
     "autoBundles": {
-        "root": {
-            "outputPath": "bundles\\auto\\",
-            "include": [
-                {
-                    "directory": "\\controllers\\Root\\"
-                },
-                {
-                    "file": "\\controllers\\Root\\Home\\index"
-                },
-                {
-                    "bundleId": "test"
-                }
-            ],
-            "exclude": [ 
-                {
-                    "directory": "\\controllers\\Root\\"
-                },
-                {
-                    "file": "\\controllers\\Root\\Home\\index"
-                },
-                {
-                    "bundleId": "test"
-                }
-            ]
-        }
+      "root": {
+        "outputPath": "bundles/auto/",
+        "compressionType": "standard",
+        "include": [
+          {
+            "directory": "controllers/Root/"
+          },
+          {
+            "file": "controllers/Root/Home/index"
+          },
+          {
+            "bundleId": "test"
+          }
+        ],
+        "exclude": [
+          {
+            "directory": "controllers/Root/"
+          },
+          {
+            "file": "controllers/Root/Home/index"
+          },
+          {
+            "bundleId": "test"
+          }
+        ]
+      }
     }
 }
