@@ -75,6 +75,7 @@
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Helpers\TestFileReader.cs" />
     <Compile Include="Helpers\InMemoryLogAdapter.cs" />
+    <Compile Include="TestData\FileSpecs.cs" />
     <Compile Include="Tests\AutoBundleConfigProcessor\ResolvePhysicalPathShould.cs" />
     <Compile Include="Tests\AutoBundleConfigProcessor\ParseConfigsShould.cs" />
     <Compile Include="Tests\CompressorTaskEngine\ExecuteShould.cs" />

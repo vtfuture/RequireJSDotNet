@@ -29,14 +29,8 @@ namespace RequireJSNet.Compressor.Tests.Tests.CompressorTaskEngine
             var taskLog = new Helpers.InMemoryLogAdapter();
 
             var files = new[] {
-                new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\a.js", null)
-                {
-                    FileContent ="define('bundleincludeddirectory/a', [],function () {\r\n    console.log('a.js');\r\n});"
-                },
-                new RequireJsNet.Compressor.FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\b.js", null)
-                {
-                    FileContent ="define('bundleincludeddirectory/b', [],function () {\r\n    console.log('b.js');\r\n});\r\n"
-                }
+                TestData.FileSpecs.Scripts_BundleIncludedDirectory_a(projectPath),
+                TestData.FileSpecs.Scripts_BundleIncludedDirectory_b(projectPath)
             };
 
             var expected = "define(\"bundleincludeddirectory/a\",[],function(){console.log(\"a.js\")});\r\ndefine(\"bundleincludeddirectory/b\",[],function(){console.log(\"b.js\")});\r\n";
