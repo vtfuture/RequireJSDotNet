@@ -102,6 +102,7 @@
     <Content Include="TestData\ParseConfigsShould\Scripts\SupportEC6\h.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\g.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\MakeCorrectRelativePathWhenDependedFileRequiresUpwardsInTree\f.js" />
+    <Content Include="TestData\ParseConfigsShould\Scripts\shimmed.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\d.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\c.js" />
     <Content Include="TestData\ParseConfigsShould\Scripts\b.js" />
@@ -118,6 +119,9 @@
     </EmbeddedResource>
     <Content Include="TestData\ResolvePhysicalPathShould\Scripts\subfolder\abc.js" />
     <EmbeddedResource Include="TestData\ParseConfigsShould\BundleIncludedDirectoryWithPath.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\ParseConfigsShould\FindShimWithPath.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

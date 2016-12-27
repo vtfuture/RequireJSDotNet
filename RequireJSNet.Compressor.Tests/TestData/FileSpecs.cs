@@ -61,6 +61,14 @@ namespace RequireJSNet.Compressor.Tests.TestData
             };
         }
 
+        public static FileSpec Scripts_shimmed(string projectPath)
+        {
+            return new FileSpec(projectPath + @"\Scripts\shimmed.js", null)
+            {
+                FileContent = "define('shimmed', [],function () {\r\n    console.log('file-shimmed.js');\r\n});"
+            };
+        }
+
         public static FileSpec Scripts_BundleIncludedDirectory_a(string projectPath)
         {
             return new FileSpec(projectPath + @"\Scripts\BundleIncludedDirectory\a.js", null)

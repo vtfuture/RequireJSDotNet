@@ -73,13 +73,12 @@ namespace RequireJsNet.Compressor.AutoDependency
                 //Expand named paths relative to the scripts folder
                 Dependencies = deps.Select(r => ExpandPaths(r, configuration)).ToList();
 
-
-
                 var shim = this.GetShim(RelativeFileName);
                 if (shim != null)
                 {
-                    Dependencies.AddRange(shim.Dependencies.Select(r => this.GetModulePath(r.Dependency)));
+                    Dependencies.AddRange(shim.Dependencies.Select(r => ExpandPaths(r.Dependency, configuration)));
                 }
+
                 Dependencies = Dependencies.Distinct().ToList();
 
 
@@ -147,7 +146,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
                     if (string.IsNullOrEmpty(defineCall.Id))
                     {
-                        trans.Add(AddIdentifierTransformation.Create(defineCall, this.CheckForConfigPath(RelativeFileName.ToModuleName())));
+                        trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
                     }
 
                     if (defineCall.DependencyArrayNode == null)
@@ -167,6 +166,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                                                         .FirstOrDefault();
         }
 
+        [Obsolete("This is really stupid! Find out WHY proper relative paths are shrunk!")]
         private string CheckForConfigPath(string name)
         {
             var result = name;
@@ -177,12 +177,6 @@ namespace RequireJsNet.Compressor.AutoDependency
             }
 
             return result;
-        }
-
-        [Obsolete("Use static ScriptProcessor.ExpandPaths() instead")]
-        internal string GetModulePath(string name)
-        {
-            return ExpandPaths(name, configuration);
         }
 
         public static string ExpandPaths(string name, ConfigurationCollection configuration)

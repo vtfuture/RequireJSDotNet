@@ -243,6 +243,31 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             AssertEqual(expectedBundle, actualBundles[0]);
         }
 
+        [Fact]
+        public void FindShimWithPath()
+        {
+            var bundleId = "bundle3";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\FindShimWithPath.json" });
+            var entrypointOverride = "";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    TestData.FileSpecs.Scripts_d(projectPath),
+                    TestData.FileSpecs.Scripts_shimmed(projectPath)
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            var actualBundles = compressor.ParseConfigs();
+
+            Assert.Equal(1, actualBundles.Count);
+            AssertEqual(expectedBundle, actualBundles[0]);
+        }
 
         #region Assertion Helpers
 
