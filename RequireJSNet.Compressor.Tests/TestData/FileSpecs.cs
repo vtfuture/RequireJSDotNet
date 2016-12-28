@@ -45,6 +45,14 @@ namespace RequireJSNet.Compressor.Tests.TestData
             };
         }
 
+        public static FileSpec Scripts_d_pathed_as_nextfile(string projectPath)
+        {
+            return new FileSpec(projectPath + @"\Scripts\d.js", null)
+            {
+                FileContent = "define('nextfile', [],function () {\r\n    console.log('file-d.js');\r\n});"
+            };
+        }
+
         public static FileSpec Scripts_exportdefault(string projectPath)
         {
             return new FileSpec(projectPath + @"\Scripts\exportdefault.js", null)
@@ -61,11 +69,11 @@ namespace RequireJSNet.Compressor.Tests.TestData
             };
         }
 
-        public static FileSpec Scripts_shimmed(string projectPath)
+        public static FileSpec Scripts_shimmed_pathed_as_thefile(string projectPath)
         {
             return new FileSpec(projectPath + @"\Scripts\shimmed.js", null)
             {
-                FileContent = "define('shimmed', [],function () {\r\n    console.log('file-shimmed.js');\r\n});"
+                FileContent = "define('thefile', [],function () {\r\n    console.log('file-shimmed.js');\r\n});"
             };
         }
 

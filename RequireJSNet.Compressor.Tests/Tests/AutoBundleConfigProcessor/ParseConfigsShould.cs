@@ -257,8 +257,8 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
                 ContainingConfig = filesPaths[0],
                 Output = $"{bundleOutputFolder}\\{bundleId}.js",
                 Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
-                    TestData.FileSpecs.Scripts_d(projectPath),
-                    TestData.FileSpecs.Scripts_shimmed(projectPath)
+                    TestData.FileSpecs.Scripts_d_pathed_as_nextfile(projectPath),
+                    TestData.FileSpecs.Scripts_shimmed_pathed_as_thefile(projectPath)
                 })
             };
 

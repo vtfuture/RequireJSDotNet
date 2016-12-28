@@ -112,6 +112,7 @@ namespace RequireJsNet.Compressor.AutoDependency
         private TransformationCollection GetTransformations(VisitorResult result, List<RequireCall> flattened)
         {
             var trans = new TransformationCollection();
+            var moduleName = this.CheckForConfigPath(RelativeFileName.ToModuleName());
 
             if (!result.RequireCalls.Any())
             {
@@ -122,7 +123,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     deps = shim.Dependencies.Select(r => r.Dependency).ToList();
                 }
 
-                trans.Add(ShimFileTransformation.Create(this.CheckForConfigPath(RelativeFileName.ToModuleName()), deps));
+                trans.Add(ShimFileTransformation.Create(moduleName, deps));
             }
             else
             {
@@ -138,7 +139,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     {
                         var call = result.RequireCalls.Where(r => r.IsModule).FirstOrDefault();
                         trans.Add(ToDefineTransformation.Create(call));
-                        trans.Add(AddIdentifierTransformation.Create(call,this.CheckForConfigPath(RelativeFileName.ToModuleName())));
+                        trans.Add(AddIdentifierTransformation.Create(call, moduleName));
                     }
                 }
                 else
@@ -146,7 +147,7 @@ namespace RequireJsNet.Compressor.AutoDependency
                     var defineCall = result.RequireCalls.Where(r => r.Type == RequireCallType.Define).FirstOrDefault();
                     if (string.IsNullOrEmpty(defineCall.Id))
                     {
-                        trans.Add(AddIdentifierTransformation.Create(defineCall, RelativeFileName.ToModuleName()));
+                        trans.Add(AddIdentifierTransformation.Create(defineCall, moduleName));
                     }
 
                     if (defineCall.DependencyArrayNode == null)
@@ -166,7 +167,6 @@ namespace RequireJsNet.Compressor.AutoDependency
                                                         .FirstOrDefault();
         }
 
-        [Obsolete("This is really stupid! Find out WHY proper relative paths are shrunk!")]
         private string CheckForConfigPath(string name)
         {
             var result = name;
