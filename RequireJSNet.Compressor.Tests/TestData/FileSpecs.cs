@@ -73,7 +73,7 @@ namespace RequireJSNet.Compressor.Tests.TestData
         {
             return new FileSpec(projectPath + @"\Scripts\shimmed.js", null)
             {
-                FileContent = "define('thefile', [],function () {\r\n    console.log('file-shimmed.js');\r\n});"
+                FileContent = "define('thefile', ['nextfile'],function () {\r\n    console.log('file-shimmed.js');\r\n});"
             };
         }
 

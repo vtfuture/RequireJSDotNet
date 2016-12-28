@@ -141,6 +141,8 @@ namespace RequireJsNet.Compressor.AutoDependency
                         trans.Add(ToDefineTransformation.Create(call));
                         trans.Add(AddIdentifierTransformation.Create(call, moduleName));
                     }
+
+                    //TODO: Append shimmed dependencies here too
                 }
                 else
                 {
@@ -153,6 +155,13 @@ namespace RequireJsNet.Compressor.AutoDependency
                     if (defineCall.DependencyArrayNode == null)
                     {
                         trans.Add(AddEmptyDepsArrayTransformation.Create(defineCall));
+                    }
+
+                    var shim = GetShim(RelativeFileName);
+                    if (shim != null)
+                    {
+                        var deps = shim.Dependencies.Select(r => r.Dependency).ToList();
+                        trans.Add(AddDepsTransformation.Create(defineCall, deps));
                     }
                 }
             }
