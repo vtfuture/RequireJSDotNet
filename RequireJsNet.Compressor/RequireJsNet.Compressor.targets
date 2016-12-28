@@ -16,6 +16,7 @@
     <RequireJsNetProjectPathForDeploy Condition="$(RequireJsNetProjectPathForDeploy) == ''">$(_PackageTempDir)</RequireJsNetProjectPathForDeploy>
     <RequireJsNetScriptsPathForDeploy Condition="$(RequireJsNetScriptsPathForDeploy) == ''">$(_PackageTempDir)\Scripts\</RequireJsNetScriptsPathForDeploy>
     <RequireJsNetEntryPointOverride Condition="$(RequireJsNetEntryPointOverride) == ''">$(MSBuildProjectDirectory)\Scripts\</RequireJsNetEntryPointOverride>
+    <RequireJsNetEntryPointOverrideForDeploy Condition="$(RequireJsNetEntryPointOverrideForDeploy) == ''">$(_PackageTempDir)\Scripts</RequireJsNetEntryPointOverrideForDeploy>
     <!--<BuildDependsOn>
       RequireJsNetMinify;
       RequireJsNetMinifyForDeploy;
@@ -48,6 +49,6 @@
       EncodingType="$(RequireJsNetEncodingType)"
       ProjectPath="$(RequireJsNetProjectPathForDeploy)"
       PackagePath="$(RequireJsNetScriptsPathForDeploy)"
-      EntryPointOverride="$(RequireJsNetEntryPointOverride)" />
+      EntryPointOverride="$(RequireJsNetEntryPointOverrideForDeploy)" />
   </Target>
 </Project>
