@@ -212,6 +212,9 @@ pip-log.txt
 #Translations
 *.mo
 
+# VS
+.vs
+
 #Mr Developer
 .mr.developer.cfg
 *.override.config
