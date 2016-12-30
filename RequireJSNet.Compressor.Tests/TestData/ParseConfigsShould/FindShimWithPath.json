@@ -1,0 +1,16 @@
+﻿{
+  "paths": {
+    "thefile": "shimmed",
+    "nextfile": "d"
+  },
+  "shim": {
+    "thefile": { "deps": [ "nextfile" ] }
+  },
+  "autoBundles": {
+    "bundle3": {
+      "include": [
+        { "file": "thefile" }
+      ]
+    }
+  }
+}

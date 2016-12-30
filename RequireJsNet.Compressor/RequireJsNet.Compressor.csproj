@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoDependency\ScriptProcessor.cs" />
+    <Compile Include="AutoDependency\Transformations\AddDepsTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\AddEmptyDepsArrayTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\IdToLowerTransformation.cs" />
     <Compile Include="AutoDependency\Transformations\ShimFileTransformation.cs" />

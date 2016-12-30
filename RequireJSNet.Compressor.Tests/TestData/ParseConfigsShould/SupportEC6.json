@@ -1,0 +1,12 @@
+﻿{
+  //"paths": {
+  //  "externalfile": "../otherscripts/e"
+  //},
+  "autoBundles": {
+    "bundle5": {
+      "include": [
+        { "file": "SupportEC6/h" }
+      ]
+    }
+  }
+}

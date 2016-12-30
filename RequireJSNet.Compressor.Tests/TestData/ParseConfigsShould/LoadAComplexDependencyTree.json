@@ -1,0 +1,18 @@
+﻿{
+  "paths": {
+    "jquery": "/somewhere/jquery-1.10.2/jquery",
+    "excludedfile": "/OtherScripts/excludedfile"
+  },
+  "autoBundles": {
+    "bundle1": {
+      "include": [
+        { "directory": "BundleIncludedDirectory" },
+        { "file": "a" }
+      ],
+      "exclude": [
+        { "file": "d" },
+        { "file": "excludedfile" }
+      ]
+    }
+  }
+}

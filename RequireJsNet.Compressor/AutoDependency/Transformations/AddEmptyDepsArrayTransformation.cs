@@ -27,10 +27,12 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
         {
             var call = RequireCall.ParentNode.Node.As<CallExpression>();
             var lastArg = call.Arguments.Last();
-            
+
             var beforeInsertPoint = script.Substring(0, lastArg.Range[0]);
             var afterInsertPoint = script.Substring(lastArg.Range[0], script.Length - lastArg.Range[0]);
             script = beforeInsertPoint + "[]," + afterInsertPoint;
+
+            addEmptyArrayArgumentTo(call, script, call.Arguments.Count - 1, new int[] { lastArg.Range[0], lastArg.Range[0] + 2 });
         }
 
         public int[] GetAffectedRange()
@@ -43,6 +45,22 @@ namespace RequireJsNet.Compressor.AutoDependency.Transformations
 
             // added + 1 to the range so that this gets executed before AddIdentifierTransformation
             return new int[] { calleeEnd + 1, calleeEnd + 2 };
+        }
+
+        private static void addEmptyArrayArgumentTo(CallExpression call, string script, int argumentIndex, int[] range)
+        {
+            var expression = new ArrayExpression()
+            {
+                Elements = new Expression[0],
+                Location = new Jint.Parser.Location
+                {
+                    Source = script,
+                    Start = new Jint.Parser.Position { /*TODO*/ },
+                    End = new Jint.Parser.Position { /*TODO*/ }
+                },
+                Range = range
+            };
+            call.Arguments.Insert(argumentIndex, expression);
         }
     }
 }

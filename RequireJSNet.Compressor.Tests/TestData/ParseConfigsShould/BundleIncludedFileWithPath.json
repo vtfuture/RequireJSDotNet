@@ -1,0 +1,12 @@
+﻿{
+  "paths": {
+    "includes": "BundleIncludedDirectory"
+  },
+  "autoBundles": {
+    "bundle2": {
+      "include": [
+        { "file": "includes/a" }
+      ]
+    }
+  }
+}

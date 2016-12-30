@@ -294,7 +294,7 @@ namespace RequireJsNet.Compressor
                                 finalContent = new StringBuilder();
                             }
 
-                            finalContent.Append(compressedContent);
+                            finalContent.AppendLine(compressedContent);
                         }
 
                         // Try and remove this file, if the user requests to do this.
