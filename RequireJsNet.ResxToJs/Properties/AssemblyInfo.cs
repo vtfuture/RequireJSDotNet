@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RequireJsNet.ResxToJs")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("VeriTech Solutions SRL")]
+[assembly: AssemblyCompany("VeriTech Solutions")]
 [assembly: AssemblyProduct("RequireJS.NET ResxToJs")]
-[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014")]
+[assembly: AssemblyCopyright("Copyright © VeriTech Solutions SRL 2014-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]
