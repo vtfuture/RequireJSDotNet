@@ -9,4 +9,6 @@ branches:
 nuget:
   disable_publish_on_pr: true
 artifacts:
-  - path: '**\*.nupkg'
+  - path: 'RequireJsNet\bin\**\*.nupkg'
+  - path: 'RequireJsNet.Compressor\bin\**\*.nupkg'
+  - path: 'RequireJsNet.ResxToJs\bin\**\*.nupkg'
