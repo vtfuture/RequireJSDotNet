@@ -8,3 +8,5 @@ branches:
   - master
 nuget:
   disable_publish_on_pr: true
+artifacts:
+  - path: '**\*.nupkg'
