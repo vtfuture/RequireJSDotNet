@@ -4,6 +4,7 @@
     <id>RequireJsNet.Compressor</id>
     <version>$version$</version>
     <authors>Stefan Prodan, Cezar Cretu, Mattias Åslund</authors>
+    <owners>Veritech Solutions</owners>
     <title>RequireJS.NET Compressor</title>
     <copyright>VeriTech Solutions SRL 2014-2017</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

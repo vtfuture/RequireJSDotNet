@@ -3,6 +3,7 @@
   <metadata>
     <version>$version$</version>
     <authors>Stefan Prodan</authors>
+    <owners>Veritech Solutions</owners>
     <id>RequireJsNet</id>
     <title>RequireJS.NET</title>
     <copyright>VeriTech Solutions SRL 2014-2017</copyright>
