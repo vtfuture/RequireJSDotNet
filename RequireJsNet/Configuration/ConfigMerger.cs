@@ -90,7 +90,7 @@ namespace RequireJsNet.Configuration
                 var existing = finalPaths.Where(r => r.Key == path.Key).FirstOrDefault();
                 if (existing != null)
                 {
-                    existing.Value = path.Value;
+                    existing.ReplaceValues(path.Value);
                 }
                 else
                 {
@@ -291,12 +291,12 @@ namespace RequireJsNet.Configuration
                 if (finalCollection.Paths.PathList.Where(r => r.Key == finalName).Any())
                 {
                     var finalEl = finalCollection.Paths.PathList.Where(r => r.Key == finalName).FirstOrDefault();
-                    if (finalEl == null)
+                    if (finalEl == null || !finalEl.Value.Any())
                     {
                         throw new Exception("Could not find path item with name = " + finalName);
                     }
 
-                    finalName = finalEl.Value;
+                    finalName = finalEl.Value.First();
                 }
 
                 item.RelativePath = finalName;

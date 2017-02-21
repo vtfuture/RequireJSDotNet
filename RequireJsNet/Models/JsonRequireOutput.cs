@@ -26,7 +26,7 @@ namespace RequireJsNet.Models
         public int WaitSeconds { get; set; }
 
         [JsonProperty(PropertyName = "paths")]
-        public Dictionary<string, string> Paths { get; set; }
+        public Dictionary<string, IEnumerable<string>> Paths { get; set; }
 
         [JsonProperty(PropertyName = "shim")]
         public Dictionary<string, JsonRequireDeps> Shim { get; set; }

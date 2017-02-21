@@ -67,15 +67,20 @@ namespace RequireJsNet.Configuration
             if (pathEl != null)
             {
                 paths.PathList = pathEl.Descendants("path")
-                                        .Select(r => new RequirePath
-                                                    {
-                                                        Key = r.ReadStringAttribute("key"),
-                                                        Value = r.ReadStringAttribute("value"),
-                                                        DefaultBundle = r.ReadStringAttribute("bundle", AttributeReadType.Optional)
-                                                    }).ToList();
+                    .Select(r => requirePathFrom(r))
+                    .ToList();
             }
 
             return paths;
+        }
+
+        private RequirePath requirePathFrom(XElement r)
+        {
+            var key = r.ReadStringAttribute("key");
+            var bundle = r.ReadStringAttribute("bundle", AttributeReadType.Optional);
+            var value = r.ReadStringAttribute("value");
+
+            return new RequirePath(key, value) { DefaultBundle = bundle };
         }
 
         private RequireShim GetShim(XElement root)

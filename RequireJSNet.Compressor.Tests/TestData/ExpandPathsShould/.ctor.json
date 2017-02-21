@@ -1,5 +1,7 @@
 ﻿{
   "paths": {
-    "jquery": "/somewhere/jquery-1.10.2/jquery"
+    "jquery": "/somewhere/jquery-1.10.2/jquery",
+    "external_jquery": "http://some.domain/jquery.js",
+    "jquery_with_fallback": [ "http://some.domain/jquery.js", "/jquery" ]
   }
 }

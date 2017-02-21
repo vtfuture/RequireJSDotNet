@@ -234,11 +234,8 @@ namespace RequireJsNet.Compressor.RequireProcessing
                                 };
                 foreach (var script in scripts)
                 {
-                    paths.PathList.Add(new RequirePath
-                                           {
-                                               Key = script,
-                                               Value = PathHelpers.GetRequireRelativePath(EntryPoint, bundle.Output)
-                                           });
+                    var path = PathHelpers.GetRequireRelativePath(EntryPoint, bundle.Output);
+                    paths.PathList.Add(new RequirePath(script, path));
                 }
 
                 var over = new CollectionOverride

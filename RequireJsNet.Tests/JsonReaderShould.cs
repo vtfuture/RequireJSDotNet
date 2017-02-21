@@ -30,11 +30,9 @@ namespace RequireJsNet.Tests
         {
             var config = ReadJson(new TestFileReader());
 
-            var expected = ConfigurationCreators.CreateCollectionWithPaths(new RequirePath
-                                                                               {
-                                                                                   Key = "jquery",
-                                                                                   Value = "jquery-1.10.2"
-                                                                               });
+            var expected = ConfigurationCreators.CreateCollectionWithPaths(
+                new RequirePath("jquery", "jquery-1.10.2")
+            );
 
             CustomAssert.JsonEquals(expected, config);
         }
@@ -44,12 +42,21 @@ namespace RequireJsNet.Tests
         {
             var config = ReadJson(new TestFileReader());
 
-            var expected = ConfigurationCreators.CreateCollectionWithPaths(new RequirePath
-                                                                               {
-                                                                                   Key = "jquery-validate",
-                                                                                   Value = "jquery.validate",
-                                                                                   DefaultBundle = "jqValidate"
-                                                                               });
+            var expected = ConfigurationCreators.CreateCollectionWithPaths(
+                new RequirePath("jquery-validate", "jquery.validate") { DefaultBundle = "jqValidate" }
+            );
+
+            CustomAssert.JsonEquals(expected, config);
+        }
+
+        [Fact]
+        public void ReadPathArray()
+        {
+            var config = ReadJson(new TestFileReader());
+
+            var expected = ConfigurationCreators.CreateCollectionWithPaths(
+                new RequirePath("jquery", "jquery-1.10.2", "jquery.min")
+            );
 
             CustomAssert.JsonEquals(expected, config);
         }

@@ -64,6 +64,21 @@ namespace RequireJSNet.Compressor.Tests
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void ExpandUrlsToNull()
+        {
+            var actual = ScriptProcessor.ExpandPaths("external_jquery", configuration);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void ExpandLocalPathWhenAvailable()
+        {
+            var expected = "/jquery";
+            var actual = ScriptProcessor.ExpandPaths("jquery_with_fallback", configuration);
+            Assert.Equal(expected, actual);
+        }
+
         private ConfigurationCollection ReadJson(TestFileReader reader)
         {
             var jsonReader = new JsonReader(

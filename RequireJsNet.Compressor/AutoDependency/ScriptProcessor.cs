@@ -71,12 +71,17 @@ namespace RequireJsNet.Compressor.AutoDependency
                 });
 
                 //Expand named paths relative to the scripts folder
-                Dependencies = deps.Select(r => ExpandPaths(r, configuration)).ToList();
+                Dependencies = deps.Select(r => ExpandPaths(r, configuration))
+                    .Where(r => r != null)
+                    .ToList();
 
                 var shim = this.GetShim(RelativeFileName);
                 if (shim != null)
                 {
-                    Dependencies.AddRange(shim.Dependencies.Select(r => ExpandPaths(r.Dependency, configuration)));
+                    var shimDependencies = shim.Dependencies
+                        .Select(r => ExpandPaths(r.Dependency, configuration))
+                        .Where(r => r != null);
+                    Dependencies.AddRange(shimDependencies);
                 }
 
                 Dependencies = Dependencies.Distinct().ToList();
@@ -171,15 +176,20 @@ namespace RequireJsNet.Compressor.AutoDependency
 
         private ShimEntry GetShim(string relativeFileName)
         {
-            return configuration.Shim.ShimEntries.Where(r => r.For.ToLower() == relativeFileName.ToModuleName().ToLower()
-                                                                    || r.For.ToLower() == this.CheckForConfigPath(relativeFileName.ToModuleName()).ToLower())
-                                                        .FirstOrDefault();
+            return configuration.Shim.ShimEntries
+                .Where(r => r.For.ToLower() == relativeFileName.ToModuleName().ToLower()
+                        || r.For.ToLower() == this.CheckForConfigPath(relativeFileName.ToModuleName()).ToLower())
+                .FirstOrDefault();
         }
 
         private string CheckForConfigPath(string name)
         {
             var result = name;
-            var pathEl = configuration.Paths.PathList.Where(r => r.Value.ToLower() == name.ToLower()).FirstOrDefault();
+
+            var pathEl = configuration.Paths.PathList
+                .Where(r => r.Value.Any(p => p.ToLower() == name.ToLower()))
+                .FirstOrDefault();
+
             if (pathEl != null)
             {
                 result = pathEl.Key;
@@ -188,6 +198,14 @@ namespace RequireJsNet.Compressor.AutoDependency
             return result;
         }
 
+        /// <summary>
+        /// Expands to longest subpath in the name that exactly matches a path
+        ///     as long as there is a local path value for that path.
+        /// </summary>
+        /// <remarks>Consider renaming this function to ExpandPathsIfLocal()</remarks>
+        /// <param name="name">requirejs dependency name, i.e. "jquery".</param>
+        /// <param name="configuration"></param>
+        /// <returns>NULL if any part of the name expands solely to a Url. The name unchanged if no match is found. Otherwise the expanded path of the name.</returns>
         public static string ExpandPaths(string name, ConfigurationCollection configuration)
         {
             var alias = configuration.Paths.PathList
@@ -198,7 +216,14 @@ namespace RequireJsNet.Compressor.AutoDependency
             if (alias == null)
                 return name;
 
-            return alias.Value + name.Substring(alias.Key.Length);
+            var localPath = alias.Value
+                .Where(path => !Helpers.FileHelpers.IsUrl(path))
+                .FirstOrDefault();
+
+            if (localPath == null)
+                return null;
+
+            return localPath + name.Substring(alias.Key.Length);
         }
 
         private void EnsureHasRange(SyntaxNode node, List<ScriptLine> lineList)

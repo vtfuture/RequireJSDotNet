@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 
 using RequireJsNet.Models;
-using System.Text.RegularExpressions;
 
 namespace RequireJsNet.Compressor
 {
@@ -37,8 +36,7 @@ namespace RequireJsNet.Compressor
 
         internal protected string ResolvePhysicalPath(string relativePath, string directory = "")
         {
-            var protocolRegex = @"^\w+://";
-            if (Regex.IsMatch(relativePath, protocolRegex))
+            if (Helpers.FileHelpers.IsUrl(relativePath))
                 return null;
 
             if (relativePath.Contains("?"))

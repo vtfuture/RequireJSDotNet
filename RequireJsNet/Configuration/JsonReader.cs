@@ -91,30 +91,46 @@ namespace RequireJsNet.Configuration
             paths.PathList = new List<RequirePath>();
             if (document != null && document["paths"] != null)
             {
-                paths.PathList = document["paths"].Select(
-                r =>
-                {
-                    var result = new RequirePath();
-                    var prop = (JProperty)r;
-                    result.Key = prop.Name;
-                    if (prop.Value.Type == JTokenType.String)
-                    {
-                        result.Value = prop.Value.ToString();
-                    }
-                    else
-                    {
-                        var pathObj = (JObject)prop.Value;
-                        if (pathObj["path"] == null || pathObj["defaultBundle"] == null)
-                            throw new ArgumentException("Expected an object with 'path' and 'defaultBundle' but got " + pathObj.ToString());
-                        result.Value = pathObj["path"].ToString();
-                        result.DefaultBundle = pathObj["defaultBundle"].ToString();
-                    }
-
-                    return result;
-                }).ToList();    
+                paths.PathList = document["paths"]
+                    .Select(r => requirePathFrom((JProperty)r))
+                    .ToList();
             }
             
             return paths;
+        }
+
+        private static RequirePath requirePathFrom(JProperty prop)
+        {
+            var result = new RequirePath(prop.Name);
+
+            if (prop.Value.Type == JTokenType.String)
+            {
+                result.Add(prop.Value.ToString());
+            }
+            else if (prop.Value.Type == JTokenType.Array)
+            {
+                result.Add(prop.Value.Values<string>());
+            }
+            else
+            {
+                var pathObj = (JObject)prop.Value;
+
+                var path = pathObj["path"];
+                var defaultBundle = pathObj["defaultBundle"];
+                if (path == null || defaultBundle == null)
+                    throw new ArgumentException("Expected an object with 'path' and 'defaultBundle' but got " + pathObj.ToString());
+
+                if (path.Type == JTokenType.String)
+                    result.Add(path.ToString());
+                else if (path.Type == JTokenType.Array)
+                    result.Add(prop.Value.Values<string>());
+                else
+                    throw new ArgumentException("Expected 'path' to be string or array, but got " + path.ToString());
+
+                result.DefaultBundle = defaultBundle.ToString();
+            }
+
+            return result;
         }
 
         private RequireShim GetShim(JObject document)

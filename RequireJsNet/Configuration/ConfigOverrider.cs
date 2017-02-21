@@ -82,20 +82,19 @@ namespace RequireJsNet.Configuration
             foreach (var pathEl in overridePaths.PathList)
             {
                 var existing = originalPaths.PathList.Where(r => r.Key.ToLower() == pathEl.Key.ToLower()).FirstOrDefault();
+
                 if (existing != null)
                 {
-                    existing.Value = pathEl.Value;
+                    existing.ReplaceValues(pathEl.Value);
                 }
                 else
                 {
                     originalPaths.PathList.Add(pathEl);
                 }
 
-                var existingValue = originalPaths.PathList.Where(r => r.Value.ToLower() == pathEl.Key.ToLower()).FirstOrDefault();
-                if (existingValue != null)
-                {
-                    existingValue.Value = pathEl.Value;
-                }
+                foreach (var pathElValue in pathEl.Value)
+                    foreach (var path in originalPaths.PathList)
+                        path.ReplaceValue(pathEl.Key, pathElValue);
             }
         }
 

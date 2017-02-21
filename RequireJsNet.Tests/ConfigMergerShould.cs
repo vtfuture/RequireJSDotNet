@@ -19,8 +19,8 @@ namespace RequireJsNet.Tests
         [Fact]
         public void UnitePathsWhenKeysAreDifferent()
         {
-            var jqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.06.2" };
-            var amplifyPath = new RequirePath { Key = "amplify", Value = "amplify-10.3.5" };
+            var jqueryPath = new RequirePath("jquery", "jquery-1.06.2");
+            var amplifyPath = new RequirePath("amplify", "amplify-10.3.5");
 
             var firstCollection = ConfigurationCreators.CreateCollectionWithPaths(jqueryPath);
             var secondCollection = ConfigurationCreators.CreateCollectionWithPaths(amplifyPath);
@@ -36,8 +36,8 @@ namespace RequireJsNet.Tests
         [Fact]
         public void OverridePathsWithSameKey()
         {
-            var jqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.06.2" };
-            var altJqueryPath = new RequirePath { Key = "jquery", Value = "jquery-1.05.3" };
+            var jqueryPath = new RequirePath("jquery", "jquery-1.06.2");
+            var altJqueryPath = new RequirePath("jquery", "jquery-1.05.3");
 
             var firstCollection = ConfigurationCreators.CreateCollectionWithPaths(jqueryPath);
             var secondCollection = ConfigurationCreators.CreateCollectionWithPaths(altJqueryPath);

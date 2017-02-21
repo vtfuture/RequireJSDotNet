@@ -7,6 +7,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RequireJsNet.Compressor.Helpers
 {
@@ -42,5 +43,10 @@ namespace RequireJsNet.Compressor.Helpers
                     throw new ArgumentException("Encoding: " + encoding + " is invalid.", "EncodingType");
             }
         }
+        public static bool IsUrl(string path)
+        {
+            return Regex.IsMatch(path, @"^\w+://");
+        }
+
     }
 }
