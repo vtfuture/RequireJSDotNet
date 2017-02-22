@@ -78,6 +78,22 @@ namespace RequireJsNet.Tests
         }
 
         [Fact]
+        public void SerializesPackagesInRequireJSFormat()
+        {
+            var expected = "var require = {\"baseUrl\":\"\",\"locale\":\"en\",\"urlArgs\":null,\"waitSeconds\":7,\"paths\":{},\"packages\":[{\"name\":\"cart\",\"main\":\"main\"},{\"name\":\"store\",\"main\":\"store\"}],\"shim\":{},\"map\":{}};";
+
+            var config = new RequireRendererConfiguration();
+            var collection = ConfigurationCreators.CreateCollectionWithPackages(
+                new RequirePackage("cart", "main"),
+                new RequirePackage("store", "store")
+            );
+            var outputConfig = RequireJsHtmlHelpers.createOutputConfigFrom(collection, config, "en");
+            var actual = Helpers.JavaScriptHelpers.SerializeAsVariable(outputConfig, "require");
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ReadShimWithExports()
         {
             var config = ReadJson(new TestFileReader());
