@@ -52,7 +52,7 @@ namespace RequireJsNet.Models
 
         public void ReplaceValue(string oldValue, string newValue)
         {
-            foreach (var value in _value)
+            foreach (var value in _value.ToArray())
             {
                 var count = _value.RemoveWhere(s => s.ToLower() == oldValue.ToLower());
                 if (count > 0)
