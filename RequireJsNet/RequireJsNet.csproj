@@ -111,6 +111,7 @@
     <Compile Include="Models\RequireBundles.cs" />
     <Compile Include="Models\RequireMap.cs" />
     <Compile Include="Models\RequireMapElement.cs" />
+    <Compile Include="Models\RequirePackage.cs" />
     <Compile Include="Models\RequireReplacement.cs" />
     <Compile Include="Models\RoutingInfo.cs" />
     <Compile Include="EntryPointResolver\RequireEntryPointResolverCollection.cs" />

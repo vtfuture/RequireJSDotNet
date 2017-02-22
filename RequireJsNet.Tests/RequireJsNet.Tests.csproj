@@ -68,6 +68,7 @@
     <Compile Include="JsonReaderShould.cs" />
     <Compile Include="ReaderFactoryShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequirePackageShould.cs" />
     <Compile Include="TestImplementations\TestFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
