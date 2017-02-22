@@ -18,6 +18,9 @@ namespace RequireJsNet.Models
         [JsonProperty(PropertyName = "paths")]
         public RequirePaths Paths { get; set; }
 
+        [JsonProperty(PropertyName = "packages")]
+        public RequirePackages Packages { get; set; }
+
         [JsonProperty(PropertyName = "shim")]
         public RequireShim Shim { get; set; }
 

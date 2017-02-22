@@ -41,6 +41,14 @@ namespace RequireJsNet.Tests.DataCreation
             return collection;
         }
 
+        public static ConfigurationCollection CreateCollectionWithPackages(params RequirePackage[] packages)
+        {
+            var collection = CreateEmptyCollection();
+            collection.Packages = new RequirePackages();
+            collection.Packages.PackageList = packages.ToList();
+            return collection;
+        }
+
         public static ConfigurationCollection CreateCollectionWithShims(params ShimEntry[] shim)
         {
             var collection = CreateEmptyCollection();

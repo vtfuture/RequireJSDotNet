@@ -62,6 +62,22 @@ namespace RequireJsNet.Tests
         }
 
         [Fact]
+        public void ReadPackagesArray()
+        {
+            var expectedPackages = new[]
+            {
+                new RequirePackage("cart", "main"),
+                new RequirePackage("store", "store")
+            };
+            var expectedCollection = ConfigurationCreators.CreateCollectionWithPackages(expectedPackages);
+
+            var config = ReadJson(new TestFileReader());
+
+            Assert.Equal(2, config.Packages.PackageList.Count);
+            CustomAssert.JsonEquals(expectedCollection, config);
+        }
+
+        [Fact]
         public void ReadShimWithExports()
         {
             var config = ReadJson(new TestFileReader());

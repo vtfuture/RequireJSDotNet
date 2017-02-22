@@ -70,6 +70,7 @@ namespace RequireJsNet.Configuration
             var deserialized = (JObject)JsonConvert.DeserializeObject(text);
             collection.FilePath = Path;
             collection.Paths = GetPaths(deserialized);
+            collection.Packages = GetPackages(deserialized);
             collection.Shim = GetShim(deserialized);
             collection.Map = GetMap(deserialized);
 
@@ -131,6 +132,38 @@ namespace RequireJsNet.Configuration
             }
 
             return result;
+        }
+
+        private RequirePackages GetPackages(JObject document)
+        {
+            var packages = new RequirePackages();
+            packages.PackageList = new List<RequirePackage>();
+
+            if (document != null && document["packages"] != null)
+            {
+                packages.PackageList = document["packages"]
+                    .Select(r => requirePackageFrom(r))
+                    .ToList();
+            }
+
+            return packages;
+        }
+
+        private static RequirePackage requirePackageFrom(JToken token)
+        {
+            if (token is JValue)
+            {
+                var name = ((JValue)token).Value<string>();
+                return new RequirePackage(name);
+            }
+            else
+            {
+                var packageObj = (JObject)token;
+                var name = (string)packageObj["name"];
+                var main = (string)packageObj["main"];
+                var location = (string)packageObj["location"];
+                return new RequirePackage(name, main, location);
+            }
         }
 
         private RequireShim GetShim(JObject document)
