@@ -293,10 +293,8 @@ namespace RequireJsNet.Compressor.Parsing
         private void ProcessRequireCall(ref RequireCall parentCall, CallExpression callExpression, NodeWithChildren parentNode)
         {
             var argCount = callExpression.Arguments.Count();
-            if (argCount < 1 || argCount > 2)
-            {
+            if (argCount < 1 || argCount > 3)
                 throw new Exception("Invalid number of arguments for require() call " + relativeFileName);
-            }
 
             var requireCall = new RequireCall
             {
@@ -315,34 +313,33 @@ namespace RequireJsNet.Compressor.Parsing
 
             parentCall = requireCall;
 
-            var firstArg = callExpression.Arguments.First();
-            var secondArg = callExpression.Arguments.Last();
+            var depsNode = callExpression.Arguments[0];
+            ProcessRequireCallDeps(requireCall, depsNode);
 
-            if (argCount == 1)
+            if (argCount > 1)
             {
-                if (firstArg is Literal)
-                {
-                    var singleDep = firstArg.As<Literal>();
-                    requireCall.SingleDependencyNode = singleDep;
-                    requireCall.Dependencies.Add(singleDep.Value.ToString());
-                }
-                else if (firstArg is ArrayExpression)
-                {
-                    var deps = this.ProcessDependencyArray(firstArg, requireCall);
-                    requireCall.Dependencies.AddRange(deps);
-                }
-                else
-                {
-                    throw new Exception("Could not read argument for require() call " + relativeFileName);
-                }
-            }
-            else if (argCount == 2)
-            {
+                var moduleNode = callExpression.Arguments[1];
                 requireCall.IsModule = true;
-                var deps = this.ProcessDependencyArray(firstArg, requireCall);
-                requireCall.Dependencies.AddRange(deps);
+                this.ProcessModuleDefinition(moduleNode, parentCall, parentNode);
+            }
+        }
 
-                this.ProcessModuleDefinition(secondArg, parentCall, parentNode);
+        private void ProcessRequireCallDeps(RequireCall requireCall, Expression depsNode)
+        {
+            if (depsNode is Literal)
+            {
+                var singleDep = depsNode.As<Literal>();
+                requireCall.SingleDependencyNode = singleDep;
+                requireCall.Dependencies.Add(singleDep.Value.ToString());
+            }
+            else if (depsNode is ArrayExpression)
+            {
+                var deps = this.ProcessDependencyArray(depsNode, requireCall);
+                requireCall.Dependencies.AddRange(deps);
+            }
+            else
+            {
+                throw new Exception("Could not read argument for require() call " + relativeFileName);
             }
         }
 

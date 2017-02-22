@@ -23,6 +23,17 @@ namespace RequireJSNet.Compressor.Tests
         }
 
         [Fact]
+        public void ResolveSingleDependencyWithCallback()
+        {
+            var expected = new[] { "wer" };
+
+            var script = "require('wer', function(){ console.log('done'); });";
+            var actual = getDependenciesFrom(script);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ResolveDependenciesWithoutCallback()
         {
             var expected = new[] { "abc", "def" };
@@ -44,22 +55,22 @@ namespace RequireJSNet.Compressor.Tests
             Assert.Equal(expected, actual);
         }
 
-        //[Fact]
-        //public void ResolveDependenciesWithCallbackAndErrback()
-        //{
-        //    var expected = new[] { "mno", "pqr" };
+        [Fact]
+        public void ResolveDependenciesWithCallbackAndErrback()
+        {
+            var expected = new[] { "mno", "pqr" };
 
-        //    var script = @"
-        //        require(['mno', 'pqr'], function(){ 
-        //            console.log('done'); 
-        //        }, function() { 
-        //            console.error('inside errback'); 
-        //        });
-        //    ";
-        //    var actual = getDependenciesFrom(script);
+            var script = @"
+                require(['mno', 'pqr'], function(){ 
+                    console.log('done'); 
+                }, function() { 
+                    console.error('inside errback'); 
+                });
+            ";
+            var actual = getDependenciesFrom(script);
 
-        //    Assert.Equal(expected, actual);
-        //}
+            Assert.Equal(expected, actual);
+        }
 
 
 
