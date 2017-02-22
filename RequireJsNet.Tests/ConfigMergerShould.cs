@@ -553,5 +553,48 @@ namespace RequireJsNet.Tests
 
             CustomAssert.JsonEquals(expected, merged);
         }
+
+        [Fact]
+        public void ReplacePackagesWithSameName()
+        {
+            var packageA1 = new RequirePackage("a", "main");
+            var packageA2 = new RequirePackage("a", "start", "/somewhere");
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithPackages(packageA1);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithPackages(packageA2);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Packages.PackageList = new List<RequirePackage>
+                {
+                    new RequirePackage("a", "start", "/somewhere")
+                };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
+
+        [Fact]
+        public void AppendPackagesWithDifferentName()
+        {
+            var packageA1 = new RequirePackage("a", "main");
+            var packageA2 = new RequirePackage("b", "start", "/somewhere");
+
+            var firstConfig = ConfigurationCreators.CreateCollectionWithPackages(packageA1);
+            var secondConfig = ConfigurationCreators.CreateCollectionWithPackages(packageA2);
+
+            var merger = ConfigurationCreators.CreateBundleProcessingConfigMerger(firstConfig, secondConfig);
+            var merged = merger.GetMerged();
+
+            var expected = ConfigurationCreators.CreateEmptyCollection();
+            expected.Packages.PackageList = new List<RequirePackage>
+                {
+                    new RequirePackage("a", "main"),
+                    new RequirePackage("b", "start", "/somewhere")
+                };
+
+            CustomAssert.JsonEquals(expected, merged);
+        }
     }
 }

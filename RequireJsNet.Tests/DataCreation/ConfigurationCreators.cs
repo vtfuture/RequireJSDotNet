@@ -17,6 +17,9 @@ namespace RequireJsNet.Tests.DataCreation
             collection.Paths = new RequirePaths();
             collection.Paths.PathList = new List<RequirePath>();
 
+            collection.Packages = new RequirePackages();
+            collection.Packages.PackageList = new List<RequirePackage>();
+
             collection.AutoBundles = new AutoBundles();
             collection.AutoBundles.Bundles = new List<AutoBundle>();
 

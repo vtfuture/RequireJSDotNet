@@ -26,6 +26,8 @@ namespace RequireJsNet.Configuration
             this.collections = collections;
             finalCollection.Paths = new RequirePaths();
             finalCollection.Paths.PathList = new List<RequirePath>();
+            finalCollection.Packages = new RequirePackages();
+            finalCollection.Packages.PackageList = new List<RequirePackage>();
             finalCollection.Shim = new RequireShim();
             finalCollection.Shim.ShimEntries = new List<ShimEntry>();
             finalCollection.Map = new RequireMap();
@@ -44,6 +46,11 @@ namespace RequireJsNet.Configuration
                 if (coll.Paths != null && coll.Paths.PathList != null)
                 {
                     MergePaths(coll);    
+                }
+
+                if (coll.Packages != null && coll.Packages.PackageList != null)
+                {
+                    MergePackages(coll);
                 }
 
                 if (coll.Shim != null && coll.Shim.ShimEntries != null)
@@ -95,6 +102,24 @@ namespace RequireJsNet.Configuration
                 else
                 {
                     finalPaths.Add(path);
+                }
+            }
+        }
+
+        private void MergePackages(ConfigurationCollection collection)
+        {
+            var finalPackages = finalCollection.Packages.PackageList;
+            foreach (var package in collection.Packages.PackageList)
+            {
+                var existing = finalPackages.Where(r => r.Name == package.Name).FirstOrDefault();
+                if (existing != null)
+                {
+                    existing.Main = package.Main;
+					existing.Location = package.Location;
+                }
+                else
+                {
+                    finalPackages.Add(package);
                 }
             }
         }
