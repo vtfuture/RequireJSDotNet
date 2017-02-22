@@ -62,35 +62,9 @@ namespace RequireJsNet
 
             var locale = config.LocaleSelector(html);
 
-            var outputConfig = new JsonRequireOutput
-            {
-                BaseUrl = config.BaseUrl,
-                Locale = locale,
-                UrlArgs = config.UrlArgs,
-                WaitSeconds = config.WaitSeconds,
-                Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
-                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
-                        r => r.For,
-                        r => new JsonRequireDeps
-                                 {
-                                     Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
-                                     Exports = r.Exports
-                                 }),
-                Map = resultingConfig.Map.MapElements.ToDictionary(
-                         r => r.For,
-                         r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
-            };
+            var outputConfig = createOutputConfigFrom(resultingConfig, config, locale);
 
-            config.ProcessConfig(outputConfig);
-
-            var options = new JsonRequireOptions
-            {
-                Locale = locale,
-                PageOptions = RequireJsOptions.GetPageOptions(html.ViewContext.HttpContext),
-                WebsiteOptions = RequireJsOptions.GetGlobalOptions(html.ViewContext.HttpContext)
-            };
-
-            config.ProcessOptions(options);
+            var options = createOptionsFrom(html.ViewContext.HttpContext, config, locale);
 
             var configBuilder = new JavaScriptBuilder();
             configBuilder.AddStatement(JavaScriptHelpers.SerializeAsVariable(options, "requireConfig"));
@@ -102,15 +76,55 @@ namespace RequireJsNet
             var requireEntryPointBuilder = new JavaScriptBuilder();
             requireEntryPointBuilder.AddStatement(
                 JavaScriptHelpers.MethodCall(
-                "require", 
+                "require",
                 (object)new[] { entryPointPath.ToString() }));
 
             return new MvcHtmlString(
-                configBuilder.Render() 
+                configBuilder.Render()
                 + Environment.NewLine
-                + requireRootBuilder.Render() 
+                + requireRootBuilder.Render()
                 + Environment.NewLine
                 + requireEntryPointBuilder.Render());
+        }
+
+        internal static JsonRequireOptions createOptionsFrom(System.Web.HttpContextBase httpContext, RequireRendererConfiguration config, string locale)
+        {
+            var options = new JsonRequireOptions
+            {
+                Locale = locale,
+                PageOptions = RequireJsOptions.GetPageOptions(httpContext),
+                WebsiteOptions = RequireJsOptions.GetGlobalOptions(httpContext)
+            };
+
+            config.ProcessOptions(options);
+            return options;
+        }
+
+        internal static JsonRequireOutput createOutputConfigFrom(ConfigurationCollection resultingConfig, RequireRendererConfiguration config, string locale)
+        {
+            var outputConfig = new JsonRequireOutput
+            {
+                BaseUrl = config.BaseUrl,
+                Locale = locale,
+                UrlArgs = config.UrlArgs,
+                WaitSeconds = config.WaitSeconds,
+                Paths = resultingConfig.Paths.PathList.ToDictionary(r => r.Key, r => r.Value),
+                Packages = resultingConfig.Packages.PackageList,
+                Shim = resultingConfig.Shim.ShimEntries.ToDictionary(
+                        r => r.For,
+                        r => new JsonRequireDeps
+                        {
+                            Dependencies = r.Dependencies.Select(x => x.Dependency).ToList(),
+                            Exports = r.Exports
+                        }),
+                Map = resultingConfig.Map.MapElements.ToDictionary(
+                         r => r.For,
+                         r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
+            };
+
+            config.ProcessConfig(outputConfig);
+
+            return outputConfig;
         }
 
         private static HashStore<ConfigurationCollection> configObjectHash = new HashStore<ConfigurationCollection>();

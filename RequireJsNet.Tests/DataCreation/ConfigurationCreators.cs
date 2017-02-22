@@ -17,6 +17,9 @@ namespace RequireJsNet.Tests.DataCreation
             collection.Paths = new RequirePaths();
             collection.Paths.PathList = new List<RequirePath>();
 
+            collection.Packages = new RequirePackages();
+            collection.Packages.PackageList = new List<RequirePackage>();
+
             collection.AutoBundles = new AutoBundles();
             collection.AutoBundles.Bundles = new List<AutoBundle>();
 
@@ -38,6 +41,14 @@ namespace RequireJsNet.Tests.DataCreation
             var collection = CreateEmptyCollection();
             collection.Paths = new RequirePaths();
             collection.Paths.PathList = paths.ToList();
+            return collection;
+        }
+
+        public static ConfigurationCollection CreateCollectionWithPackages(params RequirePackage[] packages)
+        {
+            var collection = CreateEmptyCollection();
+            collection.Packages = new RequirePackages();
+            collection.Packages.PackageList = packages.ToList();
             return collection;
         }
 

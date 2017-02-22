@@ -28,6 +28,9 @@ namespace RequireJsNet.Models
         [JsonProperty(PropertyName = "paths")]
         public Dictionary<string, IEnumerable<string>> Paths { get; set; }
 
+        [JsonProperty(PropertyName = "packages")]
+        public List<RequirePackage> Packages { get; set; }
+
         [JsonProperty(PropertyName = "shim")]
         public Dictionary<string, JsonRequireDeps> Shim { get; set; }
 

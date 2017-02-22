@@ -1,0 +1,6 @@
+﻿{
+  "packages": [
+    "cart",
+    { "name": "store", "main": "store" }
+  ]
+}
