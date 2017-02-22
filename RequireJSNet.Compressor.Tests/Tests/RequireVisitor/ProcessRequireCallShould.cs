@@ -23,6 +23,17 @@ namespace RequireJSNet.Compressor.Tests
         }
 
         [Fact]
+        public void IgnoreSingleDynamicDependency()
+        {
+            var expected = new string[] { };
+
+            var script = @"require('abc' + 'def');";
+            var actual = getDependenciesFrom(script);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ResolveSingleDependencyWithCallback()
         {
             var expected = new[] { "wer" };
@@ -39,6 +50,17 @@ namespace RequireJSNet.Compressor.Tests
             var expected = new[] { "abc", "def" };
 
             var script = "require(['abc', 'def']);";
+            var actual = getDependenciesFrom(script);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void IgnoreDynamicDependencyInArray()
+        {
+            var expected = new[] { "ghi" };
+
+            var script = @"require(['ghi', 'abc' + 'def']);";
             var actual = getDependenciesFrom(script);
 
             Assert.Equal(expected, actual);

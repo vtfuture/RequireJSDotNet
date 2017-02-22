@@ -326,20 +326,21 @@ namespace RequireJsNet.Compressor.Parsing
 
         private void ProcessRequireCallDeps(RequireCall requireCall, Expression depsNode)
         {
-            if (depsNode is Literal)
+            if (depsNode is ArrayExpression)
+            {
+                var deps = this.ProcessDependencyArray(depsNode, requireCall);
+                requireCall.Dependencies.AddRange(deps);
+            }
+            else if (depsNode is Literal)
             {
                 var singleDep = depsNode.As<Literal>();
                 requireCall.SingleDependencyNode = singleDep;
                 requireCall.Dependencies.Add(singleDep.Value.ToString());
             }
-            else if (depsNode is ArrayExpression)
+            else 
             {
-                var deps = this.ProcessDependencyArray(depsNode, requireCall);
-                requireCall.Dependencies.AddRange(deps);
-            }
-            else
-            {
-                throw new Exception("Could not read argument for require() call " + relativeFileName);
+                //We end up here when user is requiring a single expression.
+                //Just exclude this require() from compression.
             }
         }
 
