@@ -299,10 +299,10 @@ namespace RequireJsNet.Compressor.Parsing
             }
 
             var requireCall = new RequireCall
-                                  {
-                                      Type = RequireCallType.Require,
-                                      ParentNode = parentNode
-                                  };
+            {
+                Type = RequireCallType.Require,
+                ParentNode = parentNode
+            };
 
             if (parentCall != null)
             {
