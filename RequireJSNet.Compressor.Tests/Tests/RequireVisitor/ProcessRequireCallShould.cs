@@ -11,16 +11,16 @@ namespace RequireJSNet.Compressor.Tests
 {
     public class ProcessRequireCallShould
     {
-        //[Fact]
-        //public void ResolveSingleDependencyWithoutCallback()
-        //{
-        //    var expected = new[] { "abc" };
+        [Fact]
+        public void ResolveSingleDependencyWithoutCallback()
+        {
+            var expected = new[] { "abc" };
 
-        //    var script = "require('abc');";
-        //    var actual = getDependenciesFrom(script);
+            var script = "require('abc');";
+            var actual = getDependenciesFrom(script);
 
-        //    Assert.Equal(expected, actual);
-        //}
+            Assert.Equal(expected, actual);
+        }
 
         [Fact]
         public void ResolveDependenciesWithoutCallback()

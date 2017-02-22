@@ -326,7 +326,7 @@ namespace RequireJsNet.Compressor.Parsing
                     requireCall.SingleDependencyNode = singleDep;
                     requireCall.Dependencies.Add(singleDep.Value.ToString());
                 }
-                if (firstArg is ArrayExpression)
+                else if (firstArg is ArrayExpression)
                 {
                     var deps = this.ProcessDependencyArray(firstArg, requireCall);
                     requireCall.Dependencies.AddRange(deps);
