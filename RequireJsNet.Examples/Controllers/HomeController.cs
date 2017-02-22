@@ -18,6 +18,11 @@ namespace RequireJsNet.Examples.Controllers
             return View("Index");
         }
 
+        public ActionResult Errback()
+        {
+            return View("Index");
+        }
+
         public ActionResult Complex()
         {
             return View();
