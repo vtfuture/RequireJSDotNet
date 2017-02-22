@@ -36,6 +36,16 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
         }
 
         [Fact]
+        public void ResolveToNullForMissingFiles()
+        {
+            var relativeModuleUrl = "missing-file";
+
+            var actual = compressor.ResolvePhysicalPath(relativeModuleUrl, projectRootPath);
+
+            Assert.Null(actual);
+        }
+
+        [Fact]
         public void ResolveAbsoluteUrlRelativeToProjectRoot()
         {
             var relativeModuleUrl = "/def";

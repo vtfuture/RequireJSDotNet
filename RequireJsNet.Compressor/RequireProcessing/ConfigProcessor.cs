@@ -60,9 +60,7 @@ namespace RequireJsNet.Compressor
 
 
             if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("Could not load script " + filePath, filePath);
-            }
+                return null;
 
             return filePath;
         }
