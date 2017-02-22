@@ -157,6 +157,7 @@
     <Content Include="RequireJS.complex.json" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\cart\main.js" />
     <Content Include="Scripts\Controllers\Foo\Home\index.js" />
     <Content Include="Scripts\Controllers\Root\Home\errback.js" />
     <Content Include="Scripts\Controllers\Root\Home\complexLoad.js" />
@@ -187,6 +188,8 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\CommonJS\store\store.js" />
+    <Content Include="Scripts\CommonJS\store\util.js" />
     <Content Include="Scripts\text.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Web.config" />
