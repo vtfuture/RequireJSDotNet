@@ -16,33 +16,47 @@ using RequireJsNet.Compressor.Models;
 using RequireJsNet.Configuration;
 using RequireJsNet.Helpers;
 using RequireJsNet.Models;
+using Microsoft.Build.Framework;
 
 namespace RequireJsNet.Compressor.RequireProcessing
 {
     internal class AutoBundleConfigProcessor : ConfigProcessor
     {
         private Encoding encoding;
+        private Microsoft.Build.Utilities.TaskLoggingHelper Log;
+        private MessageImportance LogLevel;
 
-        public AutoBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths, Encoding encoding)
+        public AutoBundleConfigProcessor(string projectPath, string packagePath, string entryPointOverride, List<string> filePaths, Encoding encoding, Microsoft.Build.Utilities.TaskLoggingHelper log = null, MessageImportance logLevel = MessageImportance.Low)
         {
             ProjectPath = projectPath;
             FilePaths = filePaths;
             OutputPath = projectPath;
             EntryOverride = entryPointOverride;
             this.encoding = encoding;
+            this.Log = log;
+            this.LogLevel = logLevel;
+
             if (!string.IsNullOrWhiteSpace(packagePath))
             {
                 OutputPath = packagePath;
             }
 
             EntryPoint = this.GetEntryPointPath();
+
+            Log?.LogMessage(LogLevel, "Autobundler initialized");
+            Log?.LogMessage(LogLevel, $" - Project path: {projectPath}");
+            Log?.LogMessage(LogLevel, $" - Package path: {packagePath}");
+            Log?.LogMessage(LogLevel, $" - EP Override : {entryPointOverride}");
+            Log?.LogMessage(LogLevel, $" - Encoding    : {encoding.EncodingName}");
+            Log?.LogMessage(LogLevel, $" - Entrypoint  : {EntryPoint}");
+            Log?.LogMessage(LogLevel, $" - Output path : {OutputPath}");
         }
 
         public override List<Bundle> ParseConfigs()
         {
             if (!Directory.Exists(ProjectPath))
             {
-                throw new DirectoryNotFoundException("Could not find project directory.");
+                throw new DirectoryNotFoundException($"Could not find project directory '{ProjectPath}'.");
             }
 
             FindConfigs();
@@ -65,13 +79,20 @@ namespace RequireJsNet.Compressor.RequireProcessing
 
         private Bundle createBundleOf(AutoBundle autoBundle)
         {
+            Log?.LogMessage(LogLevel, $"Creating bundle {autoBundle.Id} for {autoBundle.Includes.Count} includes at {autoBundle.OutputPath}");
+
             var excludedFiles = new HashSet<string>(physicalPathsOf(autoBundle.Excludes), StringComparer.InvariantCultureIgnoreCase);
+            Log?.LogMessage(LogLevel, $" - Identified {excludedFiles.Count} excluded files.");
 
             var files = physicalPathsOf(autoBundle.Includes, excludedFiles).Distinct().ToList();
+            Log?.LogMessage(LogLevel, $" - Looked up physical paths of {files.Count} files.");
 
             var requiredFiles = enumerateDependenciesOf(files, excludedFiles);
+            Log?.LogMessage(LogLevel, $" - Enumerated {requiredFiles.Count} dependencies.");
 
             var fileSpecList = requiredFilesByDependency(requiredFiles, excludedFiles, autoBundle.CompressionType);
+            Log?.LogMessage(LogLevel, $" - Created {fileSpecList.Count} fileSpecLists.");
+            foreach (var file in fileSpecList) Log?.LogMessage(LogLevel, $"    - {file.FileName}: {file.FileContent.Length} chars");
 
             return new Bundle
             {
@@ -118,13 +139,22 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     item.File = ScriptProcessor.ExpandPaths(item.File, Configuration);
 
                     if (!excludedFiles.Contains(item.File))
-                        yield return this.ResolvePhysicalPath(item.File, baseUrl);
+                    {
+                        var physicalPath = this.ResolvePhysicalPath(item.File, baseUrl);
+                        if (physicalPath == null) Log?.LogError($"Could not to resolve path for {item.File}. File does not exist in {baseUrl}! Did you forget to include it in the project?");
+                        yield return physicalPath;
+                    }
+                    else
+                    {
+                        Log?.LogMessage(LogLevel, $"    - EXCLUDING {item.File}");
+                    }
                 }
                 else if (!string.IsNullOrEmpty(item.Directory))
                 {
                     item.Directory = ScriptProcessor.ExpandPaths(item.Directory, Configuration);
 
                     var absDirectory = this.GetAbsoluteDirectory(item.Directory);
+                    Log?.LogMessage(LogLevel, $"    - Directory '{item.Directory}' -> {absDirectory}");
 
                     // not using filter for this since we're going to use the one the user provided in the future
                     var dirFiles = Directory.GetFiles(absDirectory, "*", SearchOption.AllDirectories).Where(r => Path.GetExtension(r) == ".js").ToList();
@@ -132,7 +162,13 @@ namespace RequireJsNet.Compressor.RequireProcessing
                     {
 #warning We try to match absolute paths here while we match relative paths above?!
                         if (!excludedFiles.Contains(file))
+						{
                             yield return file;
+                        }
+                        else
+                        {
+                            Log?.LogMessage(LogLevel, $"    - EXCLUDING {file} from {item.Directory}");
+                        }
                     }
                 }
             }
@@ -215,6 +251,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
             foreach (var grouping in groupings)
             {
                 var path = RequireJsNet.Helpers.PathHelpers.GetOverridePath(grouping.Key);
+                Log?.LogMessage(LogLevel, $"Writing Require.JS override config to {path}");
                 var writer = WriterFactory.CreateWriter(path, null);
                 var collection = this.ComposeCollection(grouping.ToList());
                 writer.WriteConfig(collection);    
@@ -227,6 +264,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
             conf.Overrides = new List<CollectionOverride>();
             foreach (var bundle in bundles)
             {
+                Log?.LogMessage($" - Composing scripts for bundle {bundle.BundleId}");
                 var scripts = bundle.Files.Select(r => PathHelpers.GetRequireRelativePath(EntryPoint, r.FileName)).ToList();
                 var paths = new RequirePaths
                                 {
@@ -236,6 +274,7 @@ namespace RequireJsNet.Compressor.RequireProcessing
                 {
                     var path = PathHelpers.GetRequireRelativePath(EntryPoint, bundle.Output);
                     paths.PathList.Add(new RequirePath(script, path));
+                    Log?.LogMessage($"    - {script} -> {path}");
                 }
 
                 var over = new CollectionOverride

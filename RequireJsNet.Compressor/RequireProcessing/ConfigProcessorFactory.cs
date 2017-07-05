@@ -12,11 +12,11 @@ namespace RequireJsNet.Compressor.RequireProcessing
 {
     internal static class ConfigProcessorFactory
     {
-        public static ConfigProcessor Create(bool autoBundles, string projectPath, string packagePath, string entryPointOverride, List<string> filePaths, Encoding encoding)
+        public static ConfigProcessor Create(bool autoBundles, string projectPath, string packagePath, string entryPointOverride, List<string> filePaths, Encoding encoding, Microsoft.Build.Utilities.TaskLoggingHelper Log, Microsoft.Build.Framework.MessageImportance importance)
         {
             if (autoBundles)
             {
-                return new AutoBundleConfigProcessor(projectPath, packagePath, entryPointOverride, filePaths, encoding);
+                return new AutoBundleConfigProcessor(projectPath, packagePath, entryPointOverride, filePaths, encoding, Log, importance);
             }
 
             return new SimpleBundleConfigProcessor(projectPath, packagePath, entryPointOverride, filePaths);

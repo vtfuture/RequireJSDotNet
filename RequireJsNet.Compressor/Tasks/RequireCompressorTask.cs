@@ -59,7 +59,8 @@ namespace RequireJsNet.Compressor
                 entryPointOveride = EntryPointOverride.GetMetadata("FullPath");
             }
 
-            this.configProcessor = ConfigProcessorFactory.Create(AutoCompressor, ProjectPath, PackagePath, entryPointOveride, files, FileHelpers.ParseEncoding(EncodingType));
+            var LogLevel = LoggingType.ToLowerInvariant() == "debug" ? MessageImportance.High : MessageImportance.Normal;
+            this.configProcessor = ConfigProcessorFactory.Create(AutoCompressor, ProjectPath, PackagePath, entryPointOveride, files, FileHelpers.ParseEncoding(EncodingType), Log, LogLevel);
 
             var bundles = new List<Bundle>();
             try
@@ -69,7 +70,7 @@ namespace RequireJsNet.Compressor
             catch (Exception ex)
             {
                 var isDebugLogging = LoggingType.ToLower() == "debug";
-                Log.LogErrorFromException(ex, isDebugLogging, isDebugLogging, null);
+                Log.LogErrorFromException(ex, isDebugLogging, true, "RequireCompressorTask");
                 return false;
             }
 
