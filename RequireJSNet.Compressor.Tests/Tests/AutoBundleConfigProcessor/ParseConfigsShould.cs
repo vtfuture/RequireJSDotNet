@@ -113,6 +113,30 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             Assert.Equal(1, actualBundles.Count);
             AssertEqual(expectedBundle, actualBundles[0]);
         }
+        [Fact]
+        public void BundleIncludedNonexistentFileWithPath()
+        {
+            var bundleId = "bundle2";
+            var bundleOutputFolder = @"c:\bundles";
+            var filesPaths = new List<string>(new[] { @"TestData\ParseConfigsShould\BundleIncludedNonexistentFileWithPath.json" });
+            var entrypointOverride = "";
+
+            var expectedBundle = new RequireJsNet.Compressor.Bundle()
+            {
+                BundleId = bundleId,
+                ContainingConfig = filesPaths[0],
+                Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    TestData.FileSpecs.Scripts_BundleIncludedDirectory_a(projectPath)
+                })
+            };
+
+            var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, filesPaths, System.Text.Encoding.UTF8);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                compressor.ParseConfigs();
+            });
+        }
 
         [Fact]
         public void BundleIncludedDirectoryWithPath()
