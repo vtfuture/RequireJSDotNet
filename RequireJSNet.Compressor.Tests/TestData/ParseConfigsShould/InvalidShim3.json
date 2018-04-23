@@ -1,0 +1,8 @@
+﻿{
+  "shim": {
+    "thefile": {
+      "deps": [ "nextfile" ],
+      "exports": [ "should be a string" ]
+    }
+  }
+}
