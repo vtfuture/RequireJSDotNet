@@ -67,7 +67,15 @@ namespace RequireJsNet.Configuration
             }
 
             var collection = new ConfigurationCollection();
-            var deserialized = (JObject)JsonConvert.DeserializeObject(text);
+            JObject deserialized;
+            try
+            {
+                deserialized = (JObject)JsonConvert.DeserializeObject(text);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new JsonReaderException($"{ex.Message} File: {Path}", ex);
+            }
             collection.FilePath = Path;
             collection.Paths = GetPaths(deserialized);
             collection.Packages = GetPackages(deserialized);
@@ -166,21 +174,50 @@ namespace RequireJsNet.Configuration
             }
         }
 
+        /// <summary>
+        /// Parses input as specified by generics parameter and returns as specified type. Or throws detailled error message in case of error.
+        /// </summary>
+        /// <typeparam name="T">wanted return type: JValue for string, JArray for array, JObject for JSON object</typeparam>
+        /// <param name="inputToken">token which is to be parsed</param>
+        /// <param name="parseSectionHint">name of parent section containing <paramref name="inputToken"/> as hint for user. Only used for error message.</param>
+        /// <param name="filePath">path to file being parsed. Only used for error message.</param>
+        /// <param name="parentToken">outer token. Only used for error message. May be null.</param>
+        /// <returns></returns>
+        private T JsonParseOrThrow<T>(JToken inputToken, string parseSectionHint, string filePath, JToken parentToken)
+        {
+            T jsonOutput;
+            try
+            {
+                jsonOutput = (T)Convert.ChangeType(inputToken, typeof(T));
+            }
+            catch (InvalidCastException ex)
+            {
+                //'Object must implement IConvertible.' or
+                //'Unable to cast object of type 'Newtonsoft.Json.Linq.JValue' to type 'Newtonsoft.Json.Linq.JObject'.'
+                string errMsg = $"Found type '{inputToken.GetType().FullName}' but expected '{typeof(T).FullName}' for token '{inputToken}'. Parent token: '{parentToken}'";
+                throw new JsonReaderException($"Error in section '{parseSectionHint}' in file '{System.IO.Path.GetFileName(filePath)}': {errMsg}", ex);
+            }
+            return jsonOutput;
+        }
+
         private RequireShim GetShim(JObject document)
         {
             var shim = new RequireShim();
             shim.ShimEntries = new List<ShimEntry>();
-            if (document != null && document["shim"] != null)
+            string parseSection = "shim";
+            if (document != null && document[parseSection] != null)
             {
-                shim.ShimEntries = document["shim"].Select(
+                JToken shimParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                shim.ShimEntries = shimParent.Select(
                     r =>
                         {
                             var result = new ShimEntry();
                             var prop = (JProperty)r;
                             result.For = prop.Name;
-                            var shimObj = (JObject)prop.Value;
-                            result.Exports = shimObj["exports"] != null ? shimObj["exports"].ToString() : null;
-                            var depArr = (JArray)shimObj["deps"];
+                            string parseSectionHint = parseSection + "." + prop.Name;
+                            JObject shimObj = JsonParseOrThrow<JObject>(prop.Value, parseSectionHint, Path, r);
+                            result.Exports = JsonParseOrThrow<JValue>(shimObj["exports"], parseSectionHint, Path, shimObj)?.ToString();
+                            JArray depArr = JsonParseOrThrow<JArray>(shimObj["deps"], parseSectionHint, Path, shimObj);
                             result.Dependencies = new List<RequireDependency>();
                             if (depArr != null)
                             {

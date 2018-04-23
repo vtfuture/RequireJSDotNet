@@ -1,4 +1,5 @@
-﻿using RequireJsNet.Compressor.AutoDependency;
+﻿using Newtonsoft.Json;
+using RequireJsNet.Compressor.AutoDependency;
 using RequireJsNet.Compressor.Tests.Helpers;
 using RequireJsNet.Configuration;
 using RequireJsNet.Models;
@@ -136,6 +137,43 @@ namespace RequireJSNet.Compressor.Tests.Tests.AutoBundleConfigProcessor
             {
                 compressor.ParseConfigs();
             });
+        }
+
+        [Fact]
+        public void InvalidShim()
+        {
+            var bundleId = "bundle2";
+            var bundleOutputFolder = @"c:\bundles";
+            var testFilePaths = new List<string>(new[] {
+                @"TestData\ParseConfigsShould\InvalidShim1.json",
+                @"TestData\ParseConfigsShould\InvalidShim2.json",
+                @"TestData\ParseConfigsShould\InvalidShim3.json",
+                @"TestData\ParseConfigsShould\InvalidShim4.json",
+                @"TestData\ParseConfigsShould\InvalidShim5.json",
+                @"TestData\ParseConfigsShould\InvalidShim6.json",
+                @"TestData\ParseConfigsShould\InvalidShim7.json",
+                @"TestData\ParseConfigsShould\InvalidShim8.json",
+            });
+            var entrypointOverride = "";
+
+            foreach (var filePath in testFilePaths)
+            {
+                var expectedBundle = new RequireJsNet.Compressor.Bundle()
+                {
+                    BundleId = bundleId,
+                    ContainingConfig = filePath,
+                    Output = $"{bundleOutputFolder}\\{bundleId}.js",
+                    Files = new List<RequireJsNet.Compressor.FileSpec>(new[] {
+                    TestData.FileSpecs.Scripts_BundleIncludedDirectory_a(projectPath)
+                })
+                };
+
+                var compressor = new RequireJsNet.Compressor.RequireProcessing.AutoBundleConfigProcessor(projectPath, bundleOutputFolder, entrypointOverride, new List<string>(new string[]{ filePath }), System.Text.Encoding.UTF8);
+                Assert.Throws<JsonReaderException>(() =>
+                {
+                    compressor.ParseConfigs();                    
+                });
+            }            
         }
 
         [Fact]
