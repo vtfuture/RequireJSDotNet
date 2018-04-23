@@ -72,9 +72,9 @@ namespace RequireJsNet.Configuration
             {
                 deserialized = (JObject)JsonConvert.DeserializeObject(text);
             }
-            catch (JsonReaderException ex)
+            catch (JsonException ex)
             {
-                throw new JsonReaderException($"{ex.Message} File: {Path}", ex);
+                throw new JsonException($"{ex.Message} File: {Path}", ex);
             }
             collection.FilePath = Path;
             collection.Paths = GetPaths(deserialized);
