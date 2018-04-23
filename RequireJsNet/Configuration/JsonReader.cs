@@ -74,7 +74,8 @@ namespace RequireJsNet.Configuration
             }
             catch (JsonException ex)
             {
-                throw new JsonException($"{ex.Message} File: {Path}", ex);
+                // Note: No need to output ex.Message here. It'll be printed anyways.
+                throw new JsonException($"File: {Path}", ex);
             }
             collection.FilePath = Path;
             collection.Paths = GetPaths(deserialized);
