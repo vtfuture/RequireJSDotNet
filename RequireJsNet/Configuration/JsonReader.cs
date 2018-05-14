@@ -83,6 +83,8 @@ namespace RequireJsNet.Configuration
             collection.Shim = GetShim(deserialized);
             collection.Map = GetMap(deserialized);
 
+            collection.NodeIdCompat = deserialized.Value<bool?>("nodeIdCompat") ?? false;
+
             if (options.ProcessBundles)
             {
                 collection.Bundles = GetBundles(deserialized);
