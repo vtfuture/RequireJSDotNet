@@ -35,5 +35,8 @@ namespace RequireJsNet.Models
 
         [JsonProperty(PropertyName = "overrides")]
         public List<CollectionOverride> Overrides { get; set; }
+
+        [JsonProperty(PropertyName = "nodeIdCompat")]
+        public bool NodeIdCompat { get; set; }
     }
 }
