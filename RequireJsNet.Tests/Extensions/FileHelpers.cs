@@ -25,9 +25,13 @@ namespace RequireJsNet.Tests.Extensions
             }
 
             using (Stream stream = asm.GetManifestResourceStream(name))
-            using (var reader = new StreamReader(stream))
             {
-                return reader.ReadToEnd();
+                if (stream == null)
+                    throw new ArgumentException($"Could not open stream {name}. Is file included as resource?");
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
             }
         }
     }

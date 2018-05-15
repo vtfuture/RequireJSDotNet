@@ -68,11 +68,13 @@ namespace RequireJsNet.Configuration
                     this.MergeAutoBundles(coll);    
                 }
                 
-
                 if (options.LoadOverrides && coll.Overrides != null)
                 {
                     this.MergeOverrides(coll);
                 }
+
+                if (coll.NodeIdCompat)
+                    finalCollection.NodeIdCompat = true;
             }
 
             if (options.ProcessBundles)

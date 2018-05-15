@@ -67,12 +67,23 @@ namespace RequireJsNet.Configuration
             }
 
             var collection = new ConfigurationCollection();
-            var deserialized = (JObject)JsonConvert.DeserializeObject(text);
+            JObject deserialized;
+            try
+            {
+                deserialized = (JObject)JsonConvert.DeserializeObject(text);
+            }
+            catch (JsonException ex)
+            {
+                // Note: No need to output ex.Message here. It'll be printed anyways.
+                throw new JsonException($"File: {Path}", ex);
+            }
             collection.FilePath = Path;
             collection.Paths = GetPaths(deserialized);
             collection.Packages = GetPackages(deserialized);
             collection.Shim = GetShim(deserialized);
             collection.Map = GetMap(deserialized);
+
+            collection.NodeIdCompat = deserialized.Value<bool?>("nodeIdCompat") ?? false;
 
             if (options.ProcessBundles)
             {
@@ -90,9 +101,11 @@ namespace RequireJsNet.Configuration
         {
             var paths = new RequirePaths();
             paths.PathList = new List<RequirePath>();
-            if (document != null && document["paths"] != null)
+            string parseSection = "paths";
+            if (document != null && document[parseSection] != null)
             {
-                paths.PathList = document["paths"]
+                JToken pathParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                paths.PathList = pathParent
                     .Select(r => requirePathFrom((JProperty)r))
                     .ToList();
             }
@@ -138,18 +151,19 @@ namespace RequireJsNet.Configuration
         {
             var packages = new RequirePackages();
             packages.PackageList = new List<RequirePackage>();
-
-            if (document != null && document["packages"] != null)
+            string parseSection = "packages";
+            if (document != null && document[parseSection] != null)
             {
-                packages.PackageList = document["packages"]
-                    .Select(r => requirePackageFrom(r))
+                JToken packagesParent = JsonParseOrThrow<JArray>(document[parseSection], parseSection, Path, null);
+                packages.PackageList = packagesParent
+                    .Select(r => requirePackageFrom(r, parseSection))
                     .ToList();
             }
 
             return packages;
         }
 
-        private static RequirePackage requirePackageFrom(JToken token)
+        private RequirePackage requirePackageFrom(JToken token, string parseSectionHint)
         {
             if (token is JValue)
             {
@@ -158,29 +172,88 @@ namespace RequireJsNet.Configuration
             }
             else
             {
-                var packageObj = (JObject)token;
-                var name = (string)packageObj["name"];
-                var main = (string)packageObj["main"];
-                var location = (string)packageObj["location"];
+                var name = JsonParseStringOrThrow((JObject)token, "name", parseSectionHint, Path);
+                var main = JsonParseStringOrThrow((JObject)token, "main", parseSectionHint, Path);
+                var location = JsonParseStringOrThrow((JObject)token, "location", parseSectionHint, Path);
                 return new RequirePackage(name, main, location);
             }
+        }
+
+        /// <summary>
+        /// Parses element <paramref name="wantedInputName"/> of <paramref name="inputObject"/> and returns as string (or null).
+        /// Throws detailled error message in case of error.
+        /// </summary>
+        /// <param name="inputObject">parent object which is to be parsed</param>
+        /// <param name="wantedInputName">name of child object which is to be parsed</param>
+        /// <param name="parseSectionHint">name of parent section containing <paramref name="inputToken"/> as hint for user. Only used for error message. Usually format as 'parent.child'</param>
+        /// <param name="filePath">path to file being parsed. Only used for error message.</param>
+        /// <param name="parentToken">outer token. Only used for error message. May be null.</param>
+        /// <returns>null or content of <paramref name="wantedInputName"/> object as string</returns>
+        private string JsonParseStringOrThrow(JObject inputObject, string wantedInputName, string parseSectionHint, string filePath)
+        {
+            return JsonParseOrThrow<JValue>(inputObject[wantedInputName], $"{parseSectionHint}.{wantedInputName}", filePath, inputObject)?.ToString();
+        }
+
+        /// <summary>
+        /// Parses element <paramref name="wantedInputName"/> of <paramref name="inputObject"/> and returns as JSON array (or null).
+        /// Throws detailled error message in case of error.
+        /// </summary>
+        /// <param name="inputObject">parent object which is to be parsed</param>
+        /// <param name="wantedInputName">name of child object which is to be parsed</param>
+        /// <param name="parseSectionHint">name of parent section containing <paramref name="inputToken"/> as hint for user. Only used for error message. Usually format as 'parent.child'</param>
+        /// <param name="filePath">path to file being parsed. Only used for error message.</param>
+        /// <param name="parentToken">outer token. Only used for error message. May be null.</param>
+        /// <returns>null or content of <paramref name="wantedInputName"/> object as JSON array</returns>
+        private JArray JsonParseArrayOrThrow(JObject inputObject, string wantedInputName, string parseSectionHint, string filePath)
+        {
+            return JsonParseOrThrow<JArray>(inputObject[wantedInputName], $"{parseSectionHint}.{wantedInputName}", filePath, inputObject);
+        }
+
+
+        /// <summary>
+        /// Parses input as specified by generics parameter and returns as specified type. Or throws detailled error message in case of error.
+        /// </summary>
+        /// <typeparam name="T">wanted return type: JValue for string, JArray for array, JObject for JSON object</typeparam>
+        /// <param name="inputToken">token which is to be parsed</param>
+        /// <param name="parseSectionHint">name of parent section containing <paramref name="inputToken"/> as hint for user. Only used for error message Usually format as 'parent.child.subchild'.</param>
+        /// <param name="filePath">path to file being parsed. Only used for error message.</param>
+        /// <param name="parentToken">outer token. Only used for error message. May be null.</param>
+        /// <returns><paramref name="inputToken"/> as JSON type</returns>
+        private T JsonParseOrThrow<T>(JToken inputToken, string parseSectionHint, string filePath, JToken parentToken)
+        {
+            T jsonOutput;
+            try
+            {
+                jsonOutput = (T)Convert.ChangeType(inputToken, typeof(T));
+            }
+            catch (InvalidCastException ex)
+            {
+                //'Object must implement IConvertible.' or
+                //'Unable to cast object of type 'Newtonsoft.Json.Linq.JValue' to type 'Newtonsoft.Json.Linq.JObject'.'
+                string errMsg = $"Found type '{inputToken.GetType().FullName}' but expected '{typeof(T).FullName}' for token '{inputToken}'. Parent token: '{parentToken}'";
+                throw new JsonReaderException($"Error in section '{parseSectionHint}' in file '{System.IO.Path.GetFileName(filePath)}': {errMsg}", ex);
+            }
+            return jsonOutput;
         }
 
         private RequireShim GetShim(JObject document)
         {
             var shim = new RequireShim();
             shim.ShimEntries = new List<ShimEntry>();
-            if (document != null && document["shim"] != null)
+            string parseSection = "shim";
+            if (document != null && document[parseSection] != null)
             {
-                shim.ShimEntries = document["shim"].Select(
+                JToken shimParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                shim.ShimEntries = shimParent.Select(
                     r =>
                         {
                             var result = new ShimEntry();
                             var prop = (JProperty)r;
                             result.For = prop.Name;
-                            var shimObj = (JObject)prop.Value;
-                            result.Exports = shimObj["exports"] != null ? shimObj["exports"].ToString() : null;
-                            var depArr = (JArray)shimObj["deps"];
+                            string parseSectionHint = parseSection + "." + prop.Name;
+                            JObject shimObj = JsonParseOrThrow<JObject>(prop.Value, parseSectionHint, Path, r);
+                            result.Exports = JsonParseStringOrThrow(shimObj, "exports", parseSectionHint, Path);
+                            JArray depArr = JsonParseArrayOrThrow(shimObj, "deps", parseSectionHint, Path);
                             result.Dependencies = new List<RequireDependency>();
                             if (depArr != null)
                             {
@@ -203,42 +276,46 @@ namespace RequireJsNet.Configuration
         {
             var bundles = new RequireBundles();
             bundles.BundleEntries = new List<RequireBundle>();
-            if (document != null && document["bundles"] != null)
+            string parseSection = "bundles";
+            if (document != null && document[parseSection] != null)
             {
-                bundles.BundleEntries = document["bundles"].Select(
+                JToken bundlesParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                bundles.BundleEntries = bundlesParent.Select(
                     r =>
                         {
                             var bundle = new RequireBundle();
                             var prop = (JProperty)r;
                             bundle.Name = prop.Name;
+                            string parseSectionHint = $"{parseSection}.{prop.Name}";
                             if (prop.Value is JArray)
                             {
                                 bundle.IsVirtual = false;
-                                var arr = prop.Value as JArray;
+                                JArray arr = JsonParseOrThrow<JArray>(prop.Value, parseSectionHint, Path, null);
                                 bundle.BundleItems = arr.Select(x => new BundleItem { ModuleName = x.ToString() } ).ToList();    
                                 
                             }
                             else if(prop.Value is JObject)
                             {
                                 var obj = prop.Value as JObject;
-                                bundle.OutputPath = obj["outputPath"] != null ? obj["outputPath"].ToString() : null;
-                                var inclArr = obj["includes"] as JArray;
+                                bundle.OutputPath = JsonParseStringOrThrow(obj, "outputPath", parseSectionHint, Path);
+                                JArray inclArr = JsonParseArrayOrThrow(obj, "includes", parseSectionHint, Path);
                                 if (inclArr != null)
                                 {
                                     bundle.Includes = inclArr.Select(x => x.ToString()).ToList();
                                 }
 
-                                var itemsArr = obj["items"] as JArray;
+                                JArray itemsArr = JsonParseArrayOrThrow(obj, "items", parseSectionHint, Path);
                                 if (itemsArr != null)
                                 {
+                                    string parseSectionHint2 = $"{parseSectionHint}.items";
                                     bundle.BundleItems = itemsArr.Select(
                                         x =>
                                             {
                                                 var result = new BundleItem();
                                                 if (x is JObject)
                                                 {
-                                                    result.ModuleName = x["path"] != null ? x["path"].ToString() : null;
-                                                    result.CompressionType = x["compression"] != null ? x["compression"].ToString() : null;
+                                                    result.ModuleName = JsonParseStringOrThrow(x as JObject, "path", parseSectionHint2, Path);
+                                                    result.CompressionType = JsonParseStringOrThrow(x as JObject, "compression", parseSectionHint2, Path);
                                                 }
                                                 else if (x is JValue && x.Type == JTokenType.String)
                                                 {
@@ -250,6 +327,9 @@ namespace RequireJsNet.Configuration
                                 }
 
                                 var isVirtual = obj["virtual"];
+                                if (isVirtual != null && !(isVirtual is JValue)) {
+                                    throw new JsonReaderException($"Element 'virtual' in {parseSectionHint} is expected to be 'JValue'; found instead: '{isVirtual.GetType()}'. Value: {isVirtual}");
+                                }
                                 bundle.IsVirtual = isVirtual is JValue 
                                                     && isVirtual.Type == JTokenType.Boolean
                                                     && (bool)((JValue)isVirtual).Value;
@@ -267,16 +347,18 @@ namespace RequireJsNet.Configuration
         {
             var map = new RequireMap();
             map.MapElements = new List<RequireMapElement>();
-            if (document != null && document["map"] != null)
+            string parseSection = "map";
+            if (document != null && document[parseSection] != null)
             {
-                map.MapElements = document["map"].Select(
+                JToken mapParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                map.MapElements = mapParent.Select(
                     r =>
                         {
                             var currentMap = new RequireMapElement();
                             currentMap.Replacements = new List<RequireReplacement>();
                             var prop = (JProperty)r;
                             currentMap.For = prop.Name;
-                            var mapDefinition = prop.Value;
+                            JToken mapDefinition = JsonParseOrThrow<JObject>(prop.Value, parseSection, Path, null);
                             if (mapDefinition != null)
                             {
                                 currentMap.Replacements = mapDefinition.Select(x => new RequireReplacement()
@@ -297,9 +379,11 @@ namespace RequireJsNet.Configuration
         private List<CollectionOverride> GetOverrides(JObject document)
         {
             var overrideList = new List<CollectionOverride>();
-            if (document["overrides"] != null)
+            string parseSection = "overrides";
+            if (document[parseSection] != null)
             {
-                overrideList = document["overrides"].Select(
+                JToken overridesParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                overrideList = overridesParent.Select(
                     r =>
                         {
                             var overObj = new CollectionOverride();
@@ -312,7 +396,7 @@ namespace RequireJsNet.Configuration
                                 overObj.Map = GetMap(prop.Value as JObject);
                                 overObj.Paths = GetPaths(prop.Value as JObject);
                                 overObj.Shim = GetShim(prop.Value as JObject);
-                                var bundledItems = valObj["bundledScripts"] as JArray;
+                                JArray bundledItems = JsonParseArrayOrThrow(valObj, "bundledScripts", parseSection, Path);
                                 if (bundledItems != null)
                                 {
                                     overObj.BundledScripts = bundledItems.Select(x => x.ToString()).ToList();
@@ -332,29 +416,34 @@ namespace RequireJsNet.Configuration
         {
             var autoBundles = new AutoBundles();
             autoBundles.Bundles = new List<AutoBundle>();
-            if (document != null && document["autoBundles"] != null)
+            string parseSection = "autoBundles";
+            if (document != null && document[parseSection] != null)
             {
-                autoBundles.Bundles = document["autoBundles"].Select(
+                JToken autoBundlesParent = JsonParseOrThrow<JObject>(document[parseSection], parseSection, Path, null);
+                autoBundles.Bundles = autoBundlesParent.Select(
                     r =>
                         {
                             var currentBundle = new AutoBundle();
                             var prop = (JProperty)r;
                             currentBundle.Id = prop.Name;
+                            string parseSectionHint = parseSection + "." + prop.Name;
                             var valueObj = prop.Value as JObject;
                             if (valueObj != null)
                             {
-                                currentBundle.OutputPath = valueObj["outputPath"] != null ? valueObj["outputPath"].ToString() : null;
-                                currentBundle.CompressionType = valueObj["compressionType"] != null ? valueObj["compressionType"].ToString() : null;
+                                currentBundle.OutputPath = JsonParseStringOrThrow(valueObj, "outputPath", parseSectionHint, Path);
+                                currentBundle.CompressionType = JsonParseStringOrThrow(valueObj, "compressionType", parseSectionHint, Path);
                                 currentBundle.ContainingConfig = Path;
                                 currentBundle.Includes = new List<AutoBundleItem>();
                                 if (valueObj["include"] != null)
                                 {
-                                    currentBundle.Includes = valueObj["include"].Select(x => autoBundleItemFrom(x)).ToList();    
+                                    JToken includeParent = JsonParseOrThrow<JArray>(valueObj["include"], parseSection, Path, null);
+                                    currentBundle.Includes = includeParent.Select(x => autoBundleItemFrom(x, parseSectionHint)).ToList();    
                                 }
                                 currentBundle.Excludes = new List<AutoBundleItem>();
                                 if (valueObj["exclude"] != null)
                                 {
-                                    currentBundle.Excludes = valueObj["exclude"].Select(x => autoBundleItemFrom(x)).ToList();
+                                    JToken excludeParent = JsonParseOrThrow<JArray>(valueObj["exclude"], parseSection, Path, null);
+                                    currentBundle.Excludes = excludeParent.Select(x => autoBundleItemFrom(x, parseSectionHint)).ToList();
                                 }
                             }
 
@@ -365,7 +454,7 @@ namespace RequireJsNet.Configuration
             return autoBundles;
         }
 
-        AutoBundleItem autoBundleItemFrom(JToken token)
+        AutoBundleItem autoBundleItemFrom(JToken token, string parseSectionHint)
         {
             var target = new AutoBundleItem();
 
@@ -373,9 +462,9 @@ namespace RequireJsNet.Configuration
             if (source == null)
                 return target;
 
-            target.BundleId = source["bundleId"] != null ? source["bundleId"].ToString() : null;
-            target.File = source["file"] != null ? source["file"].ToString() : null;
-            target.Directory = source["directory"] != null ? source["directory"].ToString() : null;
+            target.BundleId = JsonParseStringOrThrow(source, "bundleId", parseSectionHint, Path);
+            target.File = JsonParseStringOrThrow(source, "file", parseSectionHint, Path);
+            target.Directory = JsonParseStringOrThrow(source, "directory", parseSectionHint, Path);
 
             var numberOfDefinedProperties = new[] { target.BundleId, target.File, target.Directory }.Where(x => x != null).Count();
             if (numberOfDefinedProperties != 1)

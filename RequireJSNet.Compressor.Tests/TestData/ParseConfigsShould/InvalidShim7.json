@@ -1,0 +1,9 @@
+﻿{
+  "shim": {
+    "valid_shim": {
+      "deps": [ "nextfile" ],
+      "exports": "this is a string"
+    },
+    "invalid_shim": "should be an object"
+  }
+}

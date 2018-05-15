@@ -119,7 +119,8 @@ namespace RequireJsNet
                         }),
                 Map = resultingConfig.Map.MapElements.ToDictionary(
                          r => r.For,
-                         r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey))
+                         r => r.Replacements.ToDictionary(x => x.OldKey, x => x.NewKey)),
+                NodeIdCompat = resultingConfig.NodeIdCompat
             };
 
             config.ProcessConfig(outputConfig);

@@ -36,5 +36,8 @@ namespace RequireJsNet.Models
 
         [JsonProperty(PropertyName = "map")]
         public Dictionary<string, Dictionary<string, string>> Map { get; set; }
+
+        [JsonProperty(PropertyName = "nodeIdCompat")]
+        public bool NodeIdCompat { get; set; }
     }
 }

@@ -1,0 +1,5 @@
+﻿{
+  "shim": {
+    "thefile":  "invalid because this is a string but it is expected to be a JSON array"    
+  }
+}

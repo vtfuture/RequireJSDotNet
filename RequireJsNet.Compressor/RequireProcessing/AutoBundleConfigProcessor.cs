@@ -87,6 +87,15 @@ namespace RequireJsNet.Compressor.RequireProcessing
             var files = physicalPathsOf(autoBundle.Includes, excludedFiles).Distinct().ToList();
             Log?.LogMessage(LogLevel, $" - Looked up physical paths of {files.Count} files.");
 
+            // check if provided paths make sense
+            if (files.Count == 0 || files[0] == null)
+            {
+                throw new ArgumentException($"Error for autoBundle {autoBundle.Id}: "
+                    + "Provided list of includes: \"" + string.Join(";", autoBundle.Includes) + "\""
+                    + (excludedFiles.Count > 0 ? (" without excludes: \"" + string.Join(";", excludedFiles)) + "\"" : "")
+                    + " results in empty autoBundle.");
+            }
+
             var requiredFiles = enumerateDependenciesOf(files, excludedFiles);
             Log?.LogMessage(LogLevel, $" - Enumerated {requiredFiles.Count} dependencies.");
 
